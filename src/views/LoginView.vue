@@ -1,8 +1,14 @@
 <template>
-    <div>
-        로그인페이지
+    <div class="background">
+        
     </div>
 </template>
+
+<style>
+.background{
+    background-color: #D2DAFF;
+}
+</style>
     
 <script>
 export default {

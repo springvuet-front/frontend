@@ -16,6 +16,21 @@ body{
   color: #2c3e50;
 }
 
+img{
+  width: 180px;
+}
+
+a {
+  color: #565656;
+  text-decoration: none; 
+  outline: none
+}
+
+a:hover, a:active {
+  color: #565656;
+  text-decoration: none;
+}
+
 </style>
 
 <script>
