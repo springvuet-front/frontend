@@ -30,7 +30,7 @@
                 <ButtonComponent parameter="" msg="회원가입"/>
                 <div>
                     <span id="sub-text">이미 계정이 있나요?</span>
-                    <router-link to="signin">
+                    <router-link to="login">
                         <span id="underline-text">로그인</span>
                     </router-link>
                 </div>

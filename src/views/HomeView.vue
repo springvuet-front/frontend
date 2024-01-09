@@ -6,7 +6,7 @@
     </div>
 
     <div class="router-view">
-      <ButtonComponent parameter="signin" msg="로그인"/>
+      <ButtonComponent parameter="login" msg="로그인"/>
       <ButtonComponent parameter="signup" msg="회원가입"/>
       <ButtonComponent parameter="community" msg="커뮤니티"/>
     </div>
