@@ -5,23 +5,275 @@
     <div>TeampageView페이지</div>
     <div>TeampageView페이지</div>
     <div>TeampageView페이지</div>
+
+    <calendar-view
+			:show-date="showDate"
+			class="theme-default holiday-us-traditional holiday-us-official">
+			<template #header="{ headerProps }">
+				<calendar-view-header
+					:header-props="headerProps"
+					@input="setShowDate" />
+			</template>
+		</calendar-view>
   </div>
 </template>
 
-<style scoped>
+<style>
+/* https://github.com/richardtallent/vue-simple-calendar */
   .container{
     padding: 20px 90px;
   }
+  .cv-wrapper{display:flex;flex-direction:column;flex-grow:1;height:100%;min-height:100%;max-height:100%;overflow-x:hidden;overflow-y:hidden}.cv-wrapper,.cv-wrapper div{box-sizing:border-box;line-height:1em;font-size:1em}.cv-header-days{display:flex;flex-grow:0;flex-shrink:0;flex-basis:auto;flex-flow:row nowrap;border-width:0 0 0 1px}.cv-header-day{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;flex-flow:row nowrap;align-items:center;justify-content:center;text-align:center;border-width:1px 1px 0 0}.cv-weeks{display:flex;flex-grow:1;flex-shrink:1;flex-basis:auto;flex-flow:column nowrap;border-width:0 0 1px 1px;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none}.cv-weeknumber{width:2rem;position:relative;text-align:center;border-width:1px 1px 0 0;border-style:solid;line-height:1}.cv-week{display:flex;flex-grow:1;flex-shrink:1;flex-basis:0;flex-flow:row nowrap;min-height:3em;border-width:0;position:relative;width:100%;overflow-y:auto;-ms-overflow-style:none}.cv-weekdays{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;flex-flow:row nowrap;direction:ltr;position:relative;overflow-y:auto;scrollbar-width:none}.cv-day{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;position:relative;position:sticky;top:0;border-width:1px 1px 0 0;direction:initial}.cv-day-number{height:auto;align-self:flex-start}.cv-day-number:hover:after{position:absolute;top:1rem;background-color:var(--cal-holiday-bg, #f7f7f7);border:var(--cal-holiday-border, 1px solid #f0f0f0);box-shadow:.1rem .1rem .2rem var(--cal-holiday-shadow, rgba(0, 0, 0, .25));padding:.2rem;margin:.5rem;line-height:1.2}.cv-day[draggable],.cv-item[draggable]{-webkit-user-select:none;-moz-user-select:none;user-select:none}.cv-item{position:absolute;white-space:nowrap;overflow:hidden;background-color:#f7f7f7;border-width:1px;direction:initial}.cv-wrapper.wrap-item-title-on-hover .cv-item:hover{white-space:normal;z-index:1}.cv-header-days,.cv-header-day,.cv-weeks,.cv-week,.cv-day,.cv-item{border-style:solid;border-color:#ddd}.cv-item .endTime:before{content:"-"}.cv-header-day,.cv-day-number,.cv-item{padding:.2em}.cv-day-number:before{margin-right:.5em}.cv-item.offset0{left:0}.cv-item.offset1{left:calc((100% / 7))}.cv-item.offset2{left:calc((200% / 7))}.cv-item.offset3{left:calc((300% / 7))}.cv-item.offset4{left:calc((400% / 7))}.cv-item.offset5{left:calc((500% / 7))}.cv-item.offset6{left:calc((600% / 7))}.cv-item.span1{width:calc((100% / 7) - .05em)}.cv-item.span2{width:calc((200% / 7) - .05em)}.cv-item.span3{width:calc((300% / 7) - .05em)}.cv-item.span4{width:calc((400% / 7) - .05em)}.cv-item.span5{width:calc((500% / 7) - .05em)}.cv-item.span6{width:calc((600% / 7) - .05em)}.cv-item.span7{width:calc(100% - .05em)}.cv-weeks::-webkit-scrollbar,.cv-weekdays::-webkit-scrollbar{width:0;background:transparent}.cv-header{display:flex;flex:0 1 auto;flex-flow:row nowrap;align-items:center;min-height:2.5em;border-width:1px 1px 0 1px}.cv-header .periodLabel{display:flex;flex:1 1 auto;flex-flow:row nowrap;min-height:1.5em;line-height:1;font-size:1.5em}.cv-header,.cv-header button{border-style:solid;border-color:#ddd}.cv-header-nav,.cv-header .periodLabel{margin:.1em .6em}.cv-header-nav button,.cv-header .periodLabel{padding:.4em .6em}.cv-header button{box-sizing:border-box;line-height:1em;font-size:1em;border-width:1px}
+
+  /*
+**************************************************************
+This theme is the default shipping theme, it includes some
+decent defaults, but is separate from the calendar component
+to make it easier for users to implement their own themes w/o
+having to override as much.
+**************************************************************
+*/
+
+/* Header */
+
+.theme-default .cv-header,
+.theme-default .cv-header-day {
+	background-color: #f0f0f0;
+}
+
+.theme-default .cv-header .periodLabel {
+	font-size: 1.5em;
+}
+
+.theme-default .cv-header button {
+	color: #7f7f7f;
+}
+
+.theme-default .cv-header button:disabled {
+	color: #ccc;
+	background-color: #f7f7f7;
+}
+
+/* Grid */
+
+.theme-default .cv-weeknumber {
+	background-color: #e0e0e0;
+	border-color: #ccc;
+	color: #808080;
+}
+
+.theme-default .cv-weeknumber span {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.theme-default .cv-day.past {
+	background-color: #fafafa;
+}
+
+.theme-default .cv-day.outsideOfMonth {
+	background-color: #f7f7f7;
+}
+
+.theme-default .cv-day.today {
+	background-color: #ffe;
+}
+
+.theme-default .cv-day[aria-selected="true"] {
+	background-color: #ffc;
+}
+
+/* Events */
+
+.theme-default .cv-item {
+	border-color: #e0e0f0;
+	border-radius: 0.5em;
+	background-color: #e7e7ff;
+	text-overflow: ellipsis;
+}
+
+.theme-default .cv-item.purple {
+	background-color: #f0e0ff;
+	border-color: #e7d7f7;
+}
+
+.theme-default .cv-item.orange {
+	background-color: #ffe7d0;
+	border-color: #f7e0c7;
+}
+
+.theme-default .cv-item.continued::before,
+.theme-default .cv-item.toBeContinued::after {
+	content: " \21e2 ";
+	color: #999;
+}
+
+.theme-default .cv-item.toBeContinued {
+	border-right-style: none;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.theme-default .cv-item.isHovered.hasUrl {
+	text-decoration: underline;
+}
+
+.theme-default .cv-item.continued {
+	border-left-style: none;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.cv-item.span3,
+.cv-item.span4,
+.cv-item.span5,
+.cv-item.span6,
+.cv-item.span7 {
+	text-align: center;
+}
+
+/* Event Times */
+
+.theme-default .cv-item .startTime,
+.theme-default .cv-item .endTime {
+	font-weight: bold;
+	color: #666;
+}
+
+/* Drag and drop */
+
+.theme-default .cv-day.draghover {
+	box-shadow: inset 0 0 0.2em 0.2em yellow;
+}
+
+/*
+********************************************************************************************************
+This theme adds emoji next to the day number for major holidays traditionally celebrated in the USA.
+
+There are two types of holidays: officially-recognized holidays, and traditionally-celebrated ones
+(most of the traditionally-celebrated ones are connected with the Christian faith.)
+
+To activate this theme, include the CSS and decorate the calendar instance with the `holidays-us-official`
+and/or `holidays-us-traditional` classes.
+********************************************************************************************************
+*/
+
+/*
+****************************************************
+Traditional US Holidays
+****************************************************
+*/
+
+/* Easter: example of a holiday that changes each year. Easy to pre-populate for a reasonable number of years. */
+.cv-wrapper.holiday-us-traditional .d2015-04-05 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2016-03-27 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2017-04-16 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2018-04-01 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2019-04-21 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2020-04-12 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2021-04-04 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2022-04-17 .cv-day-number::before,
+.cv-wrapper.holiday-us-traditional .d2023-04-09 .cv-day-number::before {
+	content: "\271D";
+}
+
+/* Cinco de Mayo */
+.cv-wrapper.holiday-us-traditional .d05-05 .cv-day-number::before {
+	content: "\1F1F2\1F1FD";
+}
+
+/* Halloween - October 31 */
+.cv-wrapper.holiday-us-traditional .d10-31 .cv-day-number::before {
+	content: "\1F383";
+}
+
+/* St. Valentine's Day - February 14 */
+.cv-wrapper.holiday-us-traditional .d02-14 .cv-day-number::before {
+	content: "\1F498";
+}
+
+/*
+****************************************************
+Official US Holidays
+****************************************************
+*/
+
+/**** Same date every year ****/
+
+/* New Year's Day - January 1 */
+.cv-wrapper.holiday-us-official .d01-01 .cv-day-number::before {
+	content: "\1F37E";
+}
+
+/* Independence Day - July 4 */
+.cv-wrapper.holiday-us-official .d07-04 .cv-day-number::before {
+	content: "\1F1FA\1F1F8";
+}
+
+/* Veteran's Day - November 11 */
+.cv-wrapper.holiday-us-official .d11-11 .cv-day-number::before {
+	content: "\1F396";
+}
+
+/* Christmas Day - December 25 */
+.cv-wrapper.holiday-us-official .d12-25 .cv-day-number::before {
+	content: "\1F384";
+}
+
+/**** Same month position every year ****/
+
+/* Martin Luther King, Jr. Day - 3rd Monday of January */
+.cv-wrapper.holiday-us-official.m01 .day.dow1.instance3 .cv-day-number::before {
+	content: "\270C\1F3FE";
+}
+
+/* Washington's Birthday - 3rd Monday in February */
+.cv-wrapper.holiday-us-official.m02 .day.dow1.instance3 .cv-day-number::before {
+	content: "\1F34E";
+}
+
+/* Memorial Day - last Monday in May */
+.cv-wrapper.holiday-us-official.m05 .day.dow1.lastInstance .cv-day-number::before {
+	content: "\1F1FA\1F1F8";
+}
+
+/* Labor Day - 1st Monday in September */
+.cv-wrapper.holiday-us-official.m09 .day.dow1.instance1 .cv-day-number::before {
+	content: "\1F4AA";
+}
+
+/* Columbus Day - 2nd Monday in October */
+.cv-wrapper.holiday-us-official.m10 .day.dow1.instance2 .cv-day-number::before {
+	content: "\2388";
+}
+
+/* Thanksgiving Day - 4th Thursday of November */
+.cv-wrapper.holiday-us-official.m11 .day.dow4.instance4 .cv-day-number::before {
+	content: "\1F64F";
+}
+
+
 </style>
     
   <script>
   import LeftMenu from '@/components/LeftMenu.vue';
+  import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
   
     export default {
       name: 'TeampageView',
       components: {
         LeftMenu,
+        CalendarView,
+        CalendarViewHeader,
       },
+      methods: {
+        setShowDate(d) {
+          this.showDate = d;
+        },
+      }
     }
   </script>
     
