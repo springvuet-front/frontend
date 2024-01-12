@@ -5,24 +5,23 @@
                 <img alt="Prolog logo" src="../assets/prolog.png" />
                 <div id="border-text">회원가입</div>
                 <div class="field-view">
-                    <div class="input-text-left">이메일</div>
-
+                    <div class="input-text">이메일</div>
                     <div class="email-confirm-view">
-                        <InputText id="email"/>
+                        <input type="text" id="email">
                         <ButtonComponent msg="이메일 확인" parameter = "" id="email-confirm-button"/>
                     </div>
                     
-                    <div class="input-text-right">인증번호 입력</div>
-                    <InputText />
+                    <div class="input-text">인증번호 입력</div>
+                    <input type="text">
 
-                    <div class="input-text-left">비밀번호</div>
-                    <InputPassword />
+                    <div class="input-text">비밀번호</div>
+                    <input type="password">
 
-                    <div class="input-text-left">비밀번호 확인</div>
-                    <InputPassword />
+                    <div class="input-text">비밀번호 확인</div>
+                    <input type="password">
 
-                    <div class="input-text-left">닉네임</div>
-                    <InputText />
+                    <div class="input-text">닉네임</div>
+                    <input type="text">
                 </div>
             </div>
 
@@ -86,14 +85,7 @@
     text-decoration: underline;
 }
 
-.input-text-left{
-    width: 20vw;
-    margin-top: 2vh;
-    color: #565656;
-    font-weight: 600;
-}
-
-.input-text-right{
+.input-text{
     width: 20vw;
     margin-top: 2vh;
     color: #565656;
@@ -140,12 +132,10 @@ input:focus{
     
 <script>
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import InputPassword from '@/components/InputPassword.vue';
-import InputText from '@/components/InputText.vue';
 
 export default {
     name: 'SignupView',
-    components: { InputPassword, InputText, ButtonComponent }
+    components: { ButtonComponent }
 }
 </script>
     

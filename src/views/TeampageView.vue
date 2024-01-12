@@ -2,23 +2,79 @@
   <LeftMenu />
 
   <div id="container">
-    <div>TeampageView페이지</div>
-    <div>TeampageView페이지</div>
-    <div>TeampageView페이지</div>
+	<div class="control">
+		<div class="select">
+			<select v-model="state.startingDayOfWeek">
+				<option v-for="(d, index) in dayNames" :key="index" :value="index">
+					{{ d }}
+				</option>
+			</select>
+		</div>
+	</div>
 
-    <calendar-view
-			:show-date="showDate"
-			class="theme-default holiday-us-traditional holiday-us-official">
+	<div class="calendar-controls">
+		<div class="box">
+			<div class="field">
+				<label class="label">Title</label>
+				<div class="control">
+					<input v-model="state.newItemTitle" type="text" class="input" />
+				</div>
+			</div>
+
+			<div class="field">
+				<label class="label">Start date</label>
+				<div class="control">
+					<input v-model="state.newItemStartDate" class="input" type="date" />
+				</div>
+			</div>
+
+			<div class="field">
+				<label class="label">End date</label>
+				<div class="control">
+					<input v-model="state.newItemEndDate" class="input" type="date" />
+				</div>
+			</div>
+			<ButtonComponent class="button is-info" @click="clickTestAddItem" msg="일정 추가하기" />
+			<button class="button is-info" @click="clickTestAddItem">Add Item</button>
+		</div>
+	</div>
+
+    <div class="calendar-parent">
+		<CalendarView
+			:items="state.items"
+			:show-date="state.showDate"
+			:time-format-options="{ hour: 'numeric', minute: '2-digit' }"
+			:enable-drag-drop="true"
+			:disable-past="state.disablePast"
+			:disable-future="state.disableFuture"
+			:show-times="state.showTimes"
+			:date-classes="myDateClasses()"
+			:display-period-uom="state.displayPeriodUom"
+			:display-period-count="state.displayPeriodCount"
+			:starting-day-of-week="state.startingDayOfWeek"
+			:class="themeClasses"
+			:period-changed-callback="periodChanged"
+			:current-period-label="state.useTodayIcons ? 'icons' : ''"
+			:displayWeekNumbers="state.displayWeekNumbers"
+			:enable-date-selection="true"
+			:selection-start="state.selectionStart"
+			:selection-end="state.selectionEnd"
+			@date-selection-start="setSelection"
+			@date-selection="setSelection"
+			@date-selection-finish="finishSelection"
+			@drop-on-date="onDrop"
+			@click-date="onClickDay"
+			@click-item="onClickItem"
+		>
 			<template #header="{ headerProps }">
-				<calendar-view-header
-					:header-props="headerProps"
-					@input="setShowDate" />
+				<CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
 			</template>
-		</calendar-view>
-  </div>
+		</CalendarView>
+		</div>
+	</div>
 </template>
 
-<style>
+<style scoped>
 /* 
 https://madewithvuejs.com/vue-simple-calendar
 https://github.com/richardtallent/vue-simple-calendar 
@@ -26,162 +82,149 @@ https://github.com/richardtallent/vue-simple-calendar
   .container{
     padding: 20px 90px;
   }
-  .cv-wrapper{display:flex;flex-direction:column;flex-grow:1;height:100%;min-height:100%;max-height:100%;overflow-x:hidden;overflow-y:hidden}.cv-wrapper,.cv-wrapper div{box-sizing:border-box;line-height:1em;font-size:1em}.cv-header-days{display:flex;flex-grow:0;flex-shrink:0;flex-basis:auto;flex-flow:row nowrap;border-width:0 0 0 1px}.cv-header-day{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;flex-flow:row nowrap;align-items:center;justify-content:center;text-align:center;border-width:1px 1px 0 0}.cv-weeks{display:flex;flex-grow:1;flex-shrink:1;flex-basis:auto;flex-flow:column nowrap;border-width:0 0 1px 1px;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none}.cv-weeknumber{width:2rem;position:relative;text-align:center;border-width:1px 1px 0 0;border-style:solid;line-height:1}.cv-week{display:flex;flex-grow:1;flex-shrink:1;flex-basis:0;flex-flow:row nowrap;min-height:3em;border-width:0;position:relative;width:100%;overflow-y:auto;-ms-overflow-style:none}.cv-weekdays{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;flex-flow:row nowrap;direction:ltr;position:relative;overflow-y:auto;scrollbar-width:none}.cv-day{display:flex;flex-grow:1;flex-shrink:0;flex-basis:0;position:relative;position:sticky;top:0;border-width:1px 1px 0 0;direction:initial}.cv-day-number{height:auto;align-self:flex-start}.cv-day-number:hover:after{position:absolute;top:1rem;background-color:var(--cal-holiday-bg, #f7f7f7);border:var(--cal-holiday-border, 1px solid #f0f0f0);box-shadow:.1rem .1rem .2rem var(--cal-holiday-shadow, rgba(0, 0, 0, .25));padding:.2rem;margin:.5rem;line-height:1.2}.cv-day[draggable],.cv-item[draggable]{-webkit-user-select:none;-moz-user-select:none;user-select:none}.cv-item{position:absolute;white-space:nowrap;overflow:hidden;background-color:#f7f7f7;border-width:1px;direction:initial}.cv-wrapper.wrap-item-title-on-hover .cv-item:hover{white-space:normal;z-index:1}.cv-header-days,.cv-header-day,.cv-weeks,.cv-week,.cv-day,.cv-item{border-style:solid;border-color:#ddd}.cv-item .endTime:before{content:"-"}.cv-header-day,.cv-day-number,.cv-item{padding:.2em}.cv-day-number:before{margin-right:.5em}.cv-item.offset0{left:0}.cv-item.offset1{left:calc((100% / 7))}.cv-item.offset2{left:calc((200% / 7))}.cv-item.offset3{left:calc((300% / 7))}.cv-item.offset4{left:calc((400% / 7))}.cv-item.offset5{left:calc((500% / 7))}.cv-item.offset6{left:calc((600% / 7))}.cv-item.span1{width:calc((100% / 7) - .05em)}.cv-item.span2{width:calc((200% / 7) - .05em)}.cv-item.span3{width:calc((300% / 7) - .05em)}.cv-item.span4{width:calc((400% / 7) - .05em)}.cv-item.span5{width:calc((500% / 7) - .05em)}.cv-item.span6{width:calc((600% / 7) - .05em)}.cv-item.span7{width:calc(100% - .05em)}.cv-weeks::-webkit-scrollbar,.cv-weekdays::-webkit-scrollbar{width:0;background:transparent}.cv-header{display:flex;flex:0 1 auto;flex-flow:row nowrap;align-items:center;min-height:2.5em;border-width:1px 1px 0 1px}.cv-header .periodLabel{display:flex;flex:1 1 auto;flex-flow:row nowrap;min-height:1.5em;line-height:1;font-size:1.5em}.cv-header,.cv-header button{border-style:solid;border-color:#ddd}.cv-header-nav,.cv-header .periodLabel{margin:.1em .6em}.cv-header-nav button,.cv-header .periodLabel{padding:.4em .6em}.cv-header button{box-sizing:border-box;line-height:1em;font-size:1em;border-width:1px}
+  .calendar-controls{
+	background-color: antiquewhite;
+  }
 
-  /*
-**************************************************************
-This theme is the default shipping theme, it includes some
-decent defaults, but is separate from the calendar component
-to make it easier for users to implement their own themes w/o
-having to override as much.
-**************************************************************
-*/
+  .calendar-parent{
+	width: 40vw;
+	height: 50vh;
+  }
 
-/* Header */
-
-.theme-default .cv-header,
-.theme-default .cv-header-day {
-	background-color: #f0f0f0;
+  input{
+    width: 100px;
+    height: 30px;
+    border: 0;
+    background-color: #C6C7FF;
+    padding-left: 10px;
 }
 
-.theme-default .cv-header .periodLabel {
-	font-size: 1.5em;
-}
-
-.theme-default .cv-header button {
-	color: #7f7f7f;
-}
-
-.theme-default .cv-header button:disabled {
-	color: #ccc;
-	background-color: #f7f7f7;
-}
-
-/* Grid */
-
-.theme-default .cv-weeknumber {
-	background-color: #e0e0e0;
-	border-color: #ccc;
-	color: #808080;
-}
-
-.theme-default .cv-weeknumber span {
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-
-.theme-default .cv-day.past {
-	background-color: #fafafa;
-}
-
-.theme-default .cv-day.outsideOfMonth {
-	background-color: #f7f7f7;
-}
-
-.theme-default .cv-day.today {
-	background-color: #ffe;
-}
-
-.theme-default .cv-day[aria-selected="true"] {
-	background-color: #ffc;
-}
-
-/* Events */
-
-.theme-default .cv-item {
-	border-color: #e0e0f0;
-	border-radius: 0.5em;
-	background-color: #e7e7ff;
-	text-overflow: ellipsis;
-}
-
-.theme-default .cv-item.purple {
-	background-color: #f0e0ff;
-	border-color: #e7d7f7;
-}
-
-.theme-default .cv-item.orange {
-	background-color: #ffe7d0;
-	border-color: #f7e0c7;
-}
-
-.theme-default .cv-item.continued::before,
-.theme-default .cv-item.toBeContinued::after {
-	content: " \21e2 ";
-	color: #999;
-}
-
-.theme-default .cv-item.toBeContinued {
-	border-right-style: none;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.theme-default .cv-item.isHovered.hasUrl {
-	text-decoration: underline;
-}
-
-.theme-default .cv-item.continued {
-	border-left-style: none;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.cv-item.span3,
-.cv-item.span4,
-.cv-item.span5,
-.cv-item.span6,
-.cv-item.span7 {
-	text-align: center;
-}
-
-/* Event Times */
-
-.theme-default .cv-item .startTime,
-.theme-default .cv-item .endTime {
-	font-weight: bold;
-	color: #666;
-}
-
-/* Drag and drop */
-
-.theme-default .cv-day.draghover {
-	box-shadow: inset 0 0 0.2em 0.2em yellow;
-}
-
-/**** Official US Holidays ****/
-
-/* New Year's Day - January 1 */
-.cv-wrapper.holiday-us-official .d01-01 .cv-day-number::before {
-	content: "\1F37E";
-}
-
-/* Christmas Day - December 25 */
-.cv-wrapper.holiday-us-official .d12-25 .cv-day-number::before {
-	content: "\1F384";
-}
+	input:focus{
+		outline: 0;
+	}
 
 </style>
-    
-  <script>
-  import LeftMenu from '@/components/LeftMenu.vue';
-  import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
-  
-    export default {
-      name: 'TeampageView',
-      components: {
-        LeftMenu,
-        CalendarView,
-        CalendarViewHeader,
-      },
-      methods: {
-        setShowDate(d) {
-          this.showDate = d;
+
+<script setup>
+import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
+import "../../node_modules/vue-simple-calendar/dist/style.css"
+//import "../../node_modules/vue-simple-calendar/dist/css/default.css"
+import "../../node_modules/vue-simple-calendar/dist/css/gcal.css"
+import "../../node_modules/vue-simple-calendar/dist/css/holidays-us.css"
+
+import { onMounted, reactive, computed } from "vue"
+import LeftMenu from "@/components/LeftMenu.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue"
+
+const thisMonth = (d, h = 0, m = 0) => {
+    const t = new Date()
+    return new Date(t.getFullYear(), t.getMonth(), d, h, m)
+}
+
+const state = reactive({
+    showDate: thisMonth(1),
+    message: "",
+    startingDayOfWeek: 0,
+    disablePast: false,
+    disableFuture: false,
+    displayPeriodUom: "month",
+    displayPeriodCount: 1,
+    displayWeekNumbers: false,
+    showTimes: true,
+    selectionStart: undefined,
+    selectionEnd: undefined,
+    newItemTitle: "",
+    newItemStartDate: "",
+    newItemEndDate: "",
+    useDefaultTheme: true,
+    useHolidayTheme: true,
+    useTodayIcons: false,
+    items: [
+        {
+            id: "e1",
+            startDate: thisMonth(15, 18, 30),
         },
-      }
-    }
-  </script>
-    
+        {
+            id: "e2",
+            startDate: thisMonth(15),
+            title: "Single-day item with a long title",
+        },
+        {
+            id: "e3",
+            startDate: thisMonth(7, 9, 25),
+            endDate: thisMonth(10, 16, 30),
+            title: "Multi-day item with a long title and times",
+        },
+        //... the rest of your items
+    ]
+})
+
+const userLocale = computed(() => CalendarMath.getDefaultBrowserLocale())
+
+const dayNames = computed(() => CalendarMath.getFormattedWeekdayNames(userLocale.value, "long", 0))
+
+const themeClasses = computed(() => ({
+    "theme-default": state.useDefaultTheme,
+    "holiday-us-traditional": state.useHolidayTheme,
+    "holiday-us-official": state.useHolidayTheme,
+}))
+
+const myDateClasses = () => {
+    const o = {}
+    const theFirst = thisMonth(1)
+    const ides = [2, 4, 6, 9].includes(theFirst.getMonth()) ? 15 : 13
+    const idesDate = thisMonth(ides)
+    o[CalendarMath.isoYearMonthDay(idesDate)] = ["ides"]
+    o[CalendarMath.isoYearMonthDay(thisMonth(21))] = ["do-you-remember", "the-21st"]
+    return o
+}
+
+onMounted(() => {
+    state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+    state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+})
+
+const periodChanged = () => {}
+
+const onClickDay = (d) => {
+    state.selectionStart = undefined
+    state.selectionEnd = undefined
+    state.message = `You clicked: ${d.toLocaleDateString()}`
+}
+
+const onClickItem = (e) => {
+    state.message = `You clicked: ${e.title}`
+}
+
+const setShowDate = (d) => {
+    state.message = `Changing calendar view to ${d.toLocaleDateString()}`
+    state.showDate = d
+}
+
+const setSelection = (dateRange) => {
+    state.selectionEnd = dateRange[1]
+    state.selectionStart = dateRange[0]
+}
+
+const finishSelection = (dateRange) => {
+    setSelection(dateRange)
+    state.message = `You selected: ${state.selectionStart?.toLocaleDateString() ?? "n/a"} - ${state.selectionEnd?.toLocaleDateString() ?? "n/a"}`
+}
+
+const onDrop = (item, date) => {
+    state.message = `You dropped ${item.id} on ${date.toLocaleDateString()}`
+    const eLength = CalendarMath.dayDiff(item.startDate, date)
+    item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
+    item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
+}
+
+const clickTestAddItem = () => {
+    state.items.push({
+        startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
+        endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
+        title: state.newItemTitle,
+        id: "e" + Math.random().toString(36).substring(2, 11),
+    })
+    state.message = "You added a calendar item!"
+}
+</script>

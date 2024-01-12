@@ -6,10 +6,10 @@
                 <div id="border-text">로그인</div>
                 <div class="field-view">
                     <div class="input-text">이메일</div>
-                    <InputText />
+                    <input type="text">
 
                     <div class="input-text">비밀번호</div>
-                    <InputPassword />
+                    <input type="password">
                 </div>
             </div>
 
@@ -103,12 +103,10 @@ input:focus{
     
 <script>
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import InputPassword from '@/components/InputPassword.vue';
-import InputText from '@/components/InputText.vue';
 
 export default {
     name: 'LoginView',
-    components: { InputPassword, InputText, ButtonComponent }
+    components: { ButtonComponent }
 }
 </script>
     

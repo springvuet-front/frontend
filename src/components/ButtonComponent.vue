@@ -21,12 +21,16 @@
 export default {
   name: 'ButtonComponent',
   props: {
-    parameter: String,
+    parameter: {
+      type: String,
+      default: "",
+    },
     msg: String
   },
   methods:{
     onClickRedirect(parameter){
-        this.$router.push(`/${parameter}`).catch(()=>{});
+        if(parameter !== "")
+          this.$router.push(`/${parameter}`).catch(()=>{});
     }
   }
 }
