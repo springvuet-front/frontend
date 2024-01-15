@@ -1,76 +1,127 @@
 <template>
-  <LeftMenu />
+    <LeftMenu />
 
-  <div id="container">
-	<div class="control">
-		<div class="select">
-			<select v-model="state.startingDayOfWeek">
-				<option v-for="(d, index) in dayNames" :key="index" :value="index">
-					{{ d }}
-				</option>
-			</select>
-		</div>
-	</div>
+    <div id="container">
+        <div class="flex-left">
+            <div class="project-info">
+                <div class="team-info">
+                    <h2>팀명</h2>
+                    <ButtonComponent msg="수정하기" />
+                </div>
 
-	<div class="calendar-controls">
-		<div class="box">
-			<div class="field">
-				<label class="label">Title</label>
-				<div class="control">
-					<input v-model="state.newItemTitle" type="text" class="input" />
-				</div>
-			</div>
 
-			<div class="field">
-				<label class="label">Start date</label>
-				<div class="control">
-					<input v-model="state.newItemStartDate" class="input" type="date" />
-				</div>
-			</div>
+                <div class="project-date">
+                    <div class="project-start">
+                        <h5>시작일</h5>
+                        <input v-model="state.newItemProjectStartDate" class="input" type="date" />
+                    </div>
+                    <div class="project-end">
+                        <h5>마감일</h5>
+                        <input v-model="state.newItemProjectEndDate" class="input" type="date" />
+                    </div>
+                </div>
 
-			<div class="field">
-				<label class="label">End date</label>
-				<div class="control">
-					<input v-model="state.newItemEndDate" class="input" type="date" />
-				</div>
-			</div>
-			<ButtonComponent class="button is-info" @click="clickTestAddItem" msg="일정 추가하기" />
-			<button class="button is-info" @click="clickTestAddItem">Add Item</button>
-		</div>
-	</div>
+                <div class="end-bar">
+                    <h5>프로젝트 마감까지</h5>
+                    <div id="bar"></div>
+                    <h5>D-44</h5>
+                </div>
+                
+                <div class="btn-container">
+                    <ButtonComponent msg="북마크" />
+                    <ButtonComponent msg="깃허브" />
+                </div>
+            </div>
 
-    <div class="calendar-parent">
-		<CalendarView
-			:items="state.items"
-			:show-date="state.showDate"
-			:time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-			:enable-drag-drop="true"
-			:disable-past="state.disablePast"
-			:disable-future="state.disableFuture"
-			:show-times="state.showTimes"
-			:date-classes="myDateClasses()"
-			:display-period-uom="state.displayPeriodUom"
-			:display-period-count="state.displayPeriodCount"
-			:starting-day-of-week="state.startingDayOfWeek"
-			:class="themeClasses"
-			:period-changed-callback="periodChanged"
-			:current-period-label="state.useTodayIcons ? 'icons' : ''"
-			:displayWeekNumbers="state.displayWeekNumbers"
-			:enable-date-selection="true"
-			:selection-start="state.selectionStart"
-			:selection-end="state.selectionEnd"
-			@date-selection-start="setSelection"
-			@date-selection="setSelection"
-			@date-selection-finish="finishSelection"
-			@drop-on-date="onDrop"
-			@click-date="onClickDay"
-			@click-item="onClickItem"
-		>
-			<template #header="{ headerProps }">
-				<CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
-			</template>
-		</CalendarView>
-		</div>
+            <div class="calendar-container">
+                <div class="calendar">
+                    <CalendarView
+                        :items="state.items"
+                        :show-date="state.showDate"
+                        :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
+                        :enable-drag-drop="true"
+                        :disable-past="state.disablePast"
+                        :disable-future="state.disableFuture"
+                        :show-times="state.showTimes"
+                        :date-classes="myDateClasses()"
+                        :display-period-uom="state.displayPeriodUom"
+                        :display-period-count="state.displayPeriodCount"
+                        :starting-day-of-week="state.startingDayOfWeek"
+                        :class="themeClasses"
+                        :period-changed-callback="periodChanged"
+                        :current-period-label="state.useTodayIcons ? 'icons' : ''"
+                        :displayWeekNumbers="state.displayWeekNumbers"
+                        :enable-date-selection="true"
+                        :selection-start="state.selectionStart"
+                        :selection-end="state.selectionEnd"
+                        @date-selection-start="setSelection"
+                        @date-selection="setSelection"
+                        @date-selection-finish="finishSelection"
+                        @drop-on-date="onDrop"
+                        @click-date="onClickDay"
+                        @click-item="onClickItem"
+                    >
+                        <template #header="{ headerProps }">
+                            <CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
+                        </template>
+                    </CalendarView>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-right">
+            <div class="right-menu">
+                <h3>팀원</h3>
+                <hr>
+                <div class="members">
+                    <div class="members-left">
+                        <div class="member1">팀원1</div>
+                        <div class="member2">팀원2</div>
+                        <div class="member3">팀원3</div>
+                    </div>
+
+                    <div class="members-right">
+                        <div class="member4">팀원4</div>
+                        <div class="member5">팀원5</div>
+                        <div class="member6">팀원6</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-menu">
+                <h3>팀원</h3>
+                <hr>
+            </div>
+            
+            <div class="right-menu">
+                <div class="calendar-controls">
+                    <div class="box">
+                        <div class="field">
+                            <label class="label">Title</label>
+                            <div class="control">
+                                <input v-model="state.newItemTitle" type="text" class="input" />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Start date</label>
+                            <div class="control">
+                                <input v-model="state.newItemStartDate" class="input" type="date" />
+                            </div>
+                        </div>
+
+                    <div class="field">
+                        <label class="label">End date</label>
+                        <div class="control">
+                            <input v-model="state.newItemEndDate" class="input" type="date" />
+                        </div>
+                    </div>
+                    <ButtonComponent class="button is-info" @click="clickTestAddItem" msg="일정 추가하기" />
+                    <button class="button is-info" @click="clickTestAddItem">Add Item</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 </template>
 
@@ -79,16 +130,90 @@
 https://madewithvuejs.com/vue-simple-calendar
 https://github.com/richardtallent/vue-simple-calendar 
 */
-  .container{
-    padding: 20px 90px;
-  }
-  .calendar-controls{
-	background-color: antiquewhite;
+  #container{
+    padding: 2vh 0px 2vh 90px;
+    height: 96vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .calendar-parent{
-	width: 40vw;
-	height: 50vh;
+  .flex-left{
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    padding: 10px
+  }
+
+  .flex-right{
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    padding: 0px 10px;
+  }
+
+  .project-info{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-date{
+    display: flex;
+    justify-content: center;
+  }
+
+  .project-start, .project-end{
+    display: flex;
+    align-items: center;
+    padding: 0px 30px 0px 30px;
+  }
+
+  .team-info{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .end-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 20px;
+  }
+
+  .btn-container{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+  }
+
+  #bar{
+    width: 300px;
+    height: 10px;
+    background-color: aqua;
+  }
+
+  .right-menu{
+    height: 180px;
+    padding: 10px;
+    margin: 10px;
+    background-color: #e1e1e1;
+  }
+
+  .members{
+    display: flex;
+    padding: 20px;
+  }
+
+  .calendar-container{
+    display: flex;
+    justify-content: center;
+  }
+
+  .calendar{
+	width: 60vw;
+	height: 60vh;
+    display: flex;
+    justify-content: center;
   }
 
   input{
@@ -97,18 +222,18 @@ https://github.com/richardtallent/vue-simple-calendar
     border: 0;
     background-color: #C6C7FF;
     padding-left: 10px;
-}
+    }
 
-	input:focus{
-		outline: 0;
-	}
+    input:focus{
+        outline: 0;
+    }
 
 </style>
 
 <script setup>
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import "../../node_modules/vue-simple-calendar/dist/style.css"
-//import "../../node_modules/vue-simple-calendar/dist/css/default.css"
+import "../../node_modules/vue-simple-calendar/dist/css/default.css"
 import "../../node_modules/vue-simple-calendar/dist/css/gcal.css"
 import "../../node_modules/vue-simple-calendar/dist/css/holidays-us.css"
 
@@ -140,28 +265,24 @@ const state = reactive({
     useHolidayTheme: true,
     useTodayIcons: false,
     items: [
-        {
-            id: "e1",
-            startDate: thisMonth(15, 18, 30),
-        },
-        {
-            id: "e2",
-            startDate: thisMonth(15),
-            title: "Single-day item with a long title",
-        },
-        {
-            id: "e3",
-            startDate: thisMonth(7, 9, 25),
-            endDate: thisMonth(10, 16, 30),
-            title: "Multi-day item with a long title and times",
-        },
+        // {
+        //     id: "e1",
+        //     startDate: thisMonth(15, 18, 30),
+        // },
+        // {
+        //     id: "e2",
+        //     startDate: thisMonth(15),
+        //     title: "Single-day item with a long title",
+        // },
+        // {
+        //     id: "e3",
+        //     startDate: thisMonth(7, 9, 25),
+        //     endDate: thisMonth(10, 16, 30),
+        //     title: "Multi-day item with a long title and times",
+        // },
         //... the rest of your items
     ]
 })
-
-const userLocale = computed(() => CalendarMath.getDefaultBrowserLocale())
-
-const dayNames = computed(() => CalendarMath.getFormattedWeekdayNames(userLocale.value, "long", 0))
 
 const themeClasses = computed(() => ({
     "theme-default": state.useDefaultTheme,
@@ -182,6 +303,8 @@ const myDateClasses = () => {
 onMounted(() => {
     state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
     state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+    state.newItemProjectStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+    state.newItemProjectEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 })
 
 const periodChanged = () => {}
