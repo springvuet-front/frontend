@@ -335,10 +335,10 @@ export default {
 
 <script setup>
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
-import "../../node_modules/vue-simple-calendar/dist/style.css"
-import "../../node_modules/vue-simple-calendar/dist/css/default.css"
-import "../../node_modules/vue-simple-calendar/dist/css/gcal.css"
-import "../../node_modules/vue-simple-calendar/dist/css/holidays-us.css"
+import "../calendar-style/style.css"
+import "../calendar-style/default.css"
+import "../calendar-style/gcal.css"
+import "../calendar-style/holidays-us.css"
 
 import { onMounted, reactive, computed } from "vue"
 import LeftMenu from "@/components/LeftMenu.vue"
