@@ -29,6 +29,38 @@ a:hover, a:active {
   text-decoration: none;
 }
 
+.modal-wrap {
+position: fixed;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.4);
+}
+/* modal or popup */
+.modal-container {
+position: relative;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 85vw;
+height: 85vh;
+background: #fff;
+border-radius: 10px;
+padding: 20px;
+box-sizing: border-box;
+display: flex;
+}
+
+.modal-info{
+  width: 85vw;
+}
+
+.close-btn{
+  width: 30px;
+  height: 30px;
+}
+
 </style>
 
 <script>
