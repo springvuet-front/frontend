@@ -5,19 +5,19 @@
         <div class="flex-left">
             <div class="project-info">
                 <div class="team-info">
-                    <h2>팀명</h2>
-                    <ButtonComponent msg="수정하기" />
+                    <h2>프로젝트명</h2>
+                    <ButtonComponent msg="수정하기" @click="modalOpen" />
                 </div>
 
 
                 <div class="project-date">
                     <div class="project-start">
-                        <h5>시작일</h5>
-                        <input v-model="state.newItemProjectStartDate" class="input" type="date" />
+                        <h5>프로젝트 시작일</h5>
+                        <input v-model="state.newItemProjectStartDate" type="date" />
                     </div>
                     <div class="project-end">
-                        <h5>마감일</h5>
-                        <input v-model="state.newItemProjectEndDate" class="input" type="date" />
+                        <h5>프로젝트 마감일</h5>
+                        <input v-model="state.newItemProjectEndDate" type="date" />
                     </div>
                 </div>
 
@@ -28,8 +28,8 @@
                 </div>
                 
                 <div class="btn-container">
-                    <ButtonComponent msg="북마크" />
-                    <ButtonComponent msg="깃허브" />
+                    <ButtonComponent msg="북마크" parameter="bookmark"/>
+                    <ButtonComponent msg="깃허브" @click="onclickgithub" />
                 </div>
             </div>
 
@@ -39,7 +39,6 @@
                         :items="state.items"
                         :show-date="state.showDate"
                         :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-                        :enable-drag-drop="true"
                         :disable-past="state.disablePast"
                         :disable-future="state.disableFuture"
                         :show-times="state.showTimes"
@@ -57,7 +56,6 @@
                         @date-selection-start="setSelection"
                         @date-selection="setSelection"
                         @date-selection-finish="finishSelection"
-                        @drop-on-date="onDrop"
                         @click-date="onClickDay"
                         @click-item="onClickItem"
                     >
@@ -70,8 +68,8 @@
         </div>
 
         <div class="flex-right">
-            <div class="right-menu">
-                <h3>팀원</h3>
+            <div class="right-menu-members">
+                <h3>팀명</h3>
                 <hr>
                 <div class="members">
                     <div class="members-left">
@@ -88,41 +86,55 @@
                 </div>
             </div>
 
-            <div class="right-menu">
-                <h3>팀원</h3>
+            <div class="right-menu-schedulelists">
+                <h3>주요 일정</h3>
                 <hr>
+
+                <div class="schedule-list">
+                    <ul id="ex">
+                        <li v-for="item in state.items" v-bind:key="item.id">
+                            {{ item.title }}
+                        </li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="right-menu">
+            <div class="right-menu-addschedule">
+                <h3>일정 추가하기</h3>
+                <hr>
+
                 <div class="calendar-controls">
                     <div class="box">
                         <div class="field">
-                            <label class="label">Title</label>
+                            <label class="label">일정명</label>
                             <div class="control">
                                 <input v-model="state.newItemTitle" type="text" class="input" />
                             </div>
                         </div>
 
-                        <div class="field">
-                            <label class="label">Start date</label>
-                            <div class="control">
-                                <input v-model="state.newItemStartDate" class="input" type="date" />
+                        <div class="schedule-input-container">
+                            <div class="select-date">
+                                <label class="label">시작 날짜</label>
+                                <div class="control">
+                                    <input v-model="state.newItemStartDate" type="date" />
+                                </div>
+                            </div>
+
+                            <div class="select-date">
+                                <label class="label">마감 날짜</label>
+                                <div class="control">
+                                    <input v-model="state.newItemEndDate" type="date" />
+                                </div>
                             </div>
                         </div>
 
-                    <div class="field">
-                        <label class="label">End date</label>
-                        <div class="control">
-                            <input v-model="state.newItemEndDate" class="input" type="date" />
-                        </div>
-                    </div>
                     <ButtonComponent class="button is-info" @click="clickTestAddItem" msg="일정 추가하기" />
-                    <button class="button is-info" @click="clickTestAddItem">Add Item</button>
                     </div>
                 </div>
             </div>
         </div>
 	</div>
+
 </template>
 
 <style scoped>
@@ -192,10 +204,17 @@ https://github.com/richardtallent/vue-simple-calendar
     background-color: aqua;
   }
 
-  .right-menu{
-    height: 180px;
-    padding: 10px;
-    margin: 10px;
+  .right-menu-addschedule{
+    height: 220px;
+    padding: 20px;
+    margin: 5px;
+    background-color: #e1e1e1;
+  }
+
+  .right-menu-members, .right-menu-schedulelists{
+    height: 130px;
+    padding: 20px;
+    margin: 5px;
     background-color: #e1e1e1;
   }
 
@@ -209,6 +228,41 @@ https://github.com/richardtallent/vue-simple-calendar
     justify-content: center;
   }
 
+  ul{
+        padding: 0;
+    }
+
+  .schedule-list{
+    height: 150px;
+    overflow-y: auto;
+  }
+
+    .schedule-list::-webkit-scrollbar {
+        width: 10px;
+    }
+  
+    .schedule-list::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    }
+
+    .schedule-list::-webkit-scrollbar-track {
+        background-color: rgb(199, 199, 199);
+        border-radius: 10px;
+    }
+
+    .select-date{
+        display: flex;
+        flex-direction: column;
+        margin-right: 5vw;
+    }
+
+    .input{
+        width: 20vw;
+    }
+
   .calendar{
 	width: 60vw;
 	height: 60vh;
@@ -216,16 +270,38 @@ https://github.com/richardtallent/vue-simple-calendar
     justify-content: center;
   }
 
+  .schedule-input-container{
+    display: flex;
+    padding: 0px 10px 10px 10px;
+  }
+
+  .field{
+    padding: 10px;
+  }
+
   input{
-    width: 100px;
     height: 30px;
     border: 0;
     background-color: #C6C7FF;
     padding-left: 10px;
+    border-radius: 3px;
     }
 
     input:focus{
         outline: 0;
+    }
+
+    h3{
+        margin: 0;
+    }
+
+    hr{
+        background-color: #D9D9D9;
+        border-width: 2px 0 0 0;
+    }
+
+    ul{
+        margin: 0;
     }
 
 </style>
@@ -265,10 +341,11 @@ const state = reactive({
     useHolidayTheme: true,
     useTodayIcons: false,
     items: [
-        // {
-        //     id: "e1",
-        //     startDate: thisMonth(15, 18, 30),
-        // },
+         {
+             id: "e1",
+             startDate: thisMonth(15, 18, 30),
+             title: "그냥"
+         },
         // {
         //     id: "e2",
         //     startDate: thisMonth(15),
@@ -334,12 +411,6 @@ const finishSelection = (dateRange) => {
     state.message = `You selected: ${state.selectionStart?.toLocaleDateString() ?? "n/a"} - ${state.selectionEnd?.toLocaleDateString() ?? "n/a"}`
 }
 
-const onDrop = (item, date) => {
-    state.message = `You dropped ${item.id} on ${date.toLocaleDateString()}`
-    const eLength = CalendarMath.dayDiff(item.startDate, date)
-    item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
-    item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
-}
 
 const clickTestAddItem = () => {
     state.items.push({
@@ -349,5 +420,9 @@ const clickTestAddItem = () => {
         id: "e" + Math.random().toString(36).substring(2, 11),
     })
     state.message = "You added a calendar item!"
+}
+
+const onclickgithub = () => {
+    window.open('https://github.com/springvuet-front/')
 }
 </script>
