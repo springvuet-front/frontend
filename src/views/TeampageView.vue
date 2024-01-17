@@ -50,12 +50,6 @@
                         :period-changed-callback="periodChanged"
                         :current-period-label="state.useTodayIcons ? 'icons' : ''"
                         :displayWeekNumbers="state.displayWeekNumbers"
-                        :enable-date-selection="true"
-                        :selection-start="state.selectionStart"
-                        :selection-end="state.selectionEnd"
-                        @date-selection-start="setSelection"
-                        @date-selection="setSelection"
-                        @date-selection-finish="finishSelection"
                         @click-date="onClickDay"
                         @click-item="onClickItem"
                     >
@@ -108,7 +102,7 @@
                         <div class="field">
                             <label class="label">일정명</label>
                             <div class="control">
-                                <input v-model="state.newItemTitle" type="text" class="input" />
+                                <input v-model="state.newItemTitle" type="text" class="input-text" />
                             </div>
                         </div>
 
@@ -134,6 +128,22 @@
             </div>
         </div>
 	</div>
+    
+    <div class="modal-wrap" v-show="modalCheck">
+    <div class="modal-container">
+        <div class="modal-info">
+            <ModifyWindow />
+        </div>
+    
+        <div class="modal-btn">
+            <div class="close-btn" @click="modalOpen">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
+    </div>
+    </div>
 
 </template>
 
@@ -183,6 +193,7 @@ https://github.com/richardtallent/vue-simple-calendar
   .team-info{
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   .end-bar{
@@ -259,7 +270,7 @@ https://github.com/richardtallent/vue-simple-calendar
         margin-right: 5vw;
     }
 
-    .input{
+    .input-text{
         width: 20vw;
     }
 
@@ -306,6 +317,22 @@ https://github.com/richardtallent/vue-simple-calendar
 
 </style>
 
+<script>
+export default {
+  name: 'TeampageView',
+  data() {
+    return {
+        modalCheck: false,
+    }
+    },
+    methods: {
+    modalOpen() {
+        this.modalCheck = !this.modalCheck
+    }
+    }
+}
+</script>
+
 <script setup>
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import "../../node_modules/vue-simple-calendar/dist/style.css"
@@ -314,8 +341,9 @@ import "../../node_modules/vue-simple-calendar/dist/css/gcal.css"
 import "../../node_modules/vue-simple-calendar/dist/css/holidays-us.css"
 
 import { onMounted, reactive, computed } from "vue"
-import LeftMenu from "@/components/LeftMenu.vue";
+import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
+import ModifyWindow from "@/components/ModifyWindow.vue"
 
 const thisMonth = (d, h = 0, m = 0) => {
     const t = new Date()
@@ -332,8 +360,6 @@ const state = reactive({
     displayPeriodCount: 1,
     displayWeekNumbers: false,
     showTimes: true,
-    selectionStart: undefined,
-    selectionEnd: undefined,
     newItemTitle: "",
     newItemStartDate: "",
     newItemEndDate: "",
@@ -386,12 +412,6 @@ onMounted(() => {
 
 const periodChanged = () => {}
 
-const onClickDay = (d) => {
-    state.selectionStart = undefined
-    state.selectionEnd = undefined
-    state.message = `You clicked: ${d.toLocaleDateString()}`
-}
-
 const onClickItem = (e) => {
     state.message = `You clicked: ${e.title}`
 }
@@ -401,25 +421,23 @@ const setShowDate = (d) => {
     state.showDate = d
 }
 
-const setSelection = (dateRange) => {
-    state.selectionEnd = dateRange[1]
-    state.selectionStart = dateRange[0]
-}
-
-const finishSelection = (dateRange) => {
-    setSelection(dateRange)
-    state.message = `You selected: ${state.selectionStart?.toLocaleDateString() ?? "n/a"} - ${state.selectionEnd?.toLocaleDateString() ?? "n/a"}`
-}
-
-
 const clickTestAddItem = () => {
-    state.items.push({
-        startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
-        endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
-        title: state.newItemTitle,
-        id: "e" + Math.random().toString(36).substring(2, 11),
-    })
-    state.message = "You added a calendar item!"
+    if (state.newItemTitle == "") alert("일정명을 입력해주세요!")
+
+    else{
+        state.items.push({
+            startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
+            endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
+            title: state.newItemTitle,
+            id: "e" + Math.random().toString(36).substring(2, 11),
+        })
+        state.message = "You added a calendar item!"
+
+        var el = document.getElementsByClassName('input-text');
+        for(var i=0; i<el.length; i++){
+            el[i].value = '';
+        }
+    }
 }
 
 const onclickgithub = () => {
