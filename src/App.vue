@@ -50,6 +50,7 @@ border-radius: 10px;
 padding: 20px;
 box-sizing: border-box;
 display: flex;
+flex-direction: column;
 }
 
 .modal-info{
