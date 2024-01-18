@@ -41,13 +41,14 @@
             </div>
           </div>
         </div>
-        <button type="button" class="showNextbtn" @click="showCurrentNext" :disabled="currentEndIndex === currentProjectList.length || currentProjectList.length <= 3">▶</button>
+        <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
+        <button type="button" class="showNextbtn" @click="showCurrentNext" :disabled="currentEndIndex === currentProjectList.length + 1 || currentProjectList.length <= 3">▶</button>
       </div>
     </div>
     <div class="bproject complete">
       <div class="title">진행 완료된 프로젝트</div>
       <div class="projectlist">
-        <button type="button" class="showPastbtn" :disabled="completeStartIndex===0">◀</button>
+        <button type="button" class="showPastbtn" @click="showCompletePast" :disabled="completeStartIndex===0">◀</button>
         <div v-for="(item, index) in visibleCompleteProject" :key="index">
           <!-- <component :is="item.component" :data="item.data"></component> -->
           <div class="projectBox">
@@ -63,7 +64,7 @@
             </div>
           </div>
         </div>
-        <button type="button" class="showNextbtn">▶</button>
+        <button type="button" class="showNextbtn" @click="showCompleteNext" :disabled="completeEndIndex === completeProjectList.length || completeProjectList.length <= 3">▶</button>
       </div>
     </div>
   </div>
@@ -265,6 +266,20 @@
     font-size: 12pt;
     font-weight: medium;
 }
+/* addProjectBtn */
+.addProjectBtn {
+  width: 150px;
+  height: 150px;
+  background-color: #D2DAFF;
+  border-radius: 5px;
+  display: block;
+  font-size: 12pt;
+  margin: 20px;
+  border: 0;
+}
+.addProjectBtn:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
 </style>
     
 <script>
@@ -290,7 +305,7 @@ export default {
       toDos: [],
       currentProjectList: [
         { 
-          // component: ProjectBox, 
+          // component: ProjectBox,
           data: { project_field: "웹", 
             project_mypart: "백", 
             project_name: "1", 
@@ -301,6 +316,7 @@ export default {
         },
         { 
           // component: ProjectBox, 
+          
           data: { project_field: "웹", 
             project_mypart: "프론트", 
             project_name: "2", 
@@ -311,6 +327,7 @@ export default {
         },
         { 
           // component: ProjectBox, 
+          
           data: { project_field: "웹", 
             project_mypart: "프론트", 
             project_name: "3", 
@@ -321,6 +338,7 @@ export default {
         },
         { 
           // component: ProjectBox, 
+          
           data: { project_field: "앱", 
             project_mypart: "프론트", 
             project_name: "4", 
@@ -331,6 +349,7 @@ export default {
         },
         { 
           // component: ProjectBox, 
+          
           data: { project_field: "앱", 
             project_mypart: "백", 
             project_name: "5", 
@@ -341,6 +360,7 @@ export default {
         },
         { 
           // component: ProjectBox, 
+          
           data: { project_field: "웹", 
             project_mypart: "프론트", 
             project_name: "6", 
@@ -381,6 +401,26 @@ export default {
             project_date_end: "2022-05-21",
           }
         },
+        { 
+          // component: ProjectBox, 
+          data: { project_field: "웹", 
+            project_mypart: "프론트", 
+            project_name: "프로젝트4", 
+            project_team: "팀4", 
+            project_date_start: "2022-03-21",
+            project_date_end: "2022-05-21",
+          }
+        },
+        { 
+          // component: ProjectBox, 
+          data: { project_field: "데분", 
+            project_mypart: "프론트", 
+            project_name: "프로젝트5", 
+            project_team: "팀5", 
+            project_date_start: "2022-03-21",
+            project_date_end: "2022-05-21",
+          }
+        },
       ],
       currentProjectPage: 1,
       currentStartIndex: 0,
@@ -392,7 +432,6 @@ export default {
   },
   methods: {
     addToDoList(){
-      // this.toDos.push('<input type="checkbox" v-model="checked"><input type="text" v-model="inputToDo" :disabled="checked">');
       this.toDos.push(ToDo);
     },
     showCurrentPast(){
@@ -402,16 +441,22 @@ export default {
       }
     },
     showCurrentNext(){
-      if(this.currentEndIndex != this.currentProjectList.length){
+      if(this.currentEndIndex != this.currentProjectList.length + 1){
         this.currentStartIndex++;
         this.currentEndIndex++;
       }
     },
     showCompletePast(){
-
+      if(this.completeStartIndex != 0){
+        this.completeStartIndex--;
+        this.completeEndIndex--;
+      }
     },
     showCompleteNext(){
-
+      if(this.completeEndIndex != this.completeProjectList.length){
+        this.completeStartIndex++;
+        this.completeEndIndex++;
+      }
     },
     
   },
@@ -422,13 +467,7 @@ export default {
     },
     visibleCompleteProject(){
       return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
-    },
-    // setEndIndex(){
-    //   if(this.currentProjectList.length <= 3) {
-    //     this.currentEndIndex = this.currentProjectList.length;
-    //     return this.currentEndIndex;
-    //   }
-    // }
+    }
   }
 }
 </script>
