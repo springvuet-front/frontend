@@ -13,11 +13,11 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <input v-model="state.newItemProjectStartDate" type="date" />
+                        <div>{{ ProjectStartDate }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <input v-model="state.newItemProjectEndDate" type="date" />
+                        <div>{{ ProjectEndDate }}</div>
                     </div>
                 </div>
 
@@ -130,19 +130,80 @@
 	</div>
     
     <div class="modal-wrap" v-show="modalCheck">
-    <div class="modal-container">
-        <div class="modal-info">
-            <ModifyWindow />
-        </div>
-    
-        <div class="modal-btn">
-            <div class="close-btn" @click="modalOpen">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
+        <div class="modal-container">
+            <div class="flex-box">
+                <div class="modal-info">
+                    <h2>수정하기</h2>
+
+                    <div class="container-modal-window">
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>프로젝트명</h4>
+                        </div>
+                        <div>
+                        <input type="text" value="${exProjectName}" id="projectname" class="input-long"/>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>팀명</h4>
+                        </div>
+                        <div>
+                        <input type="text" id="teamname" class="input-long"/>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>팀원</h4>
+                        </div>
+                        <div>
+                        <input type="text" class="input-long"/>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>프로젝트 기간</h4>
+                        </div>
+                        <div class="date-container">
+                        <div class="project-start">
+                            <h5>프로젝트 시작일</h5>
+                                <input v-model="newProjectStartDate" id="startdate" type="date" />
+                            </div>
+                            <div class="project-end">
+                                <h5>프로젝트 마감일</h5>
+                                <input v-model="newProjectEndDate" id="enddate" type="date" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>깃허브 링크</h4>
+                        </div>
+                        <div>
+                        <input type="text" id="githublink" value="https://github.com/springvuet-front/" class="input-long"/>
+                        </div>
+                    </div>
+
+                    </div>
+                    <div class="btn-container">
+                        <ButtonComponent msg="저장하기" @click="saveBtn"/>
+                    </div>
+                </div>
+            
+                <div class="modal-btn">
+                    <div class="close-btn" @click="modalOpen">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        
     </div>
 
 </template>
@@ -315,6 +376,73 @@ https://github.com/richardtallent/vue-simple-calendar
         margin: 0;
     }
 
+    .flex-box{
+        display: flex;
+    }
+
+    .modal-info{
+        width: 80vw;
+        height: 70vh;
+    }
+
+    h2, h4{
+    margin: 0;
+  }
+
+  .label-text{
+    width: 10vw;
+  }
+
+input{
+  height: 30px;
+  border: 0;
+  background-color: #C6C7FF;
+  padding-left: 10px;
+  border-radius: 3px;
+  }
+
+  input:focus{
+      outline: 0;
+  }
+
+  .container-modal-window{
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .input-container{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .input-long{
+    width: 60vw;
+  }
+
+  .btn-container{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+  }
+
+  .date-container{
+    display: flex;
+    width: 60vw;
+    justify-content: space-around;
+  }
+
+  .project-start, .project-end{
+    display: flex;
+    align-items: center;
+    padding: 0px 30px 0px 30px;
+  }
+
 </style>
 
 <script>
@@ -323,13 +451,44 @@ export default {
   data() {
     return {
         modalCheck: false,
+        exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
+        exTeamName: '스프링뷰트',
+        newProjectStartDate: '',
+        newProjectEndDate: '',
+        ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
+        ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
     }
     },
     methods: {
-    modalOpen() {
-        this.modalCheck = !this.modalCheck
-    }
-    }
+        modalOpen() {
+            this.modalCheck = !this.modalCheck
+            const projectNameInput = document.getElementById('projectname');
+            const teamNameInput = document.getElementById('teamname');
+            
+            projectNameInput.value = this.exProjectName;
+            teamNameInput.value = this.exTeamName;
+        },
+
+        saveBtn() {
+            const projectNameInput = document.getElementById('projectname');
+            const teamNameInput = document.getElementById('teamname');
+            //const teamMemberInput = document.getElementById('teammember');
+            const projectStartDateInput = document.getElementById('startdate');
+            const projectEndDateInput = document.getElementById('enddate');
+            const githubLinkInput = document.getElementById('githublink');
+
+            const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
+            const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
+            
+            //teamMemberInput.value = '하암';
+            projectStartDateInput.value = this.newProjectStartDate;
+            projectEndDateInput.value = this.newProjectEndDate;
+            githubLinkInput.value = '흠';
+
+            console.log(projectName); //변경하는 이름
+            console.log(teamName); //이것도
+        }
+    },
 }
 </script>
 
@@ -343,7 +502,6 @@ import "../calendar-style/holidays-us.css"
 import { onMounted, reactive, computed } from "vue"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
-import ModifyWindow from "@/components/ModifyWindow.vue"
 
 const thisMonth = (d, h = 0, m = 0) => {
     const t = new Date()
