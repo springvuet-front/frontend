@@ -41,7 +41,9 @@
             </div>
           </div>
         </div>
-        <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
+        <router-link to="createnew">
+          <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
+        </router-link>
         <button type="button" class="showNextbtn" @click="showCurrentNext" :disabled="currentEndIndex === currentProjectList.length + 1 || currentProjectList.length <= 3">▶</button>
       </div>
     </div>
@@ -149,7 +151,7 @@
 }
 
 .title {
-  font-size: 12pt;
+  font-size: 17pt;
   text-align: left;
   font-weight: bold;
   padding: 1vw;
@@ -254,18 +256,23 @@
     border-radius: 5px;
     font-size: 9pt;
     text-indent: 7px;
-    line-height:1.5;
+    line-height:1.7;
     color: white;
+    padding-top: 5px;
+    overflow: hidden;
 }
 .project.name{
-    font-size: 15pt;
-    line-height:1.0;
-    font-weight: bold;
+  font-size: 17pt;
+  line-height:1.0;
+  font-weight: bold;
+  white-space: nowrap;
 }
+
 .project.team{
     font-size: 12pt;
     font-weight: medium;
 }
+
 /* addProjectBtn */
 .addProjectBtn {
   width: 150px;
@@ -298,6 +305,7 @@ export default {
     return {
       // checked: false,
       // inputToDo:'',
+      hoveredProjectName: 0,
       scheduleList: [ 
         { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
         { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
@@ -308,7 +316,7 @@ export default {
           // component: ProjectBox,
           data: { project_field: "웹", 
             project_mypart: "백", 
-            project_name: "1", 
+            project_name: "개발사이트 만들기", 
             project_team: "스프링뷰트", 
             project_date_start: "2022-03-21",
             project_date_end: "2022-05-21",
@@ -319,7 +327,7 @@ export default {
           
           data: { project_field: "웹", 
             project_mypart: "프론트", 
-            project_name: "2", 
+            project_name: "글씨넘치면어떻게하지", 
             project_team: "스프링뷰트", 
             project_date_start: "2022-03-21",
             project_date_end: "2022-05-21",
@@ -462,7 +470,6 @@ export default {
   },
   computed: {
     visibleCurrentProject(){
-      console.log('변화');
       return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
     },
     visibleCompleteProject(){

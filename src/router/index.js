@@ -6,6 +6,7 @@ import LoginView from "../views/LoginView.vue"
 import SignupView from "../views/SignupView.vue"
 import MypageView from "../views/MypageView.vue"
 import TeampageView from "../views/TeampageView.vue"
+import CreateNewView from "../views/CreateNewView.vue"
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -22,6 +23,7 @@ const routes = [
     //component: () => import(/* webpackChunkName: "about" */ '../views/BookmarkView.vue')
   //},
   //{ path: '/menu', name: 'menu', component: MenuView },
+  { path: '/createnew', name: 'createnew', component: CreateNewView }
 ]
 
 const router = createRouter({
