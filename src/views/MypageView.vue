@@ -259,12 +259,13 @@
     line-height:1.7;
     color: white;
     padding-top: 5px;
+    overflow: hidden;
 }
 .project.name{
-    font-size: 17pt;
-    line-height:1.0;
-    font-weight: bold;
-    white-space: nowrap;
+  font-size: 17pt;
+  line-height:1.0;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 .project.team{
@@ -304,6 +305,7 @@ export default {
     return {
       // checked: false,
       // inputToDo:'',
+      hoveredProjectName: 0,
       scheduleList: [ 
         { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
         { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
@@ -314,7 +316,7 @@ export default {
           // component: ProjectBox,
           data: { project_field: "웹", 
             project_mypart: "백", 
-            project_name: "글씨가 넘치면 어떻게하는게 좋을까", 
+            project_name: "개발사이트 만들기", 
             project_team: "스프링뷰트", 
             project_date_start: "2022-03-21",
             project_date_end: "2022-05-21",
@@ -325,7 +327,7 @@ export default {
           
           data: { project_field: "웹", 
             project_mypart: "프론트", 
-            project_name: "2", 
+            project_name: "글씨넘치면어떻게하지", 
             project_team: "스프링뷰트", 
             project_date_start: "2022-03-21",
             project_date_end: "2022-05-21",
@@ -468,7 +470,6 @@ export default {
   },
   computed: {
     visibleCurrentProject(){
-      console.log('변화');
       return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
     },
     visibleCompleteProject(){
