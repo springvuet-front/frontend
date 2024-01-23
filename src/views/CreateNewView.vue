@@ -98,9 +98,10 @@ export default {
   },
   methods: {
     createProject(){
-      // const today = new Date();
-      // if(projectEndDate>today){
-      // }
+      const today = new Date();
+      if(this.projectEndDate<today | this.projectStartDate>this.projectEndDate){
+        alert("유효한 기간을 입력하세요");
+      }
     }
   }
 }
