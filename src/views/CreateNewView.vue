@@ -3,36 +3,28 @@
 <div id="back">
   <div class="bTitle">새 프로젝트 만들기</div>
   <div class="bInputText">
-    <div class="elementName">프로젝트명</div><input type="text">
+    <div class="elementName">프로젝트명</div><input type="text" v-model="projectName">
   </div>
   <div class="bInputText">
-    <div class="elementName">팀명</div><input type="text">
+    <div class="elementName">팀명</div><input type="text" v-model="projectTeam">
   </div>
   <div class="bInputText">
     <div class="elementName">프로젝트 기간</div>
-    <label class="label">시작일</label>
-    <label class="label">마감일</label>
+    <div class="bInputDate">
+      <div class="elementName">시작일</div><input type="date" v-model="projectStartDate"/>
+      <div class="elementName">마감일</div><input type="date" v-model="projectEndDate"/>
+    </div>
   </div>
   <div class="bInputText">
-    <div class="elementName">깃허브링크</div><input type="text">
+    <div class="elementName">깃허브링크</div><input type="text" v-model="projectGitLink">
   </div>
   <div class="bButton">
-    <ButtonComponent parameter="" msg="프로젝트 생성하기"/>
+    <ButtonComponent parameter="" msg="프로젝트 생성하기" @click="createProject"/>
     <ButtonComponent parameter="mypage" msg="취소하기"/>
   </div>
 </div>
 </template>
 <style>
-input{
-    width: 700px;
-    height: 30px;
-    border: 0;
-    background-color: #C6C7FF;
-    padding-left: 10px;
-}
-input:focus{
-    outline: 0;
-}
 #back{
   margin-left: 100px;
   display: flex;
@@ -45,6 +37,11 @@ input:focus{
   align-items: center;
   flex-direction: row;
   padding: 20px;
+}
+.bInputDate{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 .bTitle{
   font-size: 25px;
@@ -63,6 +60,20 @@ input:focus{
   justify-content: center;
   margin-top: 50px;
 }
+input{
+  width: 800px;
+  height: 30px;
+  border: 0;
+  background-color: #C6C7FF;
+  padding-left: 10px;
+}
+input:focus{
+  outline: 0;
+}
+input[type=date]{
+  width: 90px;
+}
+
 </style>
 <script>
 import LeftMenu from '@/components/LeftMenu.vue';
@@ -74,13 +85,23 @@ export default {
   components: {
     LeftMenu,
     // InputText,
-    ButtonComponent
+    ButtonComponent,
   },
   data () {
     return {
-      sampleData: ''
+      projectName:'',
+      projectTeam:'',
+      projectStartDate:'',
+      projectEndDate:'',
+      projectGitLink:'',
     }
   },
-  methods: {}
+  methods: {
+    createProject(){
+      // const today = new Date();
+      // if(projectEndDate>today){
+      // }
+    }
+  }
 }
 </script>
