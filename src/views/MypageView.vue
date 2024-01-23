@@ -25,8 +25,9 @@
     <div class="bproject current">
       <div class="title">현재 진행중인 프로젝트</div>
       <div class="projectlist">
-        <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="currentStartIndex===0">
-          <img class="showbtnimg" alt="◀" src="../assets/showpastbtn.png" />
+        <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
+          <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
+          <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
         <div v-for="(item, index) in visibleCurrentProject" :key="index">
           <!-- <component :is="item.component" :data="item.data"></component> -->
@@ -46,16 +47,18 @@
         <router-link to="createnew">
           <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
         </router-link>
-        <button type="button" class="showNextbtn" @click="showCurrentNext" @mouseover="mouseOverNextBtn" :disabled="currentEndIndex === currentProjectList.length + 1 || currentProjectList.length <= 3">
-          <img class="showbtnimg" alt="▶" src="../assets/shownextbtn.png" />
+        <button type="button" class="showNextbtn" @click="showCurrentNext" @mouseover="mouseOverNextBtn" :disabled="isDisabledCurrentNext">
+          <img class="showbtnimg" v-if="isDisabledCurrentNext" alt="▶" src="../assets/shownextbtn.png" />
+          <img class="showbtnimg" v-if="isDisabledCurrentNext===false" alt="▶" src="../assets/shownextbtn_active.png" />
         </button>
       </div>
     </div>
     <div class="bproject complete">
       <div class="title">진행 완료된 프로젝트</div>
       <div class="projectlist">
-        <button type="button" class="showPastbtn" @click="showCompletePast" :disabled="completeStartIndex===0">
-          <img class="showbtnimg" alt="◀" src="../assets/showpastbtn.png" />
+        <button type="button" class="showPastbtn" @click="showCompletePast" :disabled="isDisabledCompletePast">
+          <img class="showbtnimg" v-if="isDisabledCompletePast" alt="◀" src="../assets/showpastbtn.png"/>
+          <img class="showbtnimg" v-if="isDisabledCompletePast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
         <div v-for="(item, index) in visibleCompleteProject" :key="index">
           <!-- <component :is="item.component" :data="item.data"></component> -->
@@ -72,8 +75,9 @@
             </div>
           </div>
         </div>
-        <button type="button" class="showNextbtn" @click="showCompleteNext" :disabled="completeEndIndex === completeProjectList.length || completeProjectList.length <= 3">
-          <img class="showbtnimg" alt="▶" src="../assets/shownextbtn.png" />
+        <button type="button" class="showNextbtn" @click="showCompleteNext" :disabled="isDisabledCompleteNext">
+          <img class="showbtnimg" v-if="isDisabledCompleteNext" alt="▶" src="../assets/shownextbtn.png" />
+          <img class="showbtnimg" v-if="isDisabledCompleteNext===false" alt="▶" src="../assets/shownextbtn_active.png" />
         </button>
       </div>
     </div>
@@ -100,6 +104,11 @@
   width: 400px;
   height: 570px;
   /* background-color: gray; */
+}
+@media(max-width:1000px){
+  .b_left{
+    display:none;
+  }
 }
 .b_right {
   /* background-color: lightgray; */
@@ -148,17 +157,18 @@
 }
 
 #plusbtn{
-  width: 17px;
-  height: 17px;
-  font-size: 16px;
-  font-weight: bold;
-  /* display: inline-flex; */
+  width: 27px;
+  height: 27px;
+  font-size: 17pt;
+  font-weight: 500;
   flex-direction: column;  
   align-items: center; 
   justify-content: center;
   background-color: rgb(0,0,0,0);
-  /* border: solid; */
-  /* border-radius: 5px; */
+  border: solid;
+  border-radius: 7px;
+  float: right;
+  margin-top: 5px;
 }
 
 .title {
@@ -335,7 +345,6 @@ export default {
         { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
         { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
       ],
-      toDos: [],
       currentProjectList: [
         { 
           // component: ProjectBox,
@@ -358,28 +367,28 @@ export default {
             project_date_end: "2022-05-21",
           }
         },
-        // { 
-        //   // component: ProjectBox, 
+        { 
+          // component: ProjectBox, 
           
-        //   data: { project_field: "웹", 
-        //     project_mypart: "프론트", 
-        //     project_name: "3", 
-        //     project_team: "스프링뷰트", 
-        //     project_date_start: "2022-03-21",
-        //     project_date_end: "2022-05-21",
-        //   }
-        // },
-        // { 
-        //   // component: ProjectBox, 
+          data: { project_field: "웹", 
+            project_mypart: "프론트", 
+            project_name: "3", 
+            project_team: "스프링뷰트", 
+            project_date_start: "2022-03-21",
+            project_date_end: "2022-05-21",
+          }
+        },
+        { 
+          // component: ProjectBox, 
           
-        //   data: { project_field: "앱", 
-        //     project_mypart: "프론트", 
-        //     project_name: "4", 
-        //     project_team: "스프링뷰트", 
-        //     project_date_start: "2022-03-21",
-        //     project_date_end: "2022-05-21",
-        //   }
-        // },
+          data: { project_field: "앱", 
+            project_mypart: "프론트", 
+            project_name: "4", 
+            project_team: "스프링뷰트", 
+            project_date_start: "2022-03-21",
+            project_date_end: "2022-05-21",
+          }
+        },
         // { 
         //   // component: ProjectBox, 
           
@@ -460,13 +469,18 @@ export default {
       currentEndIndex: 3,
       completeStartIndex: 0,
       completeEndIndex: 3,
-      disabledCurrentNext: false
+      disabledCurrentNext: false,
+      
+      /* toDoList */
+      toDos: [],
+      toDoContents: []
     }
   },
   methods: {
     addToDoList(){
       this.toDos.push(ToDo);
     },
+    /* 버튼활성화 여부 계산 */
     showCurrentPast(){
       if(this.currentStartIndex != 0){
         this.currentStartIndex--;
@@ -491,33 +505,30 @@ export default {
         this.completeEndIndex++;
       }
     },
-    // mouseOverNextBtn(event){
-    //   var clickedbtn = event.target;
-    //   if(clickedbtn.disabled){
-    //     var btnimg = clickedbtn.children[0];
-    //     if(!btnimg){
-    //       console.log("오류");
-    //     }
-    //     else {
-    //       var newImg = "../assets/shownextbtn_active.png";
-    //       if(!newImg){
-    //         console.log("이미지 없음");
-    //       }
-    //       else { 
-    //         btnimg.src= newImg; 
-    //       }
-    //     }
-    //   }
-    // },
   },
   computed: {
+    /* 프로젝트 3개씩 보여주게 */
     visibleCurrentProject(){
       return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
     },
     visibleCompleteProject(){
       return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
+    },
+
+    /* 버튼 활성화 여부 */
+    isDisabledCurrentPast(){
+      return this.currentStartIndex===0;
+    },
+    isDisabledCurrentNext(){
+      return this.currentEndIndex === this.currentProjectList.length + 1 || this.currentProjectList.length <= 3;
+    },
+    isDisabledCompletePast(){
+      return this.completeStartIndex===0;
+    },
+    isDisabledCompleteNext(){
+      return this.completeEndIndex === this.completeProjectList.length || this.completeProjectList.length <= 3;
     }
-  }
+  },
 }
 </script>
     
