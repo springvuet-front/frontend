@@ -17,9 +17,10 @@
       <div class="listBox">
         <label>
           <!-- <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component> -->
-          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index">
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index" @mouseover="showDelBtn" @mouseout="unShowDelBtn">
             <input id="toDoCheck" type="checkbox" v-model="item.toDoIsChecked">
             <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
+            <button type="button" class="deleteToDoBtn" :disabled="isDisabledDelBtn"  @click="deleteToDo(index)">X</button>
           </div>
         </label>
       </div>
@@ -324,13 +325,25 @@
   border: 0;
   font-size: 14pt;
   background-color: #F1f1F1
-
+}
+.deleteToDoBtn{
+  position:relative;
+  left: -30px;
+  width: 25px;
+  height: 25px;
+  border: 0;
+  background-color: #F1f1F1;
+  font-size: 20px;
+  color: rgb(0,0,0,0.3);
 }
 .checkToDoList input[type="text"]:focus{
   outline: 0;
 }
 .checkToDoList input[type="text"]:disabled{
   text-decoration: line-through;
+}
+.deleteToDoBtn:disabled{
+  visibility:hidden;
 }
 /* addProjectBtn */
 .addProjectBtn {
@@ -501,13 +514,19 @@ export default {
       disabledCurrentNext: false,
       
       /* toDoList */
-      saveToDoList: [ { toDoIsChecked: true, toDoContents: '안녕하세요'}],
+      saveToDoList: [],
+      isDisabledDelBtn: true,
     }
   },
   methods: {
     addToDoList(){
       // this.toDos.push(ToDo);
       this.saveToDoList.push({ toDoIsChecked: false, toDoContents: this.toDoContents });
+      // console.log(this.saveToDoList);
+    },
+    deleteToDo(index){
+      console.log(this.saveToDoList);
+      this.saveToDoList.splice(index, 1);
       console.log(this.saveToDoList);
     },
     /* 버튼활성화 여부 계산 */
@@ -535,6 +554,12 @@ export default {
         this.completeEndIndex++;
       }
     },
+    showDelBtn(){
+      this.isDisabledDelBtn = false;
+    },
+    unShowDelBtn(){
+      this.isDisabledDelBtn = true;
+    }
   },
   computed: {
     /* 프로젝트 3개씩 보여주게 */
@@ -559,11 +584,6 @@ export default {
       return this.completeEndIndex === this.completeProjectList.length || this.completeProjectList.length <= 3;
     }
   },
-  watch: {
-    saveToDoList:function(){
-      console.log("변경");
-    }
-  }
 }
 </script>
     
