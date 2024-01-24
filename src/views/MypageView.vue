@@ -16,7 +16,11 @@
       </div>
       <div class="listBox">
         <label>
-          <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component>
+          <!-- <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component> -->
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index">
+            <input id="toDoCheck" type="checkbox" v-model="item.toDoIsChecked">
+            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
+          </div>
         </label>
       </div>
     </div>
@@ -303,6 +307,31 @@
   line-height: 1.5;
 }
 
+/* toDoList */
+.checkToDoList{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.checkToDoList input[type="checkbox"]{
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+}
+.checkToDoList input[type="text"]{
+  width: 190px;
+  min-height: 30px;
+  border: 0;
+  font-size: 14pt;
+  background-color: #F1f1F1
+
+}
+.checkToDoList input[type="text"]:focus{
+  outline: 0;
+}
+.checkToDoList input[type="text"]:disabled{
+  text-decoration: line-through;
+}
 /* addProjectBtn */
 .addProjectBtn {
   width: 200px;
@@ -327,14 +356,14 @@
 <script>
 import LeftMenu from '@/components/LeftMenu.vue';
 // import ProjectBox from '@/components/ProjectBox.vue';
-import ToDo from '@/components/ToDo.vue';
+// import ToDo from '@/components/ToDo.vue';
   
 export default {
   name: 'MypageView',
   components: {
     LeftMenu,
     // ProjectBox,
-    ToDo
+    // ToDo
   },
   data () {
     return {
@@ -472,13 +501,14 @@ export default {
       disabledCurrentNext: false,
       
       /* toDoList */
-      toDos: [],
-      toDoContents: []
+      saveToDoList: [ { toDoIsChecked: true, toDoContents: '안녕하세요'}],
     }
   },
   methods: {
     addToDoList(){
-      this.toDos.push(ToDo);
+      // this.toDos.push(ToDo);
+      this.saveToDoList.push({ toDoIsChecked: false, toDoContents: this.toDoContents });
+      console.log(this.saveToDoList);
     },
     /* 버튼활성화 여부 계산 */
     showCurrentPast(){
@@ -529,6 +559,11 @@ export default {
       return this.completeEndIndex === this.completeProjectList.length || this.completeProjectList.length <= 3;
     }
   },
+  watch: {
+    saveToDoList:function(){
+      console.log("변경");
+    }
+  }
 }
 </script>
     
