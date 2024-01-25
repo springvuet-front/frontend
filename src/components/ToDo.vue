@@ -16,13 +16,15 @@
   height: 25px;
 }
 .checkToDoList input[type="text"]{
-  width: 115px;
-  height: 30px;
+  width: 190px;
+  min-height: 30px;
   border: 0;
-  background-color: #F1F1F1;
+  font-size: 14pt;
+  background-color: #F1f1F1
+
 }
 .checkToDoList input[type="text"]:focus{
-    outline: 0;
+  outline: 0;
 }
 
 </style>
