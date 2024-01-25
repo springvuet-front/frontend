@@ -12,15 +12,20 @@
     </div>
     <div class="toDoList">
       <div class="title">To Do List  
-       <button type="button" id="plusbtn" @click="addToDoList">+</button>
+       <button type="button" id="plusbtn" @click="showToDoInput">+</button>
       </div>
       <div class="listBox">
         <label>
           <!-- <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component> -->
-          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index" @mouseover="showDelBtn" @mouseout="unShowDelBtn">
-            <input id="toDoCheck" type="checkbox" v-model="item.toDoIsChecked">
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index">
+            <input type="checkbox" v-model="item.toDoIsChecked" @click="checkBoxClick(index)">
             <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
-            <button type="button" class="deleteToDoBtn" :disabled="isDisabledDelBtn"  @click="deleteToDo(index)">X</button>
+            <button type="button" class="deleteToDoBtn" @click="delToDoList(index)">X</button>
+          </div>
+          <div class="checkToDoList" v-if="showInputTodo">
+            <input type="checkbox" v-model="inputChecked">
+            <input type="text" v-model="inputToDoContent" :disabled="inputChecked" @keyup.enter="addToDoEnter">
+            <!-- <button type="button" class="deleteToDoBtn">X</button> -->
           </div>
         </label>
       </div>
@@ -515,19 +520,42 @@ export default {
       
       /* toDoList */
       saveToDoList: [],
-      isDisabledDelBtn: true,
+      inputChecked: false,
+      inputToDoContent: '',
+      showInputTodo: false,
     }
   },
   methods: {
-    addToDoList(){
-      // this.toDos.push(ToDo);
-      this.saveToDoList.push({ toDoIsChecked: false, toDoContents: this.toDoContents });
+    addToDoEnter(){
+      this.saveToDoList.push({ toDoIsChecked: this.inputChecked, toDoContents: this.inputToDoContent });
+      this.inputChecked = false;
+      this.inputToDoContent = '';
+      // this.showInputTodo = false;
       // console.log(this.saveToDoList);
     },
-    deleteToDo(index){
+    showToDoInput(){
+      // this.toDos.push(ToDo);
+      // this.saveToDoList.push({ toDoIsChecked: this.inputChecked, toDoContents: this.inputToDoContent });
+      // this.inputChecked = false,
+      // this.inputToDoContent = ''
+      // console.log(this.saveToDoList);
+      this.showInputTodo = true;
       console.log(this.saveToDoList);
+    },
+    delToDoList(index){
+      // this.saveToDoList.unshift({ toDoIsChecked: this.saveToDoList[0].toDoIsChecked, toDoContents: this.saveToDoList[0].toDoContents })
       this.saveToDoList.splice(index, 1);
-      console.log(this.saveToDoList);
+      if(index != 0){
+        this.saveToDoList[0].toDoIsChecked = !this.saveToDoList[0].toDoIsChecked;
+      }
+    },
+    // 체크박스가 클릭되면 발생하는 이벤트
+    checkBoxClick(index){
+      console.log(index+" : "+this.saveToDoList[index].toDoIsChecked);
+      // this.saveToDoList[index].toDoIsChecked = !this.saveToDoList[index].toDoIsChecked;
+      console.log(index+" : "+this.saveToDoList[index].toDoIsChecked);
+      // this.saveToDoList[index].toDoIsChecked = 
+      // this.saveToDoList.
     },
     /* 버튼활성화 여부 계산 */
     showCurrentPast(){
@@ -554,12 +582,6 @@ export default {
         this.completeEndIndex++;
       }
     },
-    showDelBtn(){
-      this.isDisabledDelBtn = false;
-    },
-    unShowDelBtn(){
-      this.isDisabledDelBtn = true;
-    }
   },
   computed: {
     /* 프로젝트 3개씩 보여주게 */
@@ -584,6 +606,18 @@ export default {
       return this.completeEndIndex === this.completeProjectList.length || this.completeProjectList.length <= 3;
     }
   },
+  watch: {
+    // toDoList의 체크내역이 변화하는지 감시
+    saveToDoList:{
+      deep: true,
+      handler(newValue, oldValue) {
+        newValue.forEach((toDoIsChecked, index)=>{
+          if(newValue[index].toDoIsChecked !== oldValue[index].toDoIsChecked){
+            console.log(oldValue[index].toDoIsChecked+"==>"+newValue[index].toDoIsChecked);
+          }
+        })
+      }
+    }
+  }
 }
 </script>
-    
