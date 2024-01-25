@@ -11,21 +11,17 @@
       </div>
     </div>
     <div class="toDoList">
-      <div class="title">To Do List  
-       <button type="button" id="plusbtn" @click="showToDoInput">+</button>
-      </div>
+      <div class="title">To Do List</div>
       <div class="listBox">
         <label>
-          <!-- <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component> -->
-          <div class="checkToDoList" v-for="(item, index) in saveToDoList" :key="index">
-            <input type="checkbox" v-model="item.toDoIsChecked" @click="checkBoxClick(index)">
-            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
-            <button type="button" class="deleteToDoBtn" @click="delToDoList(index)">X</button>
+          <div class="inputToDoList" v-if="showInputTodo">
+            <input type="text" v-model="inputToDoContent" @keyup.enter="addToDoEnter">
+            <button type="button" class="plusbtn" @click="showToDoInput">+</button>
           </div>
-          <div class="checkToDoList" v-if="showInputTodo">
-            <input type="checkbox" v-model="inputChecked">
-            <input type="text" v-model="inputToDoContent" :disabled="inputChecked" @keyup.enter="addToDoEnter">
-            <!-- <button type="button" class="deleteToDoBtn">X</button> -->
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" v-bind:key="item">
+            <input type="checkbox" v-model="item.toDoIsChecked">
+            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
+            <button type="button" class="deleteToDoBtn" v-on:click="removeTodo(todoItem, index)">X</button>
           </div>
         </label>
       </div>
@@ -112,7 +108,7 @@
   margin-top: 50px;
   margin-left: 100px;
   width: 400px;
-  height: 570px;
+  /* height: 570px; */
   /* background-color: gray; */
 }
 @media(max-width:1000px){
@@ -156,6 +152,12 @@
   padding-top: 5px;
 }
 
+.toDoList .listBox {
+  height: 400px;
+  overflow-x: hidden;
+  flex-wrap: wrap;
+}
+
 .listBox li {
   font-size: 14pt;
   line-height: 1.7;
@@ -164,21 +166,6 @@
 .listBox li::marker {
   content: '■ ';
   color: #B1B2FF;
-}
-
-#plusbtn{
-  width: 27px;
-  height: 27px;
-  font-size: 17pt;
-  font-weight: 500;
-  flex-direction: column;  
-  align-items: center; 
-  justify-content: center;
-  background-color: rgb(0,0,0,0);
-  border: solid;
-  border-radius: 7px;
-  float: right;
-  margin-top: 5px;
 }
 
 .title {
@@ -313,7 +300,41 @@
   line-height: 1.5;
 }
 
-/* toDoList */
+/* toDoList 스타일*/
+.inputToDoList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.inputToDoList input[type="text"]{
+  width: 170px;
+  height: 30px;
+  border: solid;
+  border-bottom-left-radius: 7px;
+  border-top-left-radius: 7px;
+  font-size: 14pt;
+  background-color: white;
+  margin-right: 0px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.plusbtn{
+  width: 36px;
+  height: 36px;
+  font-size: 20pt;
+  font-weight: 600;
+  flex-direction: column;  
+  align-items: center; 
+  justify-content: center;
+  background-color: rgb(0,0,0,0);
+  border: solid;
+  border-bottom-right-radius: 7px;
+  border-top-right-radius: 7px;
+  /* float: right; */
+  margin-top: 5px;
+}
+
 .checkToDoList{
   display: flex;
   flex-direction: row;
@@ -333,7 +354,7 @@
 }
 .deleteToDoBtn{
   position:relative;
-  left: -30px;
+  left: -40px;
   width: 25px;
   height: 25px;
   border: 0;
@@ -522,40 +543,16 @@ export default {
       saveToDoList: [],
       inputChecked: false,
       inputToDoContent: '',
-      showInputTodo: false,
+      showInputTodo: true,
     }
   },
   methods: {
     addToDoEnter(){
-      this.saveToDoList.push({ toDoIsChecked: this.inputChecked, toDoContents: this.inputToDoContent });
-      this.inputChecked = false;
-      this.inputToDoContent = '';
-      // this.showInputTodo = false;
-      // console.log(this.saveToDoList);
+      this.saveToDoList.push({ toDoIsChecked: false, toDoContents: this.inputToDoContent})
+      this.inputToDoContent = "";
     },
-    showToDoInput(){
-      // this.toDos.push(ToDo);
-      // this.saveToDoList.push({ toDoIsChecked: this.inputChecked, toDoContents: this.inputToDoContent });
-      // this.inputChecked = false,
-      // this.inputToDoContent = ''
-      // console.log(this.saveToDoList);
-      this.showInputTodo = true;
-      console.log(this.saveToDoList);
-    },
-    delToDoList(index){
-      // this.saveToDoList.unshift({ toDoIsChecked: this.saveToDoList[0].toDoIsChecked, toDoContents: this.saveToDoList[0].toDoContents })
+    removeTodo(item, index){
       this.saveToDoList.splice(index, 1);
-      if(index != 0){
-        this.saveToDoList[0].toDoIsChecked = !this.saveToDoList[0].toDoIsChecked;
-      }
-    },
-    // 체크박스가 클릭되면 발생하는 이벤트
-    checkBoxClick(index){
-      console.log(index+" : "+this.saveToDoList[index].toDoIsChecked);
-      // this.saveToDoList[index].toDoIsChecked = !this.saveToDoList[index].toDoIsChecked;
-      console.log(index+" : "+this.saveToDoList[index].toDoIsChecked);
-      // this.saveToDoList[index].toDoIsChecked = 
-      // this.saveToDoList.
     },
     /* 버튼활성화 여부 계산 */
     showCurrentPast(){
