@@ -111,7 +111,7 @@
   margin-top: 50px;
   margin-left: 100px;
   width: 400px;
-  /* height: 570px; */
+  height: 570px;
   /* background-color: gray; */
 }
 @media(max-width:1000px){
