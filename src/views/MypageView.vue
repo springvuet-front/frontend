@@ -11,12 +11,18 @@
       </div>
     </div>
     <div class="toDoList">
-      <div class="title">To Do List  
-       <button type="button" id="plusbtn" @click="addToDoList">+</button>
-      </div>
+      <div class="title">To Do List</div>
       <div class="listBox">
         <label>
-          <component :is="toDo" v-for="(toDo, index) in toDos" :key="index"></component>
+          <div class="inputToDoList">
+            <input type="text" v-model="inputToDoContent" @keyup.enter="addToDoList">
+            <button type="button" class="plusbtn" @click="addToDoList">+</button>
+          </div>
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" v-bind:key="item">
+            <input type="checkbox" v-model="item.toDoIsChecked" @click="clickCheckbox(index)">
+            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
+            <button type="button" class="deleteToDoBtn" v-on:click="removeTodo(todoItem, index)">X</button>
+          </div>
         </label>
       </div>
     </div>
@@ -30,17 +36,16 @@
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
         <div v-for="(item, index) in visibleCurrentProject" :key="index">
-          <!-- <component :is="item.component" :data="item.data"></component> -->
           <div class="projectBox">
             <div class="project category">
-              <div class="project field">{{item.data.project_field}}</div>
-              <div class="project myPart">{{item.data.project_mypart}}</div>
+              <div class="project field">{{item.project_field}}</div>
+              <div class="project myPart">{{item.project_mypart}}</div>
             </div>
             <div class="project info">
-              <div class="project name">{{item.data.project_name}}</div>
-              <div class="project team">팀: {{item.data.project_team}}</div>
-              <div class="project date start">시작일: {{item.data.project_date_start}}</div>
-              <div class="project date end">마감일: {{item.data.project_date_end}}</div>
+              <div class="project name">{{item.project_name}}</div>
+              <div class="project team">팀: {{item.project_team}}</div>
+              <div class="project date start">시작일: {{item.project_date_start}}</div>
+              <div class="project date end">마감일: {{item.project_date_end}}</div>
             </div>
           </div>
         </div>
@@ -61,17 +66,16 @@
           <img class="showbtnimg" v-if="isDisabledCompletePast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
         <div v-for="(item, index) in visibleCompleteProject" :key="index">
-          <!-- <component :is="item.component" :data="item.data"></component> -->
           <div class="projectBox">
             <div class="project category">
-              <div class="project field">{{item.data.project_field}}</div>
-              <div class="project myPart">{{item.data.project_mypart}}</div>
+              <div class="project field">{{item.project_field}}</div>
+              <div class="project myPart">{{item.project_mypart}}</div>
             </div>
             <div class="project info">
-              <div class="project name">{{item.data.project_name}}</div>
-              <div class="project team">팀: {{item.data.project_team}}</div>
-              <div class="project date start">시작일: {{item.data.project_date_start}}</div>
-              <div class="project date end">마감일: {{item.data.project_date_end}}</div>
+              <div class="project name">{{item.project_name}}</div>
+              <div class="project team">팀: {{item.project_team}}</div>
+              <div class="project date start">시작일: {{item.project_date_start}}</div>
+              <div class="project date end">마감일: {{item.project_date_end}}</div>
             </div>
           </div>
         </div>
@@ -102,7 +106,7 @@
   margin-top: 50px;
   margin-left: 100px;
   width: 400px;
-  height: 570px;
+  /* height: 570px; */
   /* background-color: gray; */
 }
 @media(max-width:1000px){
@@ -146,6 +150,12 @@
   padding-top: 5px;
 }
 
+.toDoList .listBox {
+  height: 400px;
+  overflow-x: hidden;
+  flex-wrap: wrap;
+}
+
 .listBox li {
   font-size: 14pt;
   line-height: 1.7;
@@ -154,21 +164,6 @@
 .listBox li::marker {
   content: '■ ';
   color: #B1B2FF;
-}
-
-#plusbtn{
-  width: 27px;
-  height: 27px;
-  font-size: 17pt;
-  font-weight: 500;
-  flex-direction: column;  
-  align-items: center; 
-  justify-content: center;
-  background-color: rgb(0,0,0,0);
-  border: solid;
-  border-radius: 7px;
-  float: right;
-  margin-top: 5px;
 }
 
 .title {
@@ -303,6 +298,77 @@
   line-height: 1.5;
 }
 
+/* toDoList 스타일*/
+.inputToDoList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.inputToDoList input[type="text"]{
+  width: 170px;
+  height: 30px;
+  border: solid;
+  border-bottom-left-radius: 7px;
+  border-top-left-radius: 7px;
+  font-size: 14pt;
+  background-color: white;
+  margin-right: 0px;
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.plusbtn{
+  width: 36px;
+  height: 36px;
+  font-size: 20pt;
+  font-weight: 600;
+  flex-direction: column;  
+  align-items: center; 
+  justify-content: center;
+  background-color: rgb(0,0,0,0);
+  border: solid;
+  border-bottom-right-radius: 7px;
+  border-top-right-radius: 7px;
+  /* float: right; */
+  margin-top: 5px;
+}
+
+.checkToDoList{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.checkToDoList input[type="checkbox"]{
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+}
+.checkToDoList input[type="text"]{
+  width: 190px;
+  min-height: 30px;
+  border: 0;
+  font-size: 14pt;
+  background-color: #F1f1F1
+}
+.deleteToDoBtn{
+  position:relative;
+  left: -40px;
+  width: 25px;
+  height: 25px;
+  border: 0;
+  background-color: #F1f1F1;
+  font-size: 20px;
+  color: rgb(0,0,0,0.3);
+}
+.checkToDoList input[type="text"]:focus{
+  outline: 0;
+}
+.checkToDoList input[type="text"]:disabled{
+  text-decoration: line-through;
+}
+.deleteToDoBtn:disabled{
+  visibility:hidden;
+}
 /* addProjectBtn */
 .addProjectBtn {
   width: 200px;
@@ -326,20 +392,14 @@
     
 <script>
 import LeftMenu from '@/components/LeftMenu.vue';
-// import ProjectBox from '@/components/ProjectBox.vue';
-import ToDo from '@/components/ToDo.vue';
   
 export default {
   name: 'MypageView',
   components: {
     LeftMenu,
-    // ProjectBox,
-    ToDo
   },
   data () {
     return {
-      // checked: false,
-      // inputToDo:'',
       hoveredProjectName: 0,
       scheduleList: [ 
         { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
@@ -347,122 +407,79 @@ export default {
       ],
       currentProjectList: [
         { 
-          // component: ProjectBox,
-          data: { project_field: "웹", 
-            project_mypart: "백", 
-            project_name: "개발사이트 만들기", 
-            project_team: "스프링뷰트", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "백", 
+          project_name: "개발사이트 만들기", 
+          project_team: "스프링뷰트", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          
-          data: { project_field: "웹", 
-            project_mypart: "프론트", 
-            project_name: "글씨넘치면어떻게하지", 
-            project_team: "스프링뷰트", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "프론트", 
+          project_name: "글씨넘치면어떻게하지", 
+          project_team: "스프링뷰트", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          
-          data: { project_field: "웹", 
-            project_mypart: "프론트", 
-            project_name: "3", 
-            project_team: "스프링뷰트", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "프론트", 
+          project_name: "3", 
+          project_team: "스프링뷰트", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          
-          data: { project_field: "앱", 
-            project_mypart: "프론트", 
-            project_name: "4", 
-            project_team: "스프링뷰트", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "앱", 
+          project_mypart: "프론트", 
+          project_name: "4", 
+          project_team: "스프링뷰트", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
-        // { 
-        //   // component: ProjectBox, 
-          
-        //   data: { project_field: "앱", 
-        //     project_mypart: "백", 
-        //     project_name: "5", 
-        //     project_team: "스프링뷰트", 
-        //     project_date_start: "2022-03-21",
-        //     project_date_end: "2022-05-21",
-        //   }
-        // },
-        // { 
-        //   // component: ProjectBox, 
-          
-        //   data: { project_field: "웹", 
-        //     project_mypart: "프론트", 
-        //     project_name: "6", 
-        //     project_team: "스프링뷰트", 
-        //     project_date_start: "2022-03-21",
-        //     project_date_end: "2022-05-21",
-        //   }
-        // }
       ],
       completeProjectList: [
         { 
-          // component: ProjectBox, 
-          data: { project_field: "웹", 
-            project_mypart: "백", 
-            project_name: "프로젝트1", 
-            project_team: "팀1", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "백", 
+          project_name: "프로젝트1", 
+          project_team: "팀1", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          data: { project_field: "웹", 
-            project_mypart: "프론트", 
-            project_name: "프로젝트2", 
-            project_team: "팀2", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "프론트", 
+          project_name: "프로젝트2", 
+          project_team: "팀2", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          data: { project_field: "웹", 
-            project_mypart: "프론트", 
-            project_name: "프로젝트3", 
-            project_team: "팀3", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
+          project_field: "웹", 
+          project_mypart: "프론트", 
+          project_name: "프로젝트3", 
+          project_team: "팀3", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
+        },
+        {
+          project_field: "웹", 
+          project_mypart: "프론트", 
+          project_name: "프로젝트4", 
+          project_team: "팀4", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
         },
         { 
-          // component: ProjectBox, 
-          data: { project_field: "웹", 
-            project_mypart: "프론트", 
-            project_name: "프로젝트4", 
-            project_team: "팀4", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
-        },
-        { 
-          // component: ProjectBox, 
-          data: { project_field: "데분", 
-            project_mypart: "프론트", 
-            project_name: "프로젝트5", 
-            project_team: "팀5", 
-            project_date_start: "2022-03-21",
-            project_date_end: "2022-05-21",
-          }
-        },
+          project_field: "데분", 
+          project_mypart: "프론트", 
+          project_name: "프로젝트5", 
+          project_team: "팀5", 
+          project_date_start: "2022-03-21",
+          project_date_end: "2022-05-21",
+        }
       ],
       currentProjectPage: 1,
       currentStartIndex: 0,
@@ -472,13 +489,29 @@ export default {
       disabledCurrentNext: false,
       
       /* toDoList */
-      toDos: [],
-      toDoContents: []
+      saveToDoList: [],
+      inputChecked: false,
+      inputToDoContent: '',
     }
   },
   methods: {
     addToDoList(){
-      this.toDos.push(ToDo);
+      if(this.inputToDoContent != ''){
+        this.saveToDoList.push({ toDoIsChecked: false, toDoContents: this.inputToDoContent })
+        this.inputToDoContent = "";
+        console.log(this.saveToDoList);
+      }
+      else{
+        alert("내용을 입력하세요");
+      }
+    },
+    removeTodo(item, index){
+      this.saveToDoList.splice(index, 1);
+    },
+    clickCheckbox(index){
+      console.log(this.saveToDoList[index].toDoIsChecked);
+      // Check 값 바꿔서 리스트에 저장된 자료 변환
+      this.saveToDoList[index].toDoIsChecked = !this.saveToDoList[index].toDoIsChecked;
     },
     /* 버튼활성화 여부 계산 */
     showCurrentPast(){
@@ -529,6 +562,18 @@ export default {
       return this.completeEndIndex === this.completeProjectList.length || this.completeProjectList.length <= 3;
     }
   },
+  watch: {
+    // toDoList의 체크내역이 변화하는지 감시
+    saveToDoList:{
+      deep: true,
+      handler(newValue, oldValue) {
+        newValue.forEach((toDoIsChecked, index)=>{
+          if(newValue[index].toDoIsChecked !== oldValue[index].toDoIsChecked){
+            console.log(oldValue[index].toDoIsChecked+"==>"+newValue[index].toDoIsChecked);
+          }
+        })
+      }
+    }
+  }
 }
 </script>
-    
