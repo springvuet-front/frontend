@@ -19,9 +19,14 @@
             <button type="button" class="plusbtn" @click="addToDoList">+</button>
           </div>
           <div class="checkToDoList" v-for="(item, index) in saveToDoList" v-bind:key="item">
-            <input type="checkbox" v-model="item.toDoIsChecked" @click="clickCheckbox(index)">
-            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked">
-            <button type="button" class="deleteToDoBtn" v-on:click="removeTodo(todoItem, index)">X</button>
+            <input type="checkbox" v-model="item.toDoIsChecked" @click="clickCheckbox(index)" v-if="item.toDoIsChecked===false">
+            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked" v-if="item.toDoIsChecked===false">
+            <button type="button" class="deleteToDoBtn" @click="removeTodo(todoItem, index)" v-if="item.toDoIsChecked===false">X</button>
+          </div>
+          <div class="checkToDoList" v-for="(item, index) in saveToDoList" v-bind:key="item">
+            <input type="checkbox" v-model="item.toDoIsChecked" @click="clickCheckbox(index)" v-if="item.toDoIsChecked===true">
+            <input type="text" v-model="item.toDoContents" :disabled="item.toDoIsChecked" v-if="item.toDoIsChecked===true">
+            <button type="button" class="deleteToDoBtn" @click="removeTodo(todoItem, index)" v-if="item.toDoIsChecked===true">X</button>
           </div>
         </label>
       </div>
