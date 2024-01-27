@@ -5,7 +5,7 @@
         <div class="flex-left">
             <div class="project-info">
                 <div class="team-info">
-                    <h2>프로젝트명</h2>
+                    <h2>{{ exProjectName }}</h2>
                     <ButtonComponent msg="수정하기" @click="modalOpen" />
                 </div>
 
@@ -280,13 +280,15 @@ https://github.com/richardtallent/vue-simple-calendar
     height: 220px;
     padding: 20px;
     margin: 5px;
+    border-radius: 5px;
     background-color: #e1e1e1;
   }
 
   .right-menu-members, .right-menu-schedulelists{
-    height: 130px;
+    height: 160px;
     padding: 20px;
     margin: 5px;
+    border-radius: 5px;
     background-color: #e1e1e1;
   }
 
@@ -348,7 +350,7 @@ https://github.com/richardtallent/vue-simple-calendar
   }
 
   .field{
-    padding: 10px;
+    padding: 5px 10px 10px 10px
   }
 
   input{
@@ -443,6 +445,10 @@ input{
     padding: 0px 30px 0px 30px;
   }
 
+  input[type=date] {
+    width: 110px;
+}
+
 </style>
 
 <script>
@@ -497,7 +503,6 @@ import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calen
 import "../calendar-style/style.css"
 import "../calendar-style/default.css"
 import "../calendar-style/gcal.css"
-import "../calendar-style/holidays-us.css"
 
 import { onMounted, reactive, computed } from "vue"
 import LeftMenu from "@/components/LeftMenu.vue"
@@ -547,8 +552,6 @@ const state = reactive({
 
 const themeClasses = computed(() => ({
     "theme-default": state.useDefaultTheme,
-    "holiday-us-traditional": state.useHolidayTheme,
-    "holiday-us-official": state.useHolidayTheme,
 }))
 
 const myDateClasses = () => {
