@@ -13,7 +13,7 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ ProjectStartDate }}</div>
+                        <div>{{ now }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
@@ -24,7 +24,7 @@
                 <div class="end-bar">
                     <h5>프로젝트 마감까지</h5>
                     <div id="bar"></div>
-                    <h5>D-44</h5>
+                    <h5>D-{{ state.dDay }}</h5>
                 </div>
                 
                 <div class="btn-container">
@@ -87,7 +87,7 @@
                 <div class="schedule-list">
                     <ul id="ex">
                         <li v-for="item in state.items" v-bind:key="item.id">
-                            {{ item.title }}
+                            - {{ item.title }}
                         </li>
                     </ul>
                 </div>
@@ -155,12 +155,7 @@
                     </div>
 
                     <div class="input-container">
-                        <div class="label-text">
-                        <h4>팀원</h4>
-                        </div>
-                        <div>
-                        <input type="text" class="input-long"/>
-                        </div>
+                        <ButtonComponent msg="팀원 추가하기" @click="modalOpen2"/>
                     </div>
 
                     <div class="input-container">
@@ -203,7 +198,35 @@
                 </div>
             </div>
         </div>
-        
+    </div>
+
+    <div class="modal-wrap2" v-show="modalCheck2">
+        <div class="modal-container">
+            <div class="flex-box">
+                <div class="modal-info">
+                    <h2>팀원 추가하기</h2>
+                    <div class="container-modal-window">
+                    <div class="input-container">
+                        <div class="label-text">
+                        <h4>팀원이름</h4>
+                        </div>
+                    </div>
+
+                    </div>
+                    <div class="btn-container">
+                        <ButtonComponent msg="저장하기" @click="saveBtn"/>
+                    </div>
+                </div>
+            
+                <div class="modal-btn">
+                    <div class="close-btn" @click="modalOpen2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </template>
@@ -307,7 +330,7 @@ https://github.com/richardtallent/vue-simple-calendar
     }
 
   .schedule-list{
-    height: 150px;
+    height: 130px;
     overflow-y: auto;
   }
 
@@ -457,6 +480,7 @@ export default {
   data() {
     return {
         modalCheck: false,
+        modalCheck2: false,
         exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
         exTeamName: '스프링뷰트',
         newProjectStartDate: '',
@@ -466,6 +490,15 @@ export default {
     }
     },
     methods: {
+        currentDateTime() {
+            const current = new Date();
+            const date = current.getFullYear()+'-'+(current.getMonth()+1)+'-'+current.getDate();
+            const time = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+            const dateTime = date +' '+ time;
+            
+            return dateTime;
+        },
+
         modalOpen() {
             this.modalCheck = !this.modalCheck
             const projectNameInput = document.getElementById('projectname');
@@ -473,6 +506,11 @@ export default {
             
             projectNameInput.value = this.exProjectName;
             teamNameInput.value = this.exTeamName;
+        },
+
+        modalOpen2() {
+            this.modalCheck2 = !this.modalCheck2
+
         },
 
         saveBtn() {
@@ -493,7 +531,7 @@ export default {
 
             console.log(projectName); //변경하는 이름
             console.log(teamName); //이것도
-        }
+        },
     },
 }
 </script>
@@ -503,10 +541,14 @@ import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calen
 import "../calendar-style/style.css"
 import "../calendar-style/default.css"
 import "../calendar-style/gcal.css"
+import dayjs from "dayjs"
 
 import { onMounted, reactive, computed } from "vue"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
+
+const todayDate = dayjs();
+const dueDate = dayjs('2024-02-07');
 
 const thisMonth = (d, h = 0, m = 0) => {
     const t = new Date()
@@ -529,6 +571,7 @@ const state = reactive({
     useDefaultTheme: true,
     useHolidayTheme: true,
     useTodayIcons: false,
+    dDay: dueDate.diff(todayDate, 'day'),
     items: [
          {
              id: "e1",
@@ -575,6 +618,13 @@ const periodChanged = () => {}
 
 const onClickItem = (e) => {
     state.message = `You clicked: ${e.title}`
+    
+    if(confirm(`<${e.title}> 일정을 삭제하시겠습니까?`) == true){
+        const index = state.items.findIndex(item => item.id === e.id);
+        if (index !== -1) {
+            state.items.splice(index, 1);
+        }
+    }
 }
 
 const setShowDate = (d) => {
