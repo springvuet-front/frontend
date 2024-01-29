@@ -5,7 +5,7 @@
         <div class="flex-left">
             <div class="project-info">
                 <div class="team-info">
-                    <h2>{{ exProjectName }}</h2>
+                    <h2>{{ project.exProjectName }}</h2>
                     <ButtonComponent msg="수정하기" @click="modalOpen" />
                 </div>
 
@@ -13,18 +13,18 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ now }}</div>
+                        <div>{{ project.ProjectStartDate }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ ProjectEndDate }}</div>
+                        <div>{{ project.ProjectEndDate }}</div>
                     </div>
                 </div>
 
                 <div class="end-bar">
                     <h5>프로젝트 마감까지</h5>
                     <div id="bar"></div>
-                    <h5>D-{{ state.dDay }}</h5>
+                    <h5>D-{{ project.dDay }}</h5>
                 </div>
                 
                 <div class="btn-container">
@@ -154,17 +154,15 @@
                         </div>
                     </div>
 
-                    <div class="input-container">
-                        <ButtonComponent msg="팀원 추가하기" @click="modalOpen2"/>
-                    </div>
+                    <ButtonComponent msg="팀원 추가하기" @click="modalOpen2"/>
 
                     <div class="input-container">
                         <div class="label-text">
                         <h4>프로젝트 기간</h4>
                         </div>
                         <div class="date-container">
-                        <div class="project-start">
-                            <h5>프로젝트 시작일</h5>
+                            <div class="project-start">
+                                <h5>프로젝트 시작일</h5>
                                 <input v-model="newProjectStartDate" id="startdate" type="date" />
                             </div>
                             <div class="project-end">
@@ -285,6 +283,7 @@ https://github.com/richardtallent/vue-simple-calendar
     align-items: center;
     justify-content: space-between;
     height: 20px;
+    width: 55vw;
   }
 
   .btn-container{
@@ -294,7 +293,6 @@ https://github.com/richardtallent/vue-simple-calendar
   }
 
   #bar{
-    width: 300px;
     height: 10px;
     background-color: aqua;
   }
@@ -442,6 +440,7 @@ input{
     display: flex;
     align-items: center;
     height: 50px;
+    width: 72vw;
     margin: 10px;
     padding: 10px;
   }
@@ -470,35 +469,40 @@ input{
 
   input[type=date] {
     width: 110px;
-}
+    }
+
+    #startdate{
+        margin-left: 25px;
+    }
+
+    #enddate{
+        margin-left: 25px;
+    }
+
+    .members-right{
+        margin-left: 30px;
+    }
 
 </style>
 
 <script>
+import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
+import LeftMenu from "@/components/LeftMenu.vue"
+import ButtonComponent from "@/components/ButtonComponent.vue"
+import "../calendar-style/style.css"
+import "../calendar-style/default.css"
+import "../calendar-style/gcal.css"
+import dayjs from "dayjs"
+
 export default {
   name: 'TeampageView',
   data() {
     return {
         modalCheck: false,
         modalCheck2: false,
-        exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
-        exTeamName: '스프링뷰트',
-        newProjectStartDate: '',
-        newProjectEndDate: '',
-        ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
-        ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
     }
     },
     methods: {
-        currentDateTime() {
-            const current = new Date();
-            const date = current.getFullYear()+'-'+(current.getMonth()+1)+'-'+current.getDate();
-            const time = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-            const dateTime = date +' '+ time;
-            
-            return dateTime;
-        },
-
         modalOpen() {
             this.modalCheck = !this.modalCheck
             const projectNameInput = document.getElementById('projectname');
@@ -510,49 +514,37 @@ export default {
 
         modalOpen2() {
             this.modalCheck2 = !this.modalCheck2
-
-        },
-
-        saveBtn() {
-            const projectNameInput = document.getElementById('projectname');
-            const teamNameInput = document.getElementById('teamname');
-            //const teamMemberInput = document.getElementById('teammember');
-            const projectStartDateInput = document.getElementById('startdate');
-            const projectEndDateInput = document.getElementById('enddate');
-            const githubLinkInput = document.getElementById('githublink');
-
-            const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
-            const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
-            
-            //teamMemberInput.value = '하암';
-            projectStartDateInput.value = this.newProjectStartDate;
-            projectEndDateInput.value = this.newProjectEndDate;
-            githubLinkInput.value = '흠';
-
-            console.log(projectName); //변경하는 이름
-            console.log(teamName); //이것도
         },
     },
+    components: {
+        LeftMenu, ButtonComponent
+    }
 }
 </script>
 
 <script setup>
-import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
-import "../calendar-style/style.css"
-import "../calendar-style/default.css"
-import "../calendar-style/gcal.css"
-import dayjs from "dayjs"
-
 import { onMounted, reactive, computed } from "vue"
-import LeftMenu from "@/components/LeftMenu.vue"
-import ButtonComponent from "@/components/ButtonComponent.vue"
-
 const todayDate = dayjs();
 const dueDate = dayjs('2024-02-07');
 
 const thisMonth = (d, h = 0, m = 0) => {
     const t = new Date()
     return new Date(t.getFullYear(), t.getMonth(), d, h, m)
+}
+
+const project = ({
+    exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
+    exTeamName: '스프링뷰트',
+    newProjectStartDate: '',
+    newProjectEndDate: '',
+    ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
+    ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
+    dDay: dueDate.diff(todayDate, 'day'),
+})
+
+if (document.getElementById('bar')) {
+  var dDaywidth = document.getElementById('bar')
+  dDaywidth.style.width = project.dDay * 5 + 'px'
 }
 
 const state = reactive({
@@ -571,7 +563,6 @@ const state = reactive({
     useDefaultTheme: true,
     useHolidayTheme: true,
     useTodayIcons: false,
-    dDay: dueDate.diff(todayDate, 'day'),
     items: [
          {
              id: "e1",
@@ -590,7 +581,7 @@ const state = reactive({
         //     title: "Multi-day item with a long title and times",
         // },
         //... the rest of your items
-    ]
+    ],
 })
 
 const themeClasses = computed(() => ({
@@ -649,6 +640,26 @@ const clickTestAddItem = () => {
             el[i].value = '';
         }
     }
+}
+
+const saveBtn = () => {
+    const projectNameInput = document.getElementById('projectname');
+    const teamNameInput = document.getElementById('teamname');
+    //const teamMemberInput = document.getElementById('teammember');
+    const projectStartDateInput = document.getElementById('startdate');
+    const projectEndDateInput = document.getElementById('enddate');
+    const githubLinkInput = document.getElementById('githublink');
+
+    const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
+    const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
+    
+    //teamMemberInput.value = '하암';
+    projectStartDateInput.value = this.newProjectStartDate;
+    projectEndDateInput.value = this.newProjectEndDate;
+    githubLinkInput.value = '흠';
+
+    console.log(projectName); //변경하는 이름
+    console.log(teamName); //이것도
 }
 
 const onclickgithub = () => {
