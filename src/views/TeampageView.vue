@@ -141,7 +141,7 @@
                         <h4>프로젝트명</h4>
                         </div>
                         <div>
-                        <input type="text" value="${exProjectName}" id="projectname" class="input-long"/>
+                        <input type="text" value="${project.exProjectName}" id="projectname" class="input-long"/>
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
                         <h4>팀명</h4>
                         </div>
                         <div>
-                        <input type="text" id="teamname" class="input-long"/>
+                        <input type="text" value="${project.exTeamName}" id="teamname" class="input-long"/>
                         </div>
                     </div>
 
@@ -182,7 +182,7 @@
                     </div>
 
                     </div>
-                    <div class="btn-container">
+                    <div class="btn-container-right">
                         <ButtonComponent msg="저장하기" @click="saveBtn"/>
                     </div>
                 </div>
@@ -204,14 +204,42 @@
                 <div class="modal-info">
                     <h2>팀원 추가하기</h2>
                     <div class="container-modal-window">
-                    <div class="input-container">
-                        <div class="label-text">
-                        <h4>팀원이름</h4>
+                        <div class="input-container">
+                            <div class="label-text">
+                            <h4>팀장</h4>
+                            </div>
+                            <input type="text" id="leader" class="input-short"/>
                         </div>
-                    </div>
+                        <div class="input-container">
+                            <div class="label-text">
+                            <h4>팀원1</h4>
+                            </div>
+                            <input type="text" id="member1" class="input-short"/>
+                        </div>
+
+                        <div class="input-container">
+                            <div class="label-text">
+                            <h4>팀원2</h4>
+                            </div>
+                            <input type="text" id="member2" class="input-short"/>
+                        </div>
+
+                        <div class="input-container">
+                            <div class="label-text">
+                            <h4>팀원3</h4>
+                            </div>
+                            <input type="text" id="member3" class="input-short"/>
+                        </div>
+
+                        <div class="input-container">
+                            <div class="label-text">
+                            <h4>팀원4</h4>
+                            </div>
+                            <input type="text" id="member4" class="input-short"/>
+                        </div>
 
                     </div>
-                    <div class="btn-container">
+                    <div class="btn-container-right">
                         <ButtonComponent msg="저장하기" @click="saveBtn"/>
                     </div>
                 </div>
@@ -286,9 +314,9 @@ https://github.com/richardtallent/vue-simple-calendar
     width: 55vw;
   }
 
-  .btn-container{
+  .btn-container-right{
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     padding-bottom: 30px;
   }
 
@@ -447,6 +475,10 @@ input{
 
   .input-long{
     width: 60vw;
+  }
+
+  .input-short{
+    width: 30vw;
   }
 
   .btn-container{
