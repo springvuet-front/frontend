@@ -40,7 +40,7 @@
           <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
-        <div v-for="(item, index) in visibleCurrentProject" :key="index">
+        <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink">
           <div class="projectBox">
             <div class="project category">
               <div class="project field">{{item.project_field}}</div>
@@ -543,6 +543,10 @@ export default {
         this.completeEndIndex++;
       }
     },
+    pageLink(){
+      this.$router.push({path: 'teampage'})
+      //router.push({ name: 'user', params: { userId: 123 }})
+    }
   },
   computed: {
     /* 프로젝트 3개씩 보여주게 */
