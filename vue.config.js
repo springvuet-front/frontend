@@ -6,14 +6,16 @@ module.exports = defineConfig({
 
   devServer: {
     proxy: {
-      /*'/': {
+      '/': {
         target: "http://localhost:8080",
         changeOrigin: true,
+        ws: false,
       },
       '^/api':{
         target: "http://localhost:8080",
         changeOrigin: true,
-      }*/
+        ws: false,
+      }
     }
   },
   chainWebpack: config => {
