@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import FirstpageView from "../views/FirstpageView.vue"
 import HomeView from "../views/HomeView.vue"
 import CommunityView from '../views/CommunityView.vue'
 import BookmarkView from "../views/BookmarkView.vue"
@@ -9,7 +10,8 @@ import TeampageView from "../views/TeampageView.vue"
 import CreateNewView from "../views/CreateNewView.vue"
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
+  { path: '/', name: 'firstpage', component: FirstpageView },
+  { path: '/home', name: 'home', component: HomeView },
   { path: '/bookmark', name: 'bookmark', component: BookmarkView },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/signup', name: 'signup', component: SignupView },
