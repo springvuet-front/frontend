@@ -76,7 +76,7 @@
               <div class="modifying-icon">
                 
               </div>
-              <ButtonComponent msg="수정하기" @click="modalOpen"/>
+              <Button class="modifying-button" @click="modalOpen">수정하기</Button>
 
               <div class="modal-wrap" v-show="modalCheck">
                 <div class="modal-container">
@@ -123,7 +123,7 @@
               </svg>
             </div>
             <div class="comment-number">{{ item.data.comments_num }} </div>
-            <Button class="write-comment" @click="modalOpen">댓글 달기</Button>
+            <Button class="comment-button" @click="modalOpen">댓글 달기</Button>
 
             <div class="modal-wrap" v-show="modalCheck">
               <div class="modal-container">
@@ -148,14 +148,15 @@
                       </div>
                       <div>
                         <input type="text" id="write-comment" value="댓글 작성하기" class="input-long"/>
+                        <div class="send-icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
 
-                    <!--<div class="send-icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                      </svg>
-                    </div>-->
+                    
 
                   </div>
                 </div>
@@ -187,7 +188,7 @@
   line-height:2.0;
 }
 .bTitle{
-  font-size: 30px;
+  font-size: 40px;
   padding-left: 10px;
   text-align: left;
   font-weight: bold;
@@ -195,7 +196,7 @@
 .part-select{
   position: absolute;
   background-color: #B1B2FF;
-  margin-top: 10px;
+  margin-top: 8px;
   margin-left: 20px;
   padding-left: 10px;
   width: 90px; 
@@ -208,7 +209,7 @@
 .state-select{
   position: absolute;
   background-color: #B1B2FF;
-  margin-top: 10px;
+  margin-top: 8px;
   margin-left: 130px;
   padding-left: 10px;
   width: 130px; 
@@ -304,10 +305,10 @@
   margin-left: 10px;
   margin-top: 30px;
   width: 1200px;
-  height: 180px;
+  height: 205px;
   display: grid;
-  grid-template-columns: 200px 700px 300px;
-  grid-template-rows: 140px 50px;
+  grid-template-columns: 185px 700px 320px;
+  grid-template-rows: 155px 50px;
 }
 .post-title {
   font-weight: bold;
@@ -320,7 +321,7 @@
 }
 .posts-right{
   text-align: right;
-  padding: 70px 10px 0 0;
+  padding: 55px 13px 0 0;
 }
 .comments{
   background-color: #B1B2FF;
@@ -394,6 +395,14 @@
 .input-long{
   width: 60vw;
 }
+.comment-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 13pt;
+    font-weight: bold;
+    padding-left: 20px;
+}
 .written-comments {
   background-color: #B1B2FF;
   text-align: left;
@@ -405,16 +414,27 @@
 }
 .send-icon {
   background-color: #B1B2FF;
-  size: 15% 15%;
+  width: 35px;
+  height: 35px;
+  transform: rotate(-90deg);
 }
 .comment-icon{
   width: 35px;
   height: 35px;
-  padding: 10px;
-  padding-right: 5px;
+  padding: 10px 3px 0 15px;
 }
 .write-comment{
   padding-left: 20px;
+}
+
+/* 수정하기 모달창 */
+.modifying-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 13pt;
+    font-weight: bold;
+    text-decoration: underline;
 }
 </style>
 
@@ -456,6 +476,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
                       post_body: "Vue.js 능숙하신 분 환영합니다",
                       post_writer: "나송집가고싶송",
                       post_date: "2024-02-01",
+                      comments_num: "2",
               }},
             ],
             written_comments: [
