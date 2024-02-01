@@ -6,6 +6,17 @@
     <div class="elementName">프로젝트명</div><input type="text" v-model="projectName">
   </div>
   <div class="bInputText">
+    <div class="elementName">분야</div>
+    <div class="bInputField">
+      <input type="radio" v-model="projectField" value="웹"/>
+      <label>웹</label>
+      <input type="radio" v-model="projectField" value="앱"/>
+      <label>앱</label>
+      <input type="radio" v-model="projectField" value="데분"/>
+      <label>데분</label>
+    </div>
+  </div>
+  <div class="bInputText">
     <div class="elementName">팀명</div><input type="text" v-model="projectTeam">
   </div>
   <div class="bInputText">
@@ -38,6 +49,11 @@
   flex-direction: row;
   padding: 20px;
 }
+.bInputField{
+  display:flex;
+  width: 800px;
+  
+}
 .bInputDate{
   display: flex;
   flex-direction: row;
@@ -47,6 +63,23 @@
   font-size: 25px;
   padding-top: 20px;
   font-weight: bold;
+}
+.bInputField label{
+  display: flex;
+  flex-direction: row;
+  font-size: 12pt;
+  padding-right: 50px;
+  padding-left: 5px;
+  justify-content: center;
+}
+[type="radio"] {
+  /* vertical-align: middle;
+  appearance: none;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 50%;
+   */
+  width: 1.25em;
+  height: 1.25em;
 }
 .elementName{
   width: 200px;
@@ -91,6 +124,7 @@ export default {
     return {
       projectName:'',
       projectTeam:'',
+      projectField:'',
       projectStartDate:'',
       projectEndDate:'',
       projectGitLink:'',
