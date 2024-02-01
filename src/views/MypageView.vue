@@ -192,9 +192,6 @@
   padding-left: 20pt;
   padding-top: 10pt;
 }
-.bproject.complete {
-  
-}
 
 .projectlist {
   /* background-color: #F2F2F2; */
@@ -204,6 +201,10 @@
   flex-wrap: nowrap;
   /* justify-content: center; */
   justify-content: space-between;
+}
+
+.projectlist:hover{
+  cursor: pointer;
 }
 
 .project-item {
