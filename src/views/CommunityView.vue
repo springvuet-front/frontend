@@ -58,89 +58,124 @@
             <ButtonComponent id="btn1" parameter="" msg="등록하기"/>
           </div>
         </div>
-        <div class="posts" v-for="(item, index) in currentPosts" :key="index"> <!--기존 게시글 보이는 부분-->
-          
+
+        <!--기존 게시글 보이는 부분-->
+        <div class="posts" v-for="(item, index) in currentPosts" :key="index"> 
+          <div class="posts-part-state">
             <div class="post-part">{{ item.data.post_part }}</div>
             <div class="post-state">{{ item.data.post_state }}</div>
+          </div>
+          <div class="posts-contents">
             <div class="post-title">{{ item.data.post_title }}</div>
             <div class="post-body">{{ item.data.post_body }}</div>
+          </div>
+          <div class="posts-right">
+
+            <!-- 수정하기 모달창-->
+            <div class="modifying">
+              <div class="modifying-icon">
+                
+              </div>
+              <ButtonComponent msg="수정하기" @click="modalOpen"/>
+
+              <div class="modal-wrap" v-show="modalCheck">
+                <div class="modal-container">
+                  <div class="flex-box">
+                    <div class="modal-info">
+                      
+                      <div class="container-modal-window">
+                      <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
+                        <!-- 본문 있던 곳 -->
+                      </div>
+
+                      <div class="input-container">
+                        <div class="label-text">
+                        </div>
+                        <!-- 댓글 작성하던 곳 -->
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="modal-btn">
+                    <div class="close-btn" @click="modalOpen">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>        
+          </div>
+          <!-- 수정하기 모달창 끝 -->
+
             <div class="post-info">
               <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
               <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
             </div>
-          
+          </div>
+        
+          <!-- 댓글달기 모달창-->
           <div class="comments">
-            <div> {{ item.data.comments_num }} </div>
+            <div class="comment-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+              </svg>
+            </div>
+            <div class="comment-number">{{ item.data.comments_num }} </div>
             <ButtonComponent msg="댓글 달기" @click="modalOpen"/>
 
             <div class="modal-wrap" v-show="modalCheck">
-        <div class="modal-container">
-            <div class="flex-box">
-                <div class="modal-info">
-                  <div class="post-title"> {{ item.data.post_title }} </div>
-                  <div class="post-body">{{ item.data.post_body }}</div>
-                  <div class="post-info">
-                    <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
-                    <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
-                  </div>
+              <div class="modal-container">
+                <div class="flex-box">
+                  <div class="modal-info">
+                    <div class="post-title"> {{ item.data.post_title }} </div>
+                    <div class="post-body">{{ item.data.post_body }}</div>
+                    <div class="post-info">
+                      <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
+                      <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
+                    </div>
 
                     <div class="container-modal-window">
-                    <div class="input-container">
-                        <div class="label-text">
-                        <h4>프로젝트명</h4>
-                        </div>
-                        <div>
-                        <input type="text" value="${exProjectName}" id="projectname" class="input-long"/>
-                        </div>
+                    <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
+                      <div class="writer-id"> {{ item.data.writer_id }}</div>
+                      <div class="written-text"> {{ item.data.written_text }}</div>
+                      <div class="post-date"> 등록일 : {{ item.data.written_date }}</div>
                     </div>
 
                     <div class="input-container">
-                        <div class="label-text">
-                        <h4>팀명</h4>
-                        </div>
-                        <div>
-                        <input type="text" id="teamname" class="input-long"/>
-                        </div>
-                    </div>
-
-                    <div class="input-container">
-                        <div class="label-text">
-                        <h4>팀원</h4>
-                        </div>
-                        <div>
-                        <input type="text" class="input-long"/>
-                        </div>
-                    </div>
-
-                    <div class="input-container">
-                        <div class="label-text">
-                        </div>
-                        <div>
+                      <div class="label-text">
+                      </div>
+                      <div>
                         <input type="text" id="write-comment" value="댓글 작성하기" class="input-long"/>
-                        </div>
+                      </div>
                     </div>
 
-                    </div>
+                    <!--<div class="send-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                      </svg>
+                    </div>-->
+
+                  </div>
                 </div>
-            
                 <div class="modal-btn">
-                    <div class="close-btn" @click="modalOpen">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </div>
+                  <div class="close-btn" @click="modalOpen">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>        
         </div>
-      </div>        
+        <!-- 댓글달기 모달창 끝 -->
 
-            
-          </div>
         </div>   
-
-        </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style>
@@ -233,24 +268,21 @@
 .write-title{
   background-color: #B1B2FF;
   padding-inline: 10px;
-  width: 750px;
+  width: 770px;
   height: 35px;
-  border-color: rgb(85, 85, 85); /*색이 일부분만 바뀜*/
-  border-width: 1px;
+  border-width: 0px;
   font-size: 15pt;
-  margin-left: 80px;
+  margin-left: 150px;
   margin-top: 25px;
-  
 }
 .write-body{
   background-color: #B1B2FF;
-  margin-left: 80px;
+  margin-left: 150px;
   margin-top: 13px;
   padding-inline: 10px;
-  width : 750px;
+  width : 770px;
   height: 135px;
-  border-color: rgb(85, 85, 85); /*색이 일부분만 바뀜*/
-  border-width: 1px;
+  border-width: 0px;
   font-size: 15pt;
 }
 .write-label {
@@ -273,14 +305,27 @@
   margin-top: 30px;
   width: 1200px;
   height: 180px;
-  display: flex; 
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 200px 700px 300px;
+  grid-template-rows: 140px 50px;
+}
+.post-title {
+  font-weight: bold;
+  font-size: 20pt;
+  padding-top: 10px;
+  text-align: left;
+}
+.post-body{
+  text-align: left;
+}
+.posts-right{
+  text-align: right;
+  padding: 70px 10px 0 0;
 }
 .comments{
   background-color: #B1B2FF;
   width: 1200px;
   height: 50px;
-  margin-top: 10px;
   display: flex; 
   flex-direction: row;
   color: white;
@@ -310,24 +355,31 @@
   border: none;
   color: white;
   font-size: 13pt;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
 }
 .post-state{
   position: absolute;
   background-color: #B1B2FF;
   margin-top: 80px;
   margin-left: 20px;
-  width: 110px; 
+  width: 100px; 
   height: 40px;
   border-radius: 34px;
   border: none;
   color: white;
   font-size: 13pt;
+  display: flex; 
+  align-items: center;
+  justify-content: center;
 }
 
-/* 모달창 */
+/* 댓글달기 모달창 */
 .modal-container{
   background-color: #D2DAFF;
   color: black;
+  padding-left: 20px;
 }
 .input-container{
   display: flex;
@@ -342,7 +394,25 @@
 .input-long{
   width: 60vw;
 }
-
+.written-comments {
+  background-color: #B1B2FF;
+  text-align: left;
+  padding: 10px 0 10px 15px;
+  width: 90%;
+}
+.writer-id{
+  font-weight: bold;
+}
+.send-icon {
+  background-color: #B1B2FF;
+  size: 15% 15%;
+}
+.comment-icon{
+  width: 35px;
+  height: 35px;
+  padding: 10px;
+  padding-right: 5px;
+}
 </style>
 
 <style scoped>
@@ -384,6 +454,12 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
                       post_writer: "나송집가고싶송",
                       post_date: "2024-02-01",
               }},
+            ],
+            written_comments: [
+              {data: {writer_id:"파송송계란탁",
+                      written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
+                      written_date: "2024-02-01",
+              }}
             ],
             modalCheck: false,
         };
