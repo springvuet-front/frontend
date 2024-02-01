@@ -55,7 +55,7 @@
             <input id="body" class="write-body" type="text">
           </div>
           <div class="bBtn">
-            <ButtonComponent id="btn1" parameter="" msg="등록하기"/>
+            <ButtonComponent id="btn1" @click="addNewPost" msg="등록하기"/>
           </div>
         </div>
 
@@ -84,7 +84,7 @@
                     <div class="modal-info">
                       
                       <div class="container-modal-window">
-                      <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
+                      <div class="currentComments" v-for="(item, index) in written_comments" :key="index">
                         <!-- 본문 있던 곳 -->
                       </div>
 
@@ -95,19 +95,20 @@
                       </div>
 
                     </div>
+                    <div class="btn-container-right">
+                      <ButtonComponent msg="저장하기" @click="saveBtn"/>
+                    </div>
                   </div>
                   <div class="modal-btn">
-                    <div class="close-btn" @click="modalOpen">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                      </svg>
-                    </div>
+                    <ButtonComponent msg="취소하기" class="close-btn" @click="modalOpen"></ButtonComponent>
                   </div>
                 </div>
               </div>
             </div>        
           </div>
           <!-- 수정하기 모달창 끝 -->
+          <!-- 삭제하기 -->
+          <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
             <div class="post-info">
               <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
@@ -135,7 +136,7 @@
                       <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
                       <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                     </div>
-
+                    <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
                     <div class="container-modal-window">
                     <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
                       <div class="writer-id"> {{ item.data.writer_id }}</div>
@@ -146,13 +147,13 @@
                     <div class="input-container">
                       <div class="label-text">
                       </div>
-                      <div>
+                      <div> 
                         <input type="text" id="write-comment" value="댓글 작성하기" class="input-long"/>
-                        <div class="send-icon">
+                        <button @click="addNewComment" class="send-icon">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                           </svg>
-                        </div>
+                        </button>
                       </div>
                     </div>
 
@@ -230,7 +231,7 @@
   border-radius: 30px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
 }
 .state-select2 {
   position: absolute;
@@ -243,7 +244,7 @@
   border-radius: 34px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
 }
 .new-post{
   background-color: #D2DAFF;
@@ -318,10 +319,11 @@
 }
 .post-body{
   text-align: left;
+  font-size: 14pt;
 }
 .posts-right{
   text-align: right;
-  padding: 55px 13px 0 0;
+  padding: 20px 13px 0 0;
 }
 .comments{
   background-color: #B1B2FF;
@@ -350,12 +352,12 @@
   background-color: #B1B2FF;
   margin-top: 25px; 
   margin-left: 20px;
-  width: 70px; 
+  width: 75px; 
   height: 40px;
   border-radius: 30px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
   display: flex; 
   align-items: center;
   justify-content: center;
@@ -365,12 +367,12 @@
   background-color: #B1B2FF;
   margin-top: 80px;
   margin-left: 20px;
-  width: 100px; 
+  width: 110px; 
   height: 40px;
   border-radius: 34px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
   display: flex; 
   align-items: center;
   justify-content: center;
@@ -393,7 +395,10 @@
   width: 10vw;
 }
 .input-long{
-  width: 60vw;
+  width: 1000px;
+  height: 30px;
+  color: white;
+  font-size: 13pt;
 }
 .comment-button {
     background: none;
@@ -423,9 +428,7 @@
   height: 35px;
   padding: 10px 3px 0 15px;
 }
-.write-comment{
-  padding-left: 20px;
-}
+
 
 /* 수정하기 모달창 */
 .modifying-button {
@@ -435,6 +438,15 @@
     font-size: 13pt;
     font-weight: bold;
     text-decoration: underline;
+}
+
+.delete-button{
+  background: none;
+  border: none;
+  color: white;
+  font-size: 13pt;
+  font-weight: bold;
+  text-decoration: underline;
 }
 </style>
 
@@ -453,40 +465,40 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       ButtonComponent,
     },
     data() {
-        return {
-            partModel: '웹',
-            stateModel: '모집중',
-            partModel2: '웹',
-            stateModel2: '모집중',
-            parts: ['웹', '앱', '데분'],
-            states:['모집중', '모집 완료'],
-            message: "글을 입력하세요",
-            currentPosts: [
-              {data: {post_part: "앱",
-                      post_state: "모집중",
-                      post_title: "IOS 개발자 구합니다!",
-                      post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
-                      post_writer: "우주최강개발자",
-                      post_date: "2024-01-31",
-                      comments_num: "3",
-              }},
-              {data: {post_part: "웹",
-                      post_state: "모집중",
-                      post_title: "웹 프론트엔드 개발자 구합니다.",
-                      post_body: "Vue.js 능숙하신 분 환영합니다",
-                      post_writer: "나송집가고싶송",
-                      post_date: "2024-02-01",
-                      comments_num: "2",
-              }},
-            ],
-            written_comments: [
-              {data: {writer_id:"파송송계란탁",
-                      written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
-                      written_date: "2024-02-01",
-              }}
-            ],
-            modalCheck: false,
-        };
+      return {
+        partModel: '웹',
+        stateModel: '모집중',
+        partModel2: '웹',
+        stateModel2: '모집중',
+        parts: ['웹', '앱', '데분'],
+        states:['모집중', '모집 완료'],
+        message: "글을 입력하세요",
+        currentPosts: [
+          {data: {post_part: "앱",
+                  post_state: "모집중",
+                  post_title: "IOS 개발자 구합니다!",
+                  post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
+                  post_writer: "우주최강개발자",
+                  post_date: "2024-01-31",
+                  comments_num: "3",
+          }},
+          {data: {post_part: "웹",
+                  post_state: "모집중",
+                  post_title: "웹 프론트엔드 개발자 구합니다.",
+                  post_body: "Vue.js 능숙하신 분 환영합니다",
+                  post_writer: "나송집가고싶송",
+                  post_date: "2024-02-01",
+                  comments_num: "2",
+          }},
+        ],
+          currentComments: [
+            {data: {writer_id:"파송송계란탁",
+                    written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
+                    written_date: "2024-02-01",
+            }}
+          ],
+          modalCheck: false,
+      };
     },
     methods: {
       updateValue: function(value){
@@ -495,6 +507,46 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       modalOpen() {
         this.modalCheck = !this.modalCheck
       },
-    },
-  };
+      deletePost(index){
+        this.currentPosts.splice(index, 1);
+      },
+      addNewPost() {
+        const newPost = {
+          data: {
+            post_part: this.partModel2,
+            post_state: this.stateModel2,
+            post_title: this.$refs.writeTitle.value, // write-title input의 값을 가져옴
+            post_body: this.$refs.writeBody.value,  // write-body input의 값을 가져옴
+            post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
+            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
+            comments_num: "0",  // 초기 댓글 개수를 0으로 설정
+          }
+        };
+        // currentPosts 배열에 새로운 데이터 추가
+        this.currentComments.push(newPost);
+        // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
+        this.partModel2 = '웹';
+        this.stateModel2 = '모집중';
+        this.$refs.writeTitle.value = '';
+        this.$refs.writeBody.value = '';
+      },
+      addNewComment() {
+        const newComment = {
+          data: {
+            //아이디 가져오기 + 작성자일 경우 '작성자' 붙이기
+            written_text: this.$refs.writtenText.value,  // written-text input의 값을 가져옴
+            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
+          }
+        };
+        // currentPosts 배열에 새로운 데이터 추가
+        this.currentComments.push(newComment);
+        // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
+        this.$refs.writtenText.value = '';
+      },
+      saveBtn() {
+
+      },
+    }
+  }
 </script>
+
