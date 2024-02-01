@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <!--기존 게시글 보이는 부분 !-->
+        <!--기존 게시글 보이는 부분-->
         <div class="posts" v-for="(item, index) in currentPosts" :key="index"> 
           <div class="posts-part-state">
             <div class="post-part">{{ item.data.post_part }}</div>
@@ -123,7 +123,7 @@
               </svg>
             </div>
             <div class="comment-number">{{ item.data.comments_num }} </div>
-            <ButtonComponent msg="댓글 달기" @click="modalOpen"/>
+            <Button class="write-comment" @click="modalOpen">댓글 달기</Button>
 
             <div class="modal-wrap" v-show="modalCheck">
               <div class="modal-container">
@@ -412,6 +412,9 @@
   height: 35px;
   padding: 10px;
   padding-right: 5px;
+}
+.write-comment{
+  padding-left: 20px;
 }
 </style>
 
