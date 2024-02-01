@@ -7,14 +7,16 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/': {
-        target: "http://localhost:8000",
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      '^/api':{
+        target: "http://localhost:8080",
         changeOrigin: true,
       }
     }
+  },
+  chainWebpack: config => {
+    config.module.rules.delete('eslint');
   }
 })
-module.exports = {
-  chainWebpack: config => {
-      config.module.rules.delete('eslint');
-  }
-}
