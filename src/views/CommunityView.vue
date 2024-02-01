@@ -55,7 +55,7 @@
             <input id="body" class="write-body" type="text">
           </div>
           <div class="bBtn">
-            <ButtonComponent id="btn1" parameter="" msg="등록하기"/>
+            <ButtonComponent id="btn1" @click="addNewPost" msg="등록하기"/>
           </div>
         </div>
 
@@ -108,7 +108,7 @@
             </div>        
           </div>
           <!-- 수정하기 모달창 끝 -->
-          <!-- 삭제하기. 근데 모달은 아닌-->
+          <!-- 삭제하기 -->
           <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
             <div class="post-info">
@@ -320,10 +320,11 @@
 }
 .post-body{
   text-align: left;
+  font-size: 14pt;
 }
 .posts-right{
   text-align: right;
-  padding: 55px 13px 0 0;
+  padding: 20px 13px 0 0;
 }
 .comments{
   background-color: #B1B2FF;
@@ -465,40 +466,40 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       ButtonComponent,
     },
     data() {
-        return {
-            partModel: '웹',
-            stateModel: '모집중',
-            partModel2: '웹',
-            stateModel2: '모집중',
-            parts: ['웹', '앱', '데분'],
-            states:['모집중', '모집 완료'],
-            message: "글을 입력하세요",
-            currentPosts: [
-              {data: {post_part: "앱",
-                      post_state: "모집중",
-                      post_title: "IOS 개발자 구합니다!",
-                      post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
-                      post_writer: "우주최강개발자",
-                      post_date: "2024-01-31",
-                      comments_num: "3",
-              }},
-              {data: {post_part: "웹",
-                      post_state: "모집중",
-                      post_title: "웹 프론트엔드 개발자 구합니다.",
-                      post_body: "Vue.js 능숙하신 분 환영합니다",
-                      post_writer: "나송집가고싶송",
-                      post_date: "2024-02-01",
-                      comments_num: "2",
-              }},
-            ],
-            written_comments: [
-              {data: {writer_id:"파송송계란탁",
-                      written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
-                      written_date: "2024-02-01",
-              }}
-            ],
-            modalCheck: false,
-        };
+      return {
+        partModel: '웹',
+        stateModel: '모집중',
+        partModel2: '웹',
+        stateModel2: '모집중',
+        parts: ['웹', '앱', '데분'],
+        states:['모집중', '모집 완료'],
+        message: "글을 입력하세요",
+        currentPosts: [
+          {data: {post_part: "앱",
+                  post_state: "모집중",
+                  post_title: "IOS 개발자 구합니다!",
+                  post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
+                  post_writer: "우주최강개발자",
+                  post_date: "2024-01-31",
+                  comments_num: "3",
+          }},
+          {data: {post_part: "웹",
+                  post_state: "모집중",
+                  post_title: "웹 프론트엔드 개발자 구합니다.",
+                  post_body: "Vue.js 능숙하신 분 환영합니다",
+                  post_writer: "나송집가고싶송",
+                  post_date: "2024-02-01",
+                  comments_num: "2",
+          }},
+        ],
+          written_comments: [
+            {data: {writer_id:"파송송계란탁",
+                    written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
+                    written_date: "2024-02-01",
+            }}
+          ],
+          modalCheck: false,
+      };
     },
     methods: {
       updateValue: function(value){
@@ -509,7 +510,29 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       },
       deletePost(index){
         this.currentPosts.splice(index, 1);
-      }
-    },
-  };
+      },
+      addNewPost() {
+      // 새로운 데이터 생성
+        const newPost = {
+          data: {
+            post_part: this.partModel2,
+            post_state: this.stateModel2,
+            post_title: this.$refs.writeTitle.value, // write-title input의 값을 가져옴
+            post_body: this.$refs.writeBody.value,  // write-body input의 값을 가져옴
+            post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
+            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
+            comments_num: "0",  // 초기 댓글 개수를 0으로 설정
+          }
+        };
+        // currentPosts 배열에 새로운 데이터 추가
+        this.currentPosts.push(newPost);
+        // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
+        this.partModel2 = '웹';
+        this.stateModel2 = '모집중';
+        this.$refs.writeTitle.value = '';
+        this.$refs.writeBody.value = '';
+      },
+    }
+  }
 </script>
+
