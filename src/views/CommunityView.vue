@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <!--기존 게시글 보이는 부분-->
+        <!--기존 게시글 보이는 부분 !-->
         <div class="posts" v-for="(item, index) in currentPosts" :key="index"> 
           <div class="posts-part-state">
             <div class="post-part">{{ item.data.post_part }}</div>
