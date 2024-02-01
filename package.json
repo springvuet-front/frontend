@@ -10,8 +10,10 @@
   "dependencies": {
     "@heroicons/vue": "^2.1.1",
     "@popperjs/core": "^2.11.8",
+    "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.10",
+    "http-proxy-middleware": "^2.0.6",
     "jquery": "^3.7.1",
     "v-calendar": "^3.1.2",
     "vue": "^3.2.13",
