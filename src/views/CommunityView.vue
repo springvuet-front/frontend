@@ -108,6 +108,8 @@
             </div>        
           </div>
           <!-- 수정하기 모달창 끝 -->
+          <!-- 삭제하기. 근데 모달은 아닌-->
+          <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
             <div class="post-info">
               <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
@@ -135,7 +137,7 @@
                       <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
                       <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                     </div>
-
+                    <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
                     <div class="container-modal-window">
                     <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
                       <div class="writer-id"> {{ item.data.writer_id }}</div>
@@ -230,7 +232,7 @@
   border-radius: 30px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
 }
 .state-select2 {
   position: absolute;
@@ -243,7 +245,7 @@
   border-radius: 34px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
 }
 .new-post{
   background-color: #D2DAFF;
@@ -350,12 +352,12 @@
   background-color: #B1B2FF;
   margin-top: 25px; 
   margin-left: 20px;
-  width: 70px; 
+  width: 75px; 
   height: 40px;
   border-radius: 30px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
   display: flex; 
   align-items: center;
   justify-content: center;
@@ -365,12 +367,12 @@
   background-color: #B1B2FF;
   margin-top: 80px;
   margin-left: 20px;
-  width: 100px; 
+  width: 110px; 
   height: 40px;
   border-radius: 34px;
   border: none;
   color: white;
-  font-size: 13pt;
+  font-size: 14pt;
   display: flex; 
   align-items: center;
   justify-content: center;
@@ -393,7 +395,10 @@
   width: 10vw;
 }
 .input-long{
-  width: 60vw;
+  width: 1000px;
+  height: 30px;
+  color: white;
+  font-size: 13pt;
 }
 .comment-button {
     background: none;
@@ -423,9 +428,7 @@
   height: 35px;
   padding: 10px 3px 0 15px;
 }
-.write-comment{
-  padding-left: 20px;
-}
+
 
 /* 수정하기 모달창 */
 .modifying-button {
@@ -435,6 +438,15 @@
     font-size: 13pt;
     font-weight: bold;
     text-decoration: underline;
+}
+
+.delete-button{
+  background: none;
+  border: none;
+  color: white;
+  font-size: 13pt;
+  font-weight: bold;
+  text-decoration: underline;
 }
 </style>
 
@@ -495,6 +507,9 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       modalOpen() {
         this.modalCheck = !this.modalCheck
       },
+      deletePost(index){
+        this.currentPosts.splice(index, 1);
+      }
     },
   };
 </script>
