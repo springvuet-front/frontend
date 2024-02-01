@@ -75,9 +75,9 @@
 [type="radio"] {
   /* vertical-align: middle;
   appearance: none;
-  border: max(2px, 0.1em) solid gray;
+  border: max(2px, 0.1em) solid gray; */
   border-radius: 50%;
-   */
+  vertical-align: middle;
   width: 1.25em;
   height: 1.25em;
 }
