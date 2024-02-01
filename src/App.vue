@@ -29,6 +29,63 @@ a:hover, a:active {
   text-decoration: none;
 }
 
+.modal-wrap {
+position: fixed;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-wrap2 {
+position: fixed;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+}
+/* modal or popup */
+.modal-container {
+position: relative;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 85vw;
+height: 85vh;
+background: #fff;
+border-radius: 10px;
+padding: 20px;
+box-sizing: border-box;
+display: flex;
+flex-direction: column;
+}
+
+.modal-info{
+  width: 85vw;
+}
+
+.close-btn{
+  width: 30px;
+  height: 30px;
+}
+
+::-webkit-scrollbar {
+        width: 10px;
+    }
+  
+::-webkit-scrollbar-thumb {
+background-color: #e6e6e6;
+border-radius: 10px;
+background-clip: padding-box;
+border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgb(199, 199, 199);
+    border-radius: 10px;
+}
+
 </style>
 
 <script>
