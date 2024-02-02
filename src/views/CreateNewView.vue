@@ -8,10 +8,10 @@
   <div class="bInputText">
     <div class="elementName">분야</div>
     <div class="bInputField">
-      <label><input type="radio" v-bind:value="radioValue1" v-model="projectField">웹</label>
-      <label><input type="radio" v-bind:value="radioValue2" v-model="projectField">앱</label>
-      <label><input type="radio" v-bind:value="radioValue3" v-model="projectField">데이터분석</label>
-      <span>{{projectField}}</span>
+      <label :class="{ radioChecked:projectField === radioValue1 }"><input type="radio" v-bind:value="radioValue1" v-model="projectField">웹</label>
+      <label :class="{ radioChecked:projectField === radioValue2 }"><input type="radio" v-bind:value="radioValue2" v-model="projectField">앱</label>
+      <label :class="{ radioChecked:projectField === radioValue3 }"><input type="radio" v-bind:value="radioValue3" v-model="projectField">데이터분석</label>
+      <!-- <span>{{projectField}}</span> -->
       <!-- <input type="radio" v-model="projectField" value="웹"/>
       <label>웹</label>
       <input type="radio" v-model="projectField" value="앱"/>
@@ -53,12 +53,6 @@
   flex-direction: row;
   padding: 20px;
 }
-.bInputField{
-  display:flex;
-  width: 800px;
-  flex-direction: row;
-  justify-content: center;
-}
 .bInputDate{
   display: flex;
   flex-direction: row;
@@ -69,25 +63,30 @@
   padding-top: 20px;
   font-weight: bold;
 }
+.bInputField{
+  display:flex;
+  width: 800px;
+  flex-direction: row;
+  justify-content: space-around;
+  font-weight: 550;
+  font-size: 12pt;
+}
 [type="radio"] {
-  /* 
-  appearance: none;
-  border: max(2px, 0.1em) solid gray; */
-  /* vertical-align: middle;
-  width: 1.25em;
-  height: 1.25em; */
   display: none;
 }
 [type="radio"]+label{
 }
 .bInputField label{
-  margin-right: 120px;
   cursor: pointer;
   border: 2px solid #C6C7FF;
-  width: 100px;
+  border-radius: 15px;
+  width: 150px;
   text-align: center;
 }
-
+.radioChecked{
+  background-color: #C6C7FF;
+  color: white;
+}
 .elementName{
   width: 200px;
   text-align: right;
