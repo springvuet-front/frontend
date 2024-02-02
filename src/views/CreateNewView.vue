@@ -8,12 +8,16 @@
   <div class="bInputText">
     <div class="elementName">분야</div>
     <div class="bInputField">
-      <input type="radio" v-model="projectField" value="웹"/>
+      <label><input type="radio" v-bind:value="radioValue1" v-model="projectField">웹</label>
+      <label><input type="radio" v-bind:value="radioValue2" v-model="projectField">앱</label>
+      <label><input type="radio" v-bind:value="radioValue3" v-model="projectField">데이터분석</label>
+      <span>{{projectField}}</span>
+      <!-- <input type="radio" v-model="projectField" value="웹"/>
       <label>웹</label>
       <input type="radio" v-model="projectField" value="앱"/>
       <label>앱</label>
       <input type="radio" v-model="projectField" value="데분"/>
-      <label>데분</label>
+      <label>데분</label> -->
     </div>
   </div>
   <div class="bInputText">
@@ -52,7 +56,8 @@
 .bInputField{
   display:flex;
   width: 800px;
-  
+  flex-direction: row;
+  justify-content: center;
 }
 .bInputDate{
   display: flex;
@@ -64,23 +69,25 @@
   padding-top: 20px;
   font-weight: bold;
 }
-.bInputField label{
-  display: flex;
-  flex-direction: row;
-  font-size: 12pt;
-  padding-right: 50px;
-  padding-left: 5px;
-  justify-content: center;
-}
 [type="radio"] {
-  /* vertical-align: middle;
+  /* 
   appearance: none;
   border: max(2px, 0.1em) solid gray; */
-  border-radius: 50%;
-  vertical-align: middle;
+  /* vertical-align: middle;
   width: 1.25em;
-  height: 1.25em;
+  height: 1.25em; */
+  display: none;
 }
+[type="radio"]+label{
+}
+.bInputField label{
+  margin-right: 120px;
+  cursor: pointer;
+  border: 2px solid #C6C7FF;
+  width: 100px;
+  text-align: center;
+}
+
 .elementName{
   width: 200px;
   text-align: right;
@@ -128,6 +135,10 @@ export default {
       projectStartDate:'',
       projectEndDate:'',
       projectGitLink:'',
+
+      radioValue1: '웹',
+      radioValue2: '앱',
+      radioValue3: '데분'
     }
   },
   methods: {
