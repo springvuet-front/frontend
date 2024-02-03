@@ -51,8 +51,8 @@
             ></SelectBox>
           </div>
           <div class="bInput">
-            <input type="text" id="title1" class="write-title" v-model="inputTitle_community">
-            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community" placeholder="여기에 글을 작성하세요"></textarea>
+            <textarea type="text" id="title1" class="write-title" v-model="inputTitle_community" placeholder="여기에 제목을 작성하세요"></textarea>
+            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community" placeholder="여기에 본문을 작성하세요"></textarea>
           </div>
           <div class="bBtn">
             <ButtonComponent id="btn1" parameter="community" @click="addNewPost" msg="등록하기"/>
@@ -280,16 +280,18 @@
   font-size: 15pt;
   margin-left: 150px;
   margin-top: 25px;
+  font-family: Arial, sans-serif;
 }
 .write-body{
   background-color: #B1B2FF;
   margin-left: 150px;
-  margin-top: 13px;
+  margin-top: 5px;
   padding-inline: 10px;
   width : 770px;
   height: 135px;
   border-width: 0px;
   font-size: 15pt;
+  font-family: Arial, sans-serif;
 }
 .write-label {
   font-size: 15pt;
