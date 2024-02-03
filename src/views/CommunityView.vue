@@ -39,7 +39,7 @@
         </div>
 
         <!--기존 게시글 -->
-        <div v-for="(item, index) in currentPosts" :key="index">
+        <div v-for="(item, postindex) in currentPosts" :key="postindex">
           <div v-if="(partModel === '전체' || partModel === item.data.post_part) && (stateModel === '전체' || stateModel === item.data.post_state)">
             <div class="posts">
               <div class="posts-part-state">
@@ -60,27 +60,17 @@
                     <div class="modal-container">
                       <div class="flex-box">
                         <div class="modal-info">
-                          <h5>수저하기</h5>
+                          <h5>수정하기</h5>
 
                           <div class="project-date">
                             <div class="edit-title">
-                                <h5>제목</h5>
                                 <input msg="{{ item.data.post_title }}"  >
-                                <div>{{ item.data.post_title }}</div>
                             </div>
                             <div class="edit-body">
-                                <h5>본문</h5>
-                                <div>{{ item.data.post_body }}</div>
+                                
                             </div>
                         </div>
 
-                          <div class="modal-btn">
-                            <div class="close-btn" @click="modalOpen">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                              </svg>
-                            </div>
-                          </div>
                           
                         <div class="btn-container-right">
                           <ButtonComponent msg="저장하기" @click="saveBtn"/>
@@ -96,14 +86,13 @@
               <!-- 수정하기 모달창 끝 -->
 
               <!-- 삭제하기 -->
-              <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
+              <Button class="delete-button" @click="deletePost(postindex)">삭제하기</Button>
 
                 <div class="post-info">
                   <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
                   <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                 </div>
               </div>
-              <!-- 삭제하기 모달창 끝 -->
             
               <!-- 댓글달기 모달창-->
               <div class="comments">
@@ -133,13 +122,22 @@
                             </svg>
                           </div>
                         </div>
+                        
 
-                        <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
+                        <hr class="horizontal-divider" style="border-top: 4px solid #BFBFBF;">
                         <div class="container-modal-window">
-                        <div class="currentComments" v-for="(item, index) in currentComments" :key="index">
+                        <div class="currentComments" v-for="(item, commentindex) in currentComments" :key="commentindex">
                           <div class="writer-id"> {{ item.data.writer_id }}</div>
                           <div class="written-text"> {{ item.data.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.data.written_date }}</div>
+                          <div class="post-date"> 작성일 : {{ item.data.written_date }}</div>
+
+                          <div class="delete-comment">
+                            <div class="close-btn" @click="deleteComment(commentindex)">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                              </svg>
+                            </div>
+                          </div>
                         </div>
 
                         <div class="input-container">
@@ -280,6 +278,8 @@
   font-size: 15pt;
   font-family: Arial, sans-serif;
   resize: none;
+  white-space: pre-wrap;
+
 }
 .write-label {
   font-size: 15pt;
@@ -434,6 +434,9 @@
   width: 95%;
   margin: 5px;
 }
+.write-comment::placeholder {
+  color: rgba(255, 255, 255, 0.747);
+}
 
 /* 수정하기 모달창 */
 .modifying-button {
@@ -525,16 +528,19 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       modalOpen2() {
         this.modalCheck = !this.modalCheck
       },
-      deletePost(index){
-        this.currentPosts.splice(index, 1);
+      deletePost(postindex){
+        this.currentPosts.splice(postindex, 1);
+      },
+      deleteComment(commentindex){
+        this.currentComments.splice(commentindex, 1);
       },
       addNewPost() {
         const newPost = {
           data: {
             post_part: this.partModel2,
             post_state: this.stateModel2,
-            post_title: this.inputTitle_community, // write-title input의 값을 가져옴
-            post_body: this.inputBody_community,  // write-body input의 값을 가져옴
+            post_title: this.inputTitle_community, 
+            post_body: this.inputBody_community,  
             post_writer: "새로운 작성자",  // 아이디 연동
             post_date: new Date().toISOString().slice(0, 10),  
             comments_num: "0", 
