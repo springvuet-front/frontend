@@ -61,7 +61,7 @@
 
         <!--기존 게시글 보이는 부분-->
         <div v-for="(item, index) in currentPosts" :key="index">
-          <div v-if="partModel===item.data.post_part & stateModel===item.data.post_state">
+          <div v-if="partModel===item.data.post_part && stateModel===item.data.post_state">
             <div class="posts">
               <div class="posts-part-state">
                 <div class="post-part">{{ item.data.post_part }}</div>
@@ -530,7 +530,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         };
         // currentPosts 배열에 새로운 데이터 추가
         
-        if(this.inputTitle_community & this.inputBody_community){
+        if(this.inputTitle_community && this.inputBody_community){
           this.currentPosts.push(newPost);
           // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
           this.partModel2 = '웹';
@@ -538,7 +538,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
           this.inputTitle_community = '';
           this.inputBody_community = '';
         }
-        else if(!this.inputTitle_community & !this.inputBody_community){
+        else if(!this.inputTitle_community && !this.inputBody_community){
           alert("제목과 내용을 입력하세요");
         }
         else if(!this.inputTitle_community){
