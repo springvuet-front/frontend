@@ -5,49 +5,28 @@
       <div class ="container">
         <div id="back">
         <div class="bTitle">모집 커뮤니티
-          <select
-            v-model="partModel"
-            class="part-select"
-            v-bind:id="input_id"
-            v-on:input="updateValue($event.target.value)"
-          > 
+          <select v-model="partModel" class="part-select" v-bind:id="input_id" v-on:input="updateValue($event.target.value)" > 
             <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
           </select>
-          <select
-            v-model="stateModel"
-            class="state-select"
+          <select v-model="stateModel" class="state-select"
           > 
             <option v-for="(item, index) in states" :key="index">{{ item }}</option>
           </select>
-          <SelectBox
-            v-model="preselect_value"
-            :items="somethings"
-            :input_id="'my_selectbox'"
-            @input="value => { preselect_value = value }"
+          <SelectBox  v-model="preselect_value" :items="somethings" :input_id="'my_selectbox'" @input="value => { preselect_value = value }"
         ></SelectBox>
         </div>
         
+        <!-- 게시글 작성하기 -->
         <div class="new-post">
           <div class="bSelect">
-            <select
-              v-model="partModel2"
-              class="part-select2"
-              v-bind:id="input_id"
-              v-on:input="updateValue($event.target.value)"
-            > 
+            <select v-model="partModel2" class="part-select2" v-bind:id="input_id" v-on:input="updateValue($event.target.value)" > 
               <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
             </select>
-            <select
-              v-model="stateModel2"
-              class="state-select2"
-            > 
+            <select v-model="stateModel2" class="state-select2" > 
               <option v-for="(item, index) in states" :key="index">{{ item }}</option>
             </select>
             <SelectBox
-              v-model="preselect_value"
-              :items="somethings"
-              :input_id="'my_selectbox'"
-              @input="value => { preselect_value = value }"
+              v-model="preselect_value" :items="somethings"  :input_id="'my_selectbox'" @input="value => { preselect_value = value }"
             ></SelectBox>
           </div>
           <div class="bInput">
@@ -59,7 +38,7 @@
           </div>
         </div>
 
-        <!--기존 게시글 보이는 부분-->
+        <!--기존 게시글 -->
         <div v-for="(item, index) in currentPosts" :key="index">
           <div v-if="(partModel === '전체' || partModel === item.data.post_part) && (stateModel === '전체' || stateModel === item.data.post_state)">
             <div class="posts">
@@ -81,23 +60,19 @@
                     <div class="modal-container">
                       <div class="flex-box">
                         <div class="modal-info">
+                          <h5>수저하기</h5>
 
-                          <div v-if="selectedPost">
-                            <div class="edit-form">
-                              <div class="label-text">제목</div>
-                              <textarea
-                                v-model="selectedPost.data.post_title"
-                                class="write-title"
-                                placeholder="여기에 제목을 작성하세요"
-                              ></textarea>
-                              <div class="label-text">내용</div>
-                              <textarea
-                                v-model="selectedPost.data.post_body"
-                                class="write-body"
-                                placeholder="여기에 본문을 작성하세요"
-                              ></textarea>
+                          <div class="project-date">
+                            <div class="edit-title">
+                                <h5>제목</h5>
+                                <input msg="{{ item.data.post_title }}"  >
+                                <div>{{ item.data.post_title }}</div>
                             </div>
-                          </div>
+                            <div class="edit-body">
+                                <h5>본문</h5>
+                                <div>{{ item.data.post_body }}</div>
+                            </div>
+                        </div>
 
                           <div class="modal-btn">
                             <div class="close-btn" @click="modalOpen">
@@ -138,7 +113,7 @@
                   </svg>
                 </div>
                 <div class="comment-number">{{ item.data.comments_num }} </div>
-                <Button class="comment-button" @click="modalOpen">댓글 달기</Button>
+                <Button class="comment-button" @click="modalOpen2">댓글 달기</Button>
 
                 <div class="modal-wrap" v-show="modalCheck">
                   <div class="modal-container">
@@ -152,7 +127,7 @@
                         </div>
 
                         <div class="modal-btn">
-                          <div class="close-btn" @click="modalOpen">
+                          <div class="close-btn" @click="modalOpen2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
@@ -170,7 +145,7 @@
                         <div class="input-container">
                           <div class="label-text"></div>
                           <div> 
-                            <textarea type="text" id="write-comment" class="write-comment" placeholder="댓글 작성하기"></textarea>
+                            <textarea type="text" id="write-comment" class="write-comment" v-model="write_comment" placeholder="댓글 작성하기"></textarea>
                             <button @click="addNewComment" class="send-icon">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -423,6 +398,7 @@
   border-width: 0px;
   font-family: Arial, sans-serif;
   resize: none;
+  text-align: left; /*왜 안되지!!!*/
 }
 .comment-button {
     background: none;
@@ -536,7 +512,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
           ],
           modalCheck: false,
           inputTitle_community: '',
-          inputBody_community:'',
+          inputBody_community: '',
       };
     },
     methods: {
@@ -544,6 +520,9 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         this.$emit('input', value);
       },
       modalOpen() {
+        this.modalCheck = !this.modalCheck
+      },
+      modalOpen2() {
         this.modalCheck = !this.modalCheck
       },
       deletePost(index){
@@ -557,15 +536,12 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             post_title: this.inputTitle_community, // write-title input의 값을 가져옴
             post_body: this.inputBody_community,  // write-body input의 값을 가져옴
             post_writer: "새로운 작성자",  // 아이디 연동
-            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
-            comments_num: "0",  // 초기 댓글 개수를 0으로 설정
+            post_date: new Date().toISOString().slice(0, 10),  
+            comments_num: "0", 
           }
         };
-        // currentPosts 배열에 새로운 데이터 추가
-        
         if(this.inputTitle_community && this.inputBody_community){
           this.currentPosts.push(newPost);
-          // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
           this.partModel2 = '웹';
           this.stateModel2 = '모집중';
           this.inputTitle_community = '';
@@ -585,13 +561,18 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       addNewComment() {
         const newComment = {
           data: {
-            //아이디 가져오기 + 작성자일 경우 '작성자' 붙이기
-            written_text: this.$refs.writtenText.value,  // written-text input의 값을 가져옴
-            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
+            writer_id: "새로운 작성자", // 아이디 가져오기 (+작성자일 경우 '작성자' 붙이기)
+            written_text: this.write_comment,  
+            written_date: new Date().toISOString().slice(0, 10),  
           }
+        };
+        if(this.write_comment){
+          this.currentComments.push(newComment);
+          this.write_comment = '';
         }
-        this.currentComments.push(newComment);
-        this.$refs.writtenText.value = '';
+        else if(!this.write_comment){
+          alert("댓글을 입력하세요");
+        }
       },
       saveBtn() {
 
