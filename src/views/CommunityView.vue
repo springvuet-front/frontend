@@ -86,7 +86,7 @@
                         <div class="modal-info">
                           
                           <div class="container-modal-window">
-                          <div class="currentComments" v-for="(item, index) in written_comments" :key="index">
+                          <div class="currentComments" v-for="(item, index) in currentComments" :key="index">
                             <!-- 본문 있던 곳 -->
                           </div>
 
@@ -140,7 +140,7 @@
                         </div>
                         <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
                         <div class="container-modal-window">
-                        <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
+                        <div class="currentComments" v-for="(item, index) in currentComments" :key="index">
                           <div class="writer-id"> {{ item.data.writer_id }}</div>
                           <div class="written-text"> {{ item.data.written_text }}</div>
                           <div class="post-date"> 등록일 : {{ item.data.written_date }}</div>
@@ -274,24 +274,26 @@
 .write-title{
   background-color: #B1B2FF;
   padding-inline: 10px;
-  width: 770px;
+  width: 800px;
   height: 35px;
   border-width: 0px;
   font-size: 15pt;
   margin-left: 150px;
   margin-top: 25px;
   font-family: Arial, sans-serif;
+  resize: none;
 }
 .write-body{
   background-color: #B1B2FF;
   margin-left: 150px;
   margin-top: 5px;
   padding-inline: 10px;
-  width : 770px;
+  width : 800px;
   height: 135px;
   border-width: 0px;
   font-size: 15pt;
   font-family: Arial, sans-serif;
+  resize: none;
 }
 .write-label {
   font-size: 15pt;
@@ -414,7 +416,7 @@
     font-weight: bold;
     padding-left: 20px;
 }
-.written-comments {
+.currentComments {
   background-color: #B1B2FF;
   text-align: left;
   padding: 10px 0 10px 15px;
@@ -434,7 +436,10 @@
   height: 35px;
   padding: 10px 3px 0 15px;
 }
-
+.horizontal-divider {
+  width: 95%;
+  margin: 5px;
+}
 
 /* 수정하기 모달창 */
 .modifying-button {
@@ -525,7 +530,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             post_state: this.stateModel2,
             post_title: this.inputTitle_community, // write-title input의 값을 가져옴
             post_body: this.inputBody_community,  // write-body input의 값을 가져옴
-            post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
+            post_writer: "새로운 작성자",  // 아이디 연동
             post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
             comments_num: "0",  // 초기 댓글 개수를 0으로 설정
           }
