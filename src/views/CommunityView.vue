@@ -52,10 +52,7 @@
           </div>
           <div class="bInput">
             <input type="text" id="title1" class="write-title" v-model="inputTitle_community">
-            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community"></textarea>
-            <!-- <input type="text" class="bookMark title" placeholder="제목" v-model="item.bookMarkTitle"/>
-        <textarea class="bookMark textArea" placeholder="url만 입력하세용" v-model="item.bookMarkContent"></textArea> -->
-        
+            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community" placeholder="여기에 글을 작성하세요"></textarea>
           </div>
           <div class="bBtn">
             <ButtonComponent id="btn1" parameter="community" @click="addNewPost" msg="등록하기"/>
@@ -533,13 +530,24 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         };
         // currentPosts 배열에 새로운 데이터 추가
         
-        this.currentPosts.push(newPost);
-
-        // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
-        this.partModel2 = '웹';
-        this.stateModel2 = '모집중';
-        this.inputTitle_community = '';
-        this.inputBody_community = '';
+        if(this.inputTitle_community & this.inputBody_community){
+          this.currentPosts.push(newPost);
+          // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
+          this.partModel2 = '웹';
+          this.stateModel2 = '모집중';
+          this.inputTitle_community = '';
+          this.inputBody_community = '';
+        }
+        else if(!this.inputTitle_community & !this.inputBody_community){
+          alert("제목과 내용을 입력하세요");
+        }
+        else if(!this.inputTitle_community){
+          alert("제목을 입력하세요")
+        }
+        else{
+          alert("내용을 입력하세요");
+        }
+        
       },
       addNewComment() {
         const newComment = {
