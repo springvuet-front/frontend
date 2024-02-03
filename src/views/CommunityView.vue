@@ -61,7 +61,7 @@
 
         <!--기존 게시글 보이는 부분-->
         <div v-for="(item, index) in currentPosts" :key="index">
-          <div v-if="partModel===item.data.post_part && stateModel===item.data.post_state">
+          <div v-if="(partModel === '전체' || partModel === item.data.post_part) && (stateModel === '전체' || stateModel === item.data.post_state)">
             <div class="posts">
               <div class="posts-part-state">
                 <div class="post-part">{{ item.data.post_part }}</div>
@@ -472,12 +472,12 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
     },
     data() {
       return {
-        partModel: '웹',
-        stateModel: '모집중',
+        partModel: '전체',
+        stateModel: '전체',
         partModel2: '웹',
         stateModel2: '모집중',
-        parts: ['웹', '앱', '데분'],
-        states:['모집중', '모집 완료'],
+        parts: ['전체', '웹', '앱', '데분'],
+        states:['전체', '모집중', '모집 완료'],
         message: "글을 입력하세요",
         currentPosts: [
           {data: {post_part: "앱",
@@ -558,10 +558,8 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             written_text: this.$refs.writtenText.value,  // written-text input의 값을 가져옴
             post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
           }
-        };
-        // currentPosts 배열에 새로운 데이터 추가
+        }
         this.currentComments.push(newComment);
-        // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
         this.$refs.writtenText.value = '';
       },
       saveBtn() {
