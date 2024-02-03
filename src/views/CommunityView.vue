@@ -75,28 +75,38 @@
 
                 <!-- 수정하기 모달창-->
                 <div class="modifying">
-                  <div class="modifying-icon">
-                    
-                  </div>
-                  <Button class="modifying-button" @click="modalOpen">수정하기</Button>
+                  <Button class="modifying-button" @click="modalOpen()">수정하기</Button>
 
                   <div class="modal-wrap" v-show="modalCheck">
                     <div class="modal-container">
                       <div class="flex-box">
                         <div class="modal-info">
-                          
-                          <div class="container-modal-window">
-                          <div class="currentComments" v-for="(item, index) in currentComments" :key="index">
-                            <!-- 본문 있던 곳 -->
-                          </div>
 
-                          <div class="input-container">
-                            <div class="label-text">
+                          <div v-if="selectedPost">
+                            <div class="edit-form">
+                              <div class="label-text">제목</div>
+                              <textarea
+                                v-model="selectedPost.data.post_title"
+                                class="write-title"
+                                placeholder="여기에 제목을 작성하세요"
+                              ></textarea>
+                              <div class="label-text">내용</div>
+                              <textarea
+                                v-model="selectedPost.data.post_body"
+                                class="write-body"
+                                placeholder="여기에 본문을 작성하세요"
+                              ></textarea>
                             </div>
-                            <!-- 댓글 작성하던 곳 -->
                           </div>
 
-                        </div>
+                          <div class="modal-btn">
+                            <div class="close-btn" @click="modalOpen">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                              </svg>
+                            </div>
+                          </div>
+                          
                         <div class="btn-container-right">
                           <ButtonComponent msg="저장하기" @click="saveBtn"/>
                         </div>
@@ -109,6 +119,7 @@
                 </div>        
               </div>
               <!-- 수정하기 모달창 끝 -->
+
               <!-- 삭제하기 -->
               <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
@@ -117,6 +128,7 @@
                   <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                 </div>
               </div>
+              <!-- 삭제하기 모달창 끝 -->
             
               <!-- 댓글달기 모달창-->
               <div class="comments">
@@ -138,6 +150,15 @@
                           <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
                           <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                         </div>
+
+                        <div class="modal-btn">
+                          <div class="close-btn" @click="modalOpen">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                          </div>
+                        </div>
+
                         <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
                         <div class="container-modal-window">
                         <div class="currentComments" v-for="(item, index) in currentComments" :key="index">
@@ -147,11 +168,9 @@
                         </div>
 
                         <div class="input-container">
-                          <div class="label-text">
-                          </div>
+                          <div class="label-text"></div>
                           <div> 
-                            <textarea type="text" id="write-comment" class="write-comment" 
-                                      placeholder="댓글 작성하기"></textarea>
+                            <textarea type="text" id="write-comment" class="write-comment" placeholder="댓글 작성하기"></textarea>
                             <button @click="addNewComment" class="send-icon">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -159,24 +178,15 @@
                             </button>
                           </div>
                         </div>
-
-                        
-
                       </div>
                     </div>
-                    <div class="modal-btn">
-                      <div class="close-btn" @click="modalOpen">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
               </div>    
             </div>
           </div>   
-        </div> <!-- 게시물 보이는 부분 끝-->
+        </div> 
         <!-- 댓글달기 모달창 끝 -->
 
         </div>   
@@ -404,20 +414,13 @@
   width: 10vw;
 }
 .write-comment{
-  width: 95%;
+  width: 1000px;
   height: 80px;
-  color: white;
   font-size: 13pt;
   margin: 35px 10px 0 10px;
-
   background-color: #B1B2FF;
-  margin-left: 150px;
-  margin-top: 5px;
   padding-inline: 10px;
-  width : 800px;
-  height: 135px;
   border-width: 0px;
-  font-size: 15pt;
   font-family: Arial, sans-serif;
   resize: none;
 }
@@ -442,8 +445,8 @@
 }
 .send-icon {
   background-color: #B1B2FF;
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
   transform: rotate(-90deg);
 }
 .comment-icon{
