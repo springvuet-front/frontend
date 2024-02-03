@@ -51,11 +51,14 @@
             ></SelectBox>
           </div>
           <div class="bInput">
-            <input id="body" class="write-title" type="text">
-            <input id="body" class="write-body" type="text">
+            <input type="text" id="title1" class="write-title" v-model="inputTitle_community">
+            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community"></textarea>
+            <!-- <input type="text" class="bookMark title" placeholder="제목" v-model="item.bookMarkTitle"/>
+        <textarea class="bookMark textArea" placeholder="url만 입력하세용" v-model="item.bookMarkContent"></textArea> -->
+        
           </div>
           <div class="bBtn">
-            <ButtonComponent id="btn1" @click="addNewPost" msg="등록하기"/>
+            <ButtonComponent id="btn1" parameter="community" @click="addNewPost" msg="등록하기"/>
           </div>
         </div>
 
@@ -498,6 +501,8 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             }}
           ],
           modalCheck: false,
+          inputTitle_community: '',
+          inputBody_community:'',
       };
     },
     methods: {
@@ -515,20 +520,22 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
           data: {
             post_part: this.partModel2,
             post_state: this.stateModel2,
-            post_title: this.$refs.writeTitle.value, // write-title input의 값을 가져옴
-            post_body: this.$refs.writeBody.value,  // write-body input의 값을 가져옴
+            post_title: this.inputTitle_community, // write-title input의 값을 가져옴
+            post_body: this.inputBody_community,  // write-body input의 값을 가져옴
             post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
             post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
             comments_num: "0",  // 초기 댓글 개수를 0으로 설정
           }
         };
         // currentPosts 배열에 새로운 데이터 추가
-        this.currentComments.push(newPost);
+        
+        this.currentPosts.push(newPost);
+
         // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
         this.partModel2 = '웹';
         this.stateModel2 = '모집중';
-        this.$refs.writeTitle.value = '';
-        this.$refs.writeBody.value = '';
+        this.inputTitle_community = '';
+        this.inputBody_community = '';
       },
       addNewComment() {
         const newComment = {
