@@ -150,7 +150,8 @@
                           <div class="label-text">
                           </div>
                           <div> 
-                            <input type="text" id="write-comment" value="댓글 작성하기" class="input-long"/>
+                            <textarea type="text" id="write-comment" class="write-comment" 
+                                      placeholder="댓글 작성하기"></textarea>
                             <button @click="addNewComment" class="send-icon">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
@@ -402,11 +403,23 @@
 .label-text{
   width: 10vw;
 }
-.input-long{
-  width: 1000px;
-  height: 30px;
+.write-comment{
+  width: 95%;
+  height: 80px;
   color: white;
   font-size: 13pt;
+  margin: 35px 10px 0 10px;
+
+  background-color: #B1B2FF;
+  margin-left: 150px;
+  margin-top: 5px;
+  padding-inline: 10px;
+  width : 800px;
+  height: 135px;
+  border-width: 0px;
+  font-size: 15pt;
+  font-family: Arial, sans-serif;
+  resize: none;
 }
 .comment-button {
     background: none;
@@ -421,6 +434,8 @@
   text-align: left;
   padding: 10px 0 10px 15px;
   width: 90%;
+  margin: 16px 0 0 10px;
+  border-radius: 5px;
 }
 .writer-id{
   font-weight: bold;
@@ -506,7 +521,15 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             {data: {writer_id:"파송송계란탁",
                     written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
                     written_date: "2024-02-01",
-            }}
+            }},
+            {data: {writer_id:"작성자",
+                    written_text: "추억을 공유할 수 있는 웹페이지입니다",
+                    written_date: "2024-02-03",
+            }},
+            {data: {writer_id:"파송송계란탁",
+                    written_text: "저 참여하고 싶습니다!",
+                    written_date: "2024-02-04",
+            }},
           ],
           modalCheck: false,
           inputTitle_community: '',
