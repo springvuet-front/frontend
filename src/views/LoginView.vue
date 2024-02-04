@@ -6,15 +6,15 @@
                 <div id="border-text">로그인</div>
                 <div class="field-view">
                     <div class="input-text">이메일</div>
-                    <input type="text">
+                    <input type="text" v-model="email">
 
                     <div class="input-text">비밀번호</div>
-                    <input type="password">
+                    <input type="password" v-model="memberPw">
                 </div>
             </div>
 
             <div class="button-view">
-                <ButtonComponent parameter="" msg="로그인"/>
+                <ButtonComponent parameter="" msg="로그인" @click="login"/>
                 <div>
                     <span id="sub-text">계정이 없나요?</span>
                         <router-link to="signup">
@@ -102,11 +102,34 @@ input:focus{
 </style>
     
 <script>
+import api from '@/axios.js';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 
 export default {
     name: 'LoginView',
-    components: { ButtonComponent }
+    components: { ButtonComponent },
+    data() {
+        return {
+            email: undefined,
+            memberPw: undefined,
+        }
+    },
+    methods: {
+        login() {
+            api.post('/auth/login', {
+                email: this.email,
+                memberPw: this.memberPw
+            })
+            .then(response => {
+                console.log(response);
+                localStorage.setItem('accessToken', response.data.accessToken);
+                this.$router.push({name:'home'});
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+    },
 }
 </script>
     

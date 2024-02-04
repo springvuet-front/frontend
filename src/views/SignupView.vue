@@ -17,7 +17,7 @@
                         <input
                             type="text"
                             v-model="email"
-                            id="email" />
+                            id="email" /> 
 
                         <ButtonComponent msg="이메일 확인" parameter = "" id="email-confirm-button"/>
                     </div>
@@ -27,15 +27,15 @@
                     <div class="valid-view">
                         <div class="input-text">비밀번호</div>
                         <p
-                            v-show="valid.password"
-                            class="input-error">
+                            v-show="valid.memberPw"
+                            class="input-error"> 
                             영문, 숫자, 특수문자를 조합하여 입력해주세요. (8-16자)
                         </p>
                     </div>
                     <input
                         type="password"
-                        v-model="password"
-                    >
+                        v-model="memberPw"
+                    > 
                     <div class="valid-view">
                         <div class="input-text">비밀번호 확인</div>
                         <p
@@ -51,12 +51,13 @@
                     >
 
                     <div class="input-text">닉네임</div>
-                    <input type="text">
+                    <input type="text"
+                            v-model="nickname">
                 </div>
             </div>
 
             <div class="button-view">
-                <ButtonComponent parameter="" msg="회원가입" @click="[checkEmail(), checkPassword(), checkPassword2()]"/>
+                <ButtonComponent parameter="" msg="회원가입" @click="signup"/>
                 <div>
                     <span id="sub-text">이미 계정이 있나요?</span>
                     <router-link to="login">
@@ -175,6 +176,7 @@ input:focus{
 </style>
     
 <script>
+import axios from 'axios';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 
 export default {
@@ -182,10 +184,14 @@ export default {
     components: { ButtonComponent },
     data(){
         return{
+        email: undefined,
+        memberPw: undefined,
+        password2: undefined,
+        nickname: undefined,
             valid: {
                 all: false,
                 email: false,
-                password: false,
+                memberPw: false,
                 password2: false,
             },
             emailHasError: false,
@@ -226,23 +232,39 @@ export default {
         checkPassword() {
         // 비밀번호 형식 검사(영문, 숫자, 특수문자)
             const validatePassword = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/
-            if (!validatePassword.test(this.password) || !this.password) {
-                this.valid.password = true
+            if (!validatePassword.test(this.memberPw) || !this.memberPw) {
+                this.valid.memberPw = true
                 this.passwordHasError = true
                 return
             }
-            this.valid.password = false
+            this.valid.memberPw = false
             this.passwordHasError = false
         },
         checkPassword2(){
-            if(this.password !== this.password2){
+            if(this.memberPw !== this.password2){
                 this.valid.password2 = true
                 this.password2HasError = true
                 return
             }
             this.valid.password2 = false
             this.password2HasError = false
-        }
+        },
+        signup(){
+            if (!this.valid.email && !this.valid.memberPw && !this.valid.password2) {
+                axios.post('/api/auth/signup', {
+                    email: this.email,
+                    memberPw: this.memberPw,
+                    nickname: this.nickname
+                })
+                .then(response => {
+                    console.log(response);
+                    this.$router.push({name:'firstpage'});
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+        },
     },
 }
 </script>
