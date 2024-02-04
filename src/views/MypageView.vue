@@ -40,6 +40,10 @@
           <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
+        <router-link to="createnew">
+          <!-- <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button> -->
+          <button type="button" v-if="currentStartIndex === 0" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
+        </router-link>
         <div v-for="(item, index) in visibleCurrentProject" :key="index">
           <div class="projectBox">
             <div class="project category">
@@ -54,9 +58,6 @@
             </div>
           </div>
         </div>
-        <router-link to="createnew">
-          <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
-        </router-link>
         <button type="button" class="showNextbtn" @click="showCurrentNext" @mouseover="mouseOverNextBtn" :disabled="isDisabledCurrentNext">
           <img class="showbtnimg" v-if="isDisabledCurrentNext" alt="▶" src="../assets/shownextbtn.png" />
           <img class="showbtnimg" v-if="isDisabledCurrentNext===false" alt="▶" src="../assets/shownextbtn_active.png" />
@@ -547,7 +548,14 @@ export default {
   computed: {
     /* 프로젝트 3개씩 보여주게 */
     visibleCurrentProject(){
-      return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
+      console.log(this.currentStartIndex);
+      if(this.currentStartIndex === 0){
+        return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex-1);
+      }
+      else{
+        return this.currentProjectList.slice(this.currentStartIndex-1, this.currentEndIndex-1);
+      }
+      
     },
     visibleCompleteProject(){
       return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
