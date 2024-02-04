@@ -3,10 +3,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <router-view/>
-  <div>
-    백엔드에서 가져온 데이터입니다.
-    {{ hello }}
-  </div>
 </template>
 
 <style>
@@ -109,16 +105,7 @@ import axios from 'axios';
 
 </script> -->
 <script>
-import axios from 'axios';
 
 export default {
-  data() {
-    return {hello: ''};
-  },
-  created() {
-    axios.get('/api/main')
-      .then(response => (this.hello = response.data))
-      .catch(error => console.log(error))
-  }
 };
 </script>
