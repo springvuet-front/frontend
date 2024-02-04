@@ -5,29 +5,58 @@
                 <img alt="Prolog logo" src="../assets/prolog.png" />
                 <div id="border-text">회원가입</div>
                 <div class="field-view">
-                    <div class="input-text-left">이메일</div>
-
+                    <div class="valid-view">
+                        <div class="input-text">이메일</div>
+                        <p
+                            v-show="valid.email"
+                            class="input-error">
+                            이메일 형식이 올바르지 않습니다.
+                        </p>
+                    </div>
                     <div class="email-confirm-view">
-                        <InputText id="email"/>
+                        <input
+                            type="text"
+                            v-model="email"
+                            id="email" />
+
                         <ButtonComponent msg="이메일 확인" parameter = "" id="email-confirm-button"/>
                     </div>
                     
-                    <div class="input-text-right">인증번호 입력</div>
-                    <InputText />
+                    <div class="input-text">인증번호 입력</div>
+                    <input type="text">
+                    <div class="valid-view">
+                        <div class="input-text">비밀번호</div>
+                        <p
+                            v-show="valid.password"
+                            class="input-error">
+                            영문, 숫자, 특수문자를 조합하여 입력해주세요. (8-16자)
+                        </p>
+                    </div>
+                    <input
+                        type="password"
+                        v-model="password"
+                    >
+                    <div class="valid-view">
+                        <div class="input-text">비밀번호 확인</div>
+                        <p
+                            v-show="valid.password2"
+                            class="input-error">
+                            비밀번호가 일치하지 않습니다.
+                        </p>
+                    </div>
+                    
+                    <input
+                        type="password"
+                        v-model="password2"
+                    >
 
-                    <div class="input-text-left">비밀번호</div>
-                    <InputPassword />
-
-                    <div class="input-text-left">비밀번호 확인</div>
-                    <InputPassword />
-
-                    <div class="input-text-left">닉네임</div>
-                    <InputText />
+                    <div class="input-text">닉네임</div>
+                    <input type="text">
                 </div>
             </div>
 
             <div class="button-view">
-                <ButtonComponent parameter="" msg="회원가입"/>
+                <ButtonComponent parameter="" msg="회원가입" @click="[checkEmail(), checkPassword(), checkPassword2()]"/>
                 <div>
                     <span id="sub-text">이미 계정이 있나요?</span>
                     <router-link to="login">
@@ -37,7 +66,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -86,15 +114,8 @@
     text-decoration: underline;
 }
 
-.input-text-left{
-    width: 20vw;
-    margin-top: 2vh;
-    color: #565656;
-    font-weight: 600;
-}
-
-.input-text-right{
-    width: 20vw;
+.input-text{
+    width: 103px;
     margin-top: 2vh;
     color: #565656;
     font-weight: 600;
@@ -102,6 +123,7 @@
 
 .field-view{
     display: flex;
+    width: 362px;
     justify-content: center;
     flex-direction: column;
     align-items: flex-start;
@@ -136,16 +158,92 @@ input:focus{
     padding: 1px 2px 1px 0px;
     border-radius: 0;
 }
+
+.input-error {
+    line-height: 16px;
+    font-size: 9.5px;
+    color: #ff6060;
+    margin: 0;
+  }
+
+  .valid-view{
+    display: flex;
+    width: 362px;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
 </style>
     
 <script>
 import ButtonComponent from '@/components/ButtonComponent.vue';
-import InputPassword from '@/components/InputPassword.vue';
-import InputText from '@/components/InputText.vue';
 
 export default {
     name: 'SignupView',
-    components: { InputPassword, InputText, ButtonComponent }
+    components: { ButtonComponent },
+    data(){
+        return{
+            valid: {
+                all: false,
+                email: false,
+                password: false,
+                password2: false,
+            },
+            emailHasError: false,
+            passwordHasError: false,
+            password2HasError: false,
+        }
+    },
+    watch: {
+        'email': function() {
+            this.checkEmail()
+        },
+        'password': function() {
+            this.checkPassword()
+        },
+        'password2' : function(){
+            this.checkPassword2()
+        }
+    },
+    methods: {
+        checckAll(){
+            if(!this.emailHasError && !this.passwordHasError){
+                this.valid.all = true
+                return
+            }
+        },
+        checkEmail() {
+        // 이메일 형식 검사
+            const validateEmail = /^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\.[A-Za-z0-9\\-]+/
+
+            if (!validateEmail.test(this.email) || !this.email) {
+                this.valid.email = true
+                this.emailHasError = true
+                return
+            }
+            this.valid.email = false
+            this.emailHasError = false
+        },
+        checkPassword() {
+        // 비밀번호 형식 검사(영문, 숫자, 특수문자)
+            const validatePassword = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/
+            if (!validatePassword.test(this.password) || !this.password) {
+                this.valid.password = true
+                this.passwordHasError = true
+                return
+            }
+            this.valid.password = false
+            this.passwordHasError = false
+        },
+        checkPassword2(){
+            if(this.password !== this.password2){
+                this.valid.password2 = true
+                this.password2HasError = true
+                return
+            }
+            this.valid.password2 = false
+            this.password2HasError = false
+        }
+    },
 }
 </script>
     

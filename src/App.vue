@@ -1,5 +1,9 @@
 <template>
   <router-view/>
+  <div>
+    백엔드에서 가져온 데이터입니다.
+    {{ hello }}
+  </div>
 </template>
 
 <style>
@@ -88,11 +92,29 @@ border: 2px solid transparent;
 
 </style>
 
-<script>
+<!-- <script>
+import axios from 'axios';
+
   export default {
   name: 'App',
   data() {
     return {};
   },
+};
+
+
+</script> -->
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {hello: ''};
+  },
+  created() {
+    axios.get('/api/main')
+      .then(response => (this.hello = response.data))
+      .catch(error => console.log(error))
+  }
 };
 </script>

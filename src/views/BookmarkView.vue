@@ -1,7 +1,7 @@
 <template>
   <LeftMenu />
   <div class="container">
-    <div class="bookMarkPageTitle">북마크</div>
+    <div class="bookMarkPageTitle"> ((팀명)) 북마크</div>
     <div class="bookMarkContent">
       <div class="singleBookMark" v-for="(item, index) in bookMarkList" :key="index">
         <input type="text" class="bookMark title" placeholder="제목" v-model="item.bookMarkTitle"/>
@@ -11,40 +11,56 @@
           <ButtonComponent parameter="bookmark" msg="삭제하기" @click="deleteBookMark(index)"/>
         </div>
       </div>
-      <div class="singleBookMark">
+      <div class="createBookMark">
         <input type="text" class="bookMark title" placeholder="제목" v-model="inputTitle"/>
         <textarea class="bookMark textArea" placeholder="url만 입력하세용" v-model="inputContent"></textArea>
-        <ButtonComponent parameter="bookmark" msg="등록하기" @click="addBookMark"/>
+          <div class="buttonArea">
+            <ButtonComponent parameter="bookmark" msg="등록하기" @click="addBookMark"/>
+          </div>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .container{
-  padding: 20px 90px;
+  padding: 2vh 0px 2vh 90px;
 }
+
 .bookMarkPageTitle{
   padding-top: 20px;
   font-size: 20pt;
   font-weight: 900;
-  padding-left: 120px;
+  padding-left: 60px;
 }
 
 .bookMarkContent{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  padding-left: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0px 30px 30px 20px;
 }
 
 .singleBookMark {
+  margin: 20px;
+  height: 250px;
+  background-color: #D2DAFF;
+  display: flex;
+  flex-direction: column;
+  width: calc(20% - 40px);
+  border-radius: 5px;
+}
+
+.createBookMark{
   margin: 20px;
   width: 200px;
   height: 250px;
   background-color: #D2DAFF;
   display: flex;
   flex-direction: column;
+  border-radius: 5px;
+  width: calc(20% - 40px);
 }
+
 .bookMark.title{
   padding-top: 10px;
   padding-left: 15px;
@@ -66,12 +82,14 @@ hr{
   font-size: 12pt;
   font-family: sans-serif;
   overflow-y: auto;
+  resize: none;
 }
 .bookMark.textArea:focus{
   outline: 0;
 }
 .buttonArea {
   display: flex;
+  justify-content: center;
   flex-direction: row;
 }
 </style>
@@ -108,6 +126,10 @@ export default {
         this.bookMarkList.push({ bookMarkTitle: this.inputTitle, bookMarkContent: this.inputContent });
         this.inputTitle = '';
         this.inputContent = '';
+      }
+
+      else{
+        alert('제목과 내용을 입력하세요!')
       }
     },
     changeBookMark(event){

@@ -5,6 +5,7 @@
 <style scoped>
   button{
       width: 150px;
+      height: 40px;
       margin: 10px;
       padding: 10px;
       font-size: 15px;
@@ -21,12 +22,16 @@
 export default {
   name: 'ButtonComponent',
   props: {
-    parameter: String,
+    parameter: {
+      type: String,
+      default: "",
+    },
     msg: String
   },
   methods:{
     onClickRedirect(parameter){
-        this.$router.push(`/${parameter}`).catch(()=>{});
+        if(parameter !== "")
+          this.$router.push(`/${parameter}`).catch(()=>{});
     }
   }
 }

@@ -5,13 +5,7 @@
     </div>
 
     <div class="router-view">
-      <ButtonComponent parameter="login" msg="로그인"/>
-      <ButtonComponent parameter="signup" msg="회원가입"/>
-    </div>
-
-    <div class="router-view">
       <ButtonComponent parameter="mypage" msg="마이페이지"/>
-      <ButtonComponent parameter="teampage" msg="팀페이지"/>
       <ButtonComponent parameter="community" msg="커뮤니티"/>
     </div>
   </div>
@@ -30,6 +24,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 50px;
+  flex-direction: column;
 }
 .text{
     flex-direction: column;
@@ -45,6 +40,6 @@ export default {
   name: 'HomeView',
   components: {
     ButtonComponent
-}
+  }
 }
 </script>
