@@ -41,10 +41,9 @@
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
         <router-link to="createnew">
-          <!-- <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button> -->
           <button type="button" v-if="currentStartIndex === 0" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
         </router-link>
-        <div v-for="(item, index) in visibleCurrentProject" :key="index">
+        <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink">
           <div class="projectBox">
             <div class="project category">
               <div class="project field">{{item.project_field}}</div>
@@ -193,9 +192,6 @@
   padding-left: 20pt;
   padding-top: 10pt;
 }
-.bproject.complete {
-  
-}
 
 .projectlist {
   /* background-color: #F2F2F2; */
@@ -205,6 +201,10 @@
   flex-wrap: nowrap;
   /* justify-content: center; */
   justify-content: space-between;
+}
+
+.projectlist:hover{
+  cursor: pointer;
 }
 
 .project-item {
@@ -544,6 +544,10 @@ export default {
         this.completeEndIndex++;
       }
     },
+    pageLink(){
+      this.$router.push({path: 'teampage'})
+      //router.push({ name: 'user', params: { userId: 123 }})
+    }
   },
   computed: {
     /* 프로젝트 3개씩 보여주게 */
@@ -555,7 +559,6 @@ export default {
       else{
         return this.currentProjectList.slice(this.currentStartIndex-1, this.currentEndIndex-1);
       }
-      
     },
     visibleCompleteProject(){
       return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
