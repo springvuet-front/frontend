@@ -78,7 +78,7 @@
                   <div class="modifying-icon">
                     
                   </div>
-                  <Button class="modifying-button" @click="modalOpen">수정하기</Button>
+                  <Button class="modifying-button" @click="modalOpen(index)">수정하기</Button>
 
                   <div class="modal-wrap" v-show="modalCheck">
                     <div class="modal-container">
@@ -102,7 +102,7 @@
                         </div>
                       </div>
                       <div class="modal-btn">
-                        <ButtonComponent msg="취소하기" class="close-btn" @click="modalOpen"></ButtonComponent>
+                        <ButtonComponent msg="취소하기" class="close-btn" @click="modalOpen(index)"></ButtonComponent>
                       </div>
                     </div>
                   </div>
@@ -126,24 +126,29 @@
                   </svg>
                 </div>
                 <div class="comment-number">{{ item.data.comments_num }} </div>
-                <Button class="comment-button" @click="modalOpen">댓글 달기</Button>
+                <Button class="comment-button" @click="modalOpen(index)">댓글 달기</Button>
 
                 <div class="modal-wrap" v-show="modalCheck">
                   <div class="modal-container">
                     <div class="flex-box">
                       <div class="modal-info">
-                        <div class="post-title"> {{ item.data.post_title }} </div>
-                        <div class="post-body">{{ item.data.post_body }}</div>
+                        <div class="post-title"> {{ currentPosts[modalIndex].data.post_title }} </div>
+                        <div class="post-body">{{ currentPosts[modalIndex].data.post_body }}</div>
                         <div class="post-info">
-                          <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
-                          <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
+                          <div class="post-writer"> 작성자 : {{ currentPosts[modalIndex].data.post_writer }}</div>
+                          <div class="post-date"> 등록일 : {{ currentPosts[modalIndex].data.post_date }}</div>
                         </div>
                         <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
                         <div class="container-modal-window">
-                        <div class="written-comments" v-for="(item, index) in written_comments" :key="index">
-                          <div class="writer-id"> {{ item.data.writer_id }}</div>
-                          <div class="written-text"> {{ item.data.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.data.written_date }}</div>
+                        <!-- <div class="written-comments" v-for="(item, index) in currentPosts[modalIndex].post_Comment" :key="index">
+                          <div class="writer-id"> {{ item.writer_id }}</div>
+                          <div class="written-text"> {{ item.written_text }}</div>
+                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
+                        </div> -->
+                        <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
+                          <div class="writer-id"> {{ item.writer_id }}</div>
+                          <div class="written-text"> {{ item.written_text }}</div>
+                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
                         </div>
 
                         <div class="input-container">
@@ -164,7 +169,7 @@
                       </div>
                     </div>
                     <div class="modal-btn">
-                      <div class="close-btn" @click="modalOpen">
+                      <div class="close-btn" @click="modalOpen(index)">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
@@ -478,40 +483,82 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         states:['모집중', '모집 완료'],
         message: "글을 입력하세요",
         currentPosts: [
-          {data: {post_part: "앱",
-                  post_state: "모집중",
-                  post_title: "IOS 개발자 구합니다!",
-                  post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
-                  post_writer: "우주최강개발자",
-                  post_date: "2024-01-31",
-                  comments_num: "3",
-          }},
-          {data: {post_part: "웹",
-                  post_state: "모집중",
-                  post_title: "웹 프론트엔드 개발자 구합니다.",
-                  post_body: "Vue.js 능숙하신 분 환영합니다",
-                  post_writer: "나송집가고싶송",
-                  post_date: "2024-02-01",
-                  comments_num: "2",
-          }},
+          {
+            data: {
+              post_part: "앱",
+              post_state: "모집중",
+              post_title: "IOS 개발자 구합니다!",
+              post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
+              post_writer: "우주최강개발자",
+              post_date: "2024-01-31",
+              comments_num: "3",
+            },
+          },
+          {
+            data: {
+              post_part: "웹",
+              post_state: "모집중",
+              post_title: "웹 프론트엔드 개발자 구합니다.",
+              post_body: "Vue.js 능숙하신 분 환영합니다",
+              post_writer: "나송집가고싶송",
+              post_date: "2024-02-01",
+              comments_num: "2",
+            },
+            // post_Comment:[
+            //   {
+            //     writer_id:"파송송계란탁",
+            //     written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
+            //     written_date: "2024-02-01"
+            //   },
+            //   { 
+            //     writer_id:"나송집가고싶송",
+            //     written_text:"추억을 공유하는 웹페이지입니다",
+            //     written_date: "2024-02-02"
+            //   }
+            // ]
+          },
         ],
-          currentComments: [
-            {data: {writer_id:"파송송계란탁",
-                    written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
-                    written_date: "2024-02-01",
-            }}
+        currentComments: [
+          [
+            {
+              writer_id:"파송송계란탁",
+              written_text: "저 참여하고 싶습니다.",
+              written_date: "2024-02-01"
+            },
+            {
+              writer_id:"우주최강개발자",
+              written_text: "프로젝트 경험 있으신가요?",
+              written_date: "2024-02-01"
+            }
           ],
-          modalCheck: false,
-          inputTitle_community: '',
-          inputBody_community:'',
+          [
+            { 
+              writer_id:"파송송계란탁",
+              written_text: "안녕하세요~ 어떤 웹페이지인지 설명 부탁드립니다",
+              written_date: "2024-02-01",
+            },
+            { 
+              writer_id:"나송집가고싶송",
+              written_text:"추억을 공유하는 웹페이지입니다",
+              written_date: "2024-02-02"
+            }
+          ],
+
+        ],
+        modalIndex: 0,
+        modalCheck: false,
+        inputTitle_community: '',
+        inputBody_community:'',
       };
     },
     methods: {
       updateValue: function(value){
         this.$emit('input', value);
       },
-      modalOpen() {
-        this.modalCheck = !this.modalCheck
+      modalOpen(index) {
+        this.modalCheck = !this.modalCheck;
+        console.log(index);
+        this.modalIndex= index;
       },
       deletePost(index){
         this.currentPosts.splice(index, 1);
