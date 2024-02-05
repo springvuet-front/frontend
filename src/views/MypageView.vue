@@ -51,7 +51,8 @@
             <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
           </button>
           <!-- <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink"> -->
-          <div v-for="teampage in data.myTeamResponseDto.currentTeams" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)">
+          <div v-for="teampage in visibleCurrentProject" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)">
+          <!-- <div v-for="teampage in data.myTeamResponseDto.currentTeams" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)"> -->
             
             <div class="projectBox">
               <div class="project category">
@@ -112,15 +113,15 @@
   }
   #wrap {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
   }
   .b_left {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    margin-left: 100px;
-    width: 40vw;
+    /* align-items: center; */
+    margin-left: 90px;
+    width: 20vw;
     height: 100vh;
     /* background-color: gray; */
   }
@@ -133,16 +134,16 @@
     }
   }
   .b_right {
-    /* background-color: lightgray; */
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    /* background-color: pink; */
     height: 100vh;
   }
   .schedule {
     width: 250px;
     margin-top: 1vw;
+    margin: 10px;
     height: 45vh;
-    /* background-color: black; */
     display: flex;
     flex-direction: column;
   }
@@ -152,7 +153,6 @@
     height: 45vh;
     display:flex;
     flex-direction: column;
-    /* background-color: black; */
   }
   
   .listBox {
@@ -565,7 +565,7 @@
         }
       },
       showCurrentNext(){
-        if(this.currentEndIndex != this.currentProjectList.length + 1){
+        if(this.currentEndIndex != this.currentProjectList.length){
           this.currentStartIndex++;
           this.currentEndIndex++;
         }
@@ -603,13 +603,17 @@
     computed: {
       /* 프로젝트 3개씩 보여주게 */
       visibleCurrentProject(){
+        // console.log(this.currentStartIndex);
+        // if(this.currentStartIndex === 0){
+        //   return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex-1);
+        // }
+        // else{
+        //   return this.currentProjectList.slice(this.currentStartIndex-1, this.currentEndIndex-1);
+        // }
         console.log(this.currentStartIndex);
-        if(this.currentStartIndex === 0){
-          return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex-1);
-        }
-        else{
-          return this.currentProjectList.slice(this.currentStartIndex-1, this.currentEndIndex-1);
-        }
+        console.log(this.currentEndIndex);
+        return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
+        
       },
       visibleCompleteProject(){
         return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
@@ -620,7 +624,7 @@
         return this.currentStartIndex===0;
       },
       isDisabledCurrentNext(){
-        return this.currentEndIndex === this.currentProjectList.length + 1 || this.currentProjectList.length <= 3;
+        return this.currentEndIndex === this.currentProjectList.length || this.currentProjectList.length <= 3;
       },
       isDisabledCompletePast(){
         return this.completeStartIndex===0;

@@ -13,11 +13,11 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
+                        <div style="padding-left:10px">{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
+                        <div style="padding-left:10px">{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
