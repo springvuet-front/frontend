@@ -110,11 +110,12 @@ input:focus{
   outline: 0;
 }
 input[type=date]{
-  width: 90px;
+  width: 105px;
 }
 
 </style>
 <script>
+import api from '@/axios.js';
 import LeftMenu from '@/components/LeftMenu.vue';
 // import InputText from '@/components/InputText.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
@@ -146,6 +147,21 @@ export default {
       if(this.projectEndDate<today | this.projectStartDate>this.projectEndDate){
         alert("유효한 기간을 입력하세요");
       }
+      api.post('/mypage/project/create', {
+        projectName: this.projectName,
+        teamName: this.projectTeam,
+        start: this.projectStartDate,
+        end: this.projectEndDate,
+        github: this.projectGitLink,
+        teamPosition: this.projectField,
+      })
+      .then(response => {
+        console.log(response);
+        this.$router.push({name:'mypage'});
+          })
+      .catch(error => {
+        console.log(error);
+          });
     }
   }
 }

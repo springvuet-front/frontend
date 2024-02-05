@@ -9,7 +9,7 @@
                     <input type="text" v-model="email">
 
                     <div class="input-text">비밀번호</div>
-                    <input type="password" v-model="memberPw">
+                    <input type="password" v-model="memberPw" v-on:keyup.enter="login">
                 </div>
             </div>
 
