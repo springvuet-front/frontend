@@ -144,7 +144,7 @@
                         <h4>프로젝트명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exProjectName" id="projectname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.projectName" id="projectname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -153,7 +153,7 @@
                         <h4>팀명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exTeamName" id="teamname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.teamName" id="teamname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -180,7 +180,7 @@
                         <h4>깃허브 링크</h4>
                         </div>
                         <div>
-                        <input type="text" id="githublink" value="https://github.com/springvuet-front/" class="input-long"/>
+                        <input type="text" id="githublink" :value="project.teampageDetailResponseDto.github" class="input-long"/>
                         </div>
                     </div>
 
@@ -320,6 +320,7 @@ https://github.com/richardtallent/vue-simple-calendar
   .btn-container-right{
     display: flex;
     justify-content: flex-end;
+    padding-top: 30px;
     padding-bottom: 30px;
   }
 
@@ -526,6 +527,15 @@ input{
 
     ul li{
         padding: 5px;
+    }
+
+    ul{
+        list-style: none;
+    }
+
+    .modal-info h2{
+        margin-left: 30px;
+        margin-top: 30px;
     }
 
 </style>
