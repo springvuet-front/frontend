@@ -103,9 +103,10 @@
       </div>
     </div>
   </div>
-  </template>
-  
-  <style scoped>
+</div>
+</template>
+
+<style scoped>
   .container{
     padding: 20px 90px;
     height: 100vh;
@@ -324,9 +325,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 5px;
   }
   .inputToDoList input[type="text"]{
-    width: 170px;
+    width: 180px;
     height: 30px;
     border: solid;
     border-bottom-left-radius: 7px;
@@ -413,9 +415,116 @@
     width: 30px;
     height: 50px;
   }
-  
-  </style>
-      
+</style>
+    
+<script>
+import api from '@/axios.js';
+import LeftMenu from '@/components/LeftMenu.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import { parseDateTime, parseYearTime } from '@/utils/date.js';
+
+export default {
+  name: 'MypageView',
+  components: {
+    LeftMenu,
+    ButtonComponent,
+  },
+  data () {
+    return {
+      hoveredProjectName: 0,
+      // scheduleList: [ 
+      //   { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
+      //   { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
+      // ],
+      scheduleList: null,
+      // currentProjectList: [
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "백", 
+      //     project_name: "개발사이트 만들기", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "글씨넘치면어떻게하지", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "3", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "앱", 
+      //     project_mypart: "프론트", 
+      //     project_name: "4", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      // ],
+      // completeProjectList: [
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "백", 
+      //     project_name: "프로젝트1", 
+      //     project_team: "팀1", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트2", 
+      //     project_team: "팀2", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트3", 
+      //     project_team: "팀3", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   {
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트4", 
+      //     project_team: "팀4", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "데분", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트5", 
+      //     project_team: "팀5", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   }
+      // ],
+      currentProjectList: null,
+      currentProjectPage: 1,
+      currentStartIndex: 0,
+      currentEndIndex: 3,
+      completeStartIndex: 0,
+      completeEndIndex: 3,
+      disabledCurrentNext: false,
+      /* toDoList */
+      saveToDoList: [],
+      inputChecked: false,
+      inputToDoContent: '',
+      data:null
   <script>
   import api from '@/axios.js';
   import LeftMenu from '@/components/LeftMenu.vue';
