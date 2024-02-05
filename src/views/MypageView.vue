@@ -40,7 +40,8 @@
   <!-- 프로젝트들 -->
   <div class="b_right">
     <div class="bproject current">
-      <div class="title">현재 진행중인 프로젝트</div>
+      <div class="title">현재 진행중인 프로젝트</div> 
+      <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
       <!-- currentProject -->
       <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.currentTeams">
         <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
@@ -62,9 +63,7 @@
             </div>
           </div>
         </div>
-        <router-link to="createnew">
-          <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
-        </router-link>
+        
         <button type="button" class="showNextbtn" @click="showCurrentNext" @mouseover="mouseOverNextBtn" :disabled="isDisabledCurrentNext">
           <img class="showbtnimg" v-if="isDisabledCurrentNext" alt="▶" src="../assets/shownextbtn.png" />
           <img class="showbtnimg" v-if="isDisabledCurrentNext===false" alt="▶" src="../assets/shownextbtn_active.png" />
@@ -408,12 +407,14 @@
 <script>
 import api from '@/axios.js';
 import LeftMenu from '@/components/LeftMenu.vue';
+import ButtonComponent from '@/components/ButtonComponent.vue';
 import { parseDateTime, parseYearTime } from '@/utils/date.js';
 
 export default {
   name: 'MypageView',
   components: {
     LeftMenu,
+    ButtonComponent,
   },
   data () {
     return {
