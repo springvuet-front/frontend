@@ -148,15 +148,15 @@
                   <div class="modal-container">
                     <div class="flex-box">
                       <div class="modal-info2">
-                        <div class="post-title2"> {{ currentPosts[modalIndex].postTitle }} </div>
-                        <div class="post-body2">{{ currentPosts[modalIndex].postContent }}</div>
+                        <div class="post-title2" v-if="postDetail"> {{ postDetail.postTitle }} </div>
+                        <div class="post-body2" v-if="postDetail">{{ postDetail.postContent }}</div>
                         <div class="post-info2">
-                          <div class="post-writer"> 작성자 : {{ currentPosts[modalIndex].nickname }}</div>
-                          <div class="post-date"> 등록일 : {{ currentPosts[modalIndex].createAt }}</div>
+                          <div class="post-writer" v-if="postDetail"> 작성자 : {{ postDetail.nickname}}</div>
+                          <div class="post-date" v-if="postDetail"> 등록일 : {{ postDetail.createAt }}</div>
                         </div>
 
                         <div class="modal-btn-comments">
-                          <div class="close-btn" @click="modalOpen(index)">
+                          <div class="close-btn" @click="modalClose">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
@@ -179,8 +179,8 @@
 
                         <div class="comment-scroll">
                           <div class="container-modal-window">
-                            <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
-                                <div class="writer-id"> {{ item.writer_id }}
+                            <div class="written-comments" v-for="comment in comments" :key="comment.commentUuid">
+                                <div class="writer-id"> {{ comment.nickname }}
                                   <div class="delete-comment">
                                     <div class="close-btn" @click="deleteComment(index)">
                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
@@ -189,8 +189,8 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="written-text"> {{ item.written_text }}</div>
-                                <div class="post-date"> 작성일 : {{ item.written_date }}</div>
+                                <div class="written-text"> {{ comment.content }}</div>
+                                <div class="post-date"> 작성일 : {{ comment.createAt }}</div>
 
                               
                             </div> 
@@ -638,6 +638,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         states_input: ['모집중', '모집 완료'],
         message: "글을 입력하세요",
         currentPosts: [],
+        // currentPost: null,
         currentComments: [
           // [
           //   {
@@ -665,6 +666,8 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
           // ],
 
         ],
+        postDetail: null,
+        comments: [],
         modalIndex: 0,
         modalCheck: false,
         modalIndex_modify: 0,
@@ -672,6 +675,9 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         inputTitle_community: '',
         inputBody_community:'',
         inputComment: '',
+        input_id: null,
+        preselect_value: null,
+        somethings: null,
       };
     },
     created() {
@@ -687,6 +693,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
                   postContent: post.postContent,
                   nickname: post.nickname,
                   createAt: String(post.createAt[0]) + "-" + String(post.createAt[1]).padStart(2, '0') + "-" + String(post.createAt[2]).padStart(2, '0'),
+                  postUuid: post.postUuid
                   //comments_num: 3,
               });
           }
@@ -710,14 +717,37 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         this.$emit('input', value);
       },
       modalOpen(index) {
-        this.modalCheck = !this.modalCheck;
-        console.log(index);
-        this.modalIndex= index;
-      }, 
+        // this.modalCheck = !this.modalCheck;
+        // console.log(index);
+        // this.modalIndex= index;
+        const postUuid = this.currentPosts[index].postUuid;
+        api.get(`/post/${postUuid}`)
+        .then(response => {
+          this.postDetail = response.data.postResponseDto;
+          this.comments = response.data.commentResponseDtoList;
+          this.modalCheck = true;
+          console.log()
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      },   
+      modalClose() {
+          this.modalCheck = false;  // 모달 창 닫기
+      },
       modalOpen_modify(index) {
         this.modalCheck_modify = !this.modalCheck_modify;
         // console.log(index);
         this.modalIndex_modify = index;
+        // const postUuid = this.posts[index].postUuid;
+        // api.get(`/post/${postUuid}`)
+        // .then(response => {
+        //   this.currentPost = response.data;
+        //   this.modalCheck = true;
+        // })
+        // .catch(error => {
+        //   console.error(error);
+        // });
       },
       deletePost(index){
         this.currentPosts.splice(index, 1);
