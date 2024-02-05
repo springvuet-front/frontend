@@ -202,7 +202,9 @@
   </div>
 </template>
 
-<style>
+<style scoped>
+
+.container{padding: 20px 90px}
 #back{
   /* margin-left: 10px; */
   display: flex;
@@ -484,10 +486,6 @@
   font-weight: bold;
   text-decoration: underline;
 }
-</style>
-
-<style scoped>
-.container{padding: 20px 90px}
 </style>
 
 <script>
