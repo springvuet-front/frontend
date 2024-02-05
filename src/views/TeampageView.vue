@@ -535,10 +535,12 @@ input{
     }
 
     .teammates-list{
-        display: flex;
+        display: block;
         height: 130px;
-        justify-content: space-evenly;
-        align-items: center;
+        /* justify-content: space-evenly; */
+        justify-content: center;
+        flex-direction: row;
+        /* align-items: center; */
         overflow-y: auto;
     }
 
