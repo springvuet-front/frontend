@@ -163,14 +163,6 @@
                         </div>
 
                         <hr class="horizontal-divider" style="width: 100%;">
-                        <div class="input-container">
-                          <input type="text" id="write-comment" v-model="inputComment" placeholder="댓글 작성하기" class="input-long" v-on:keyup.enter="addNewComment"/>
-                          <button @click="addNewComment" class="send-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                            </svg>
-                          </button>
-                        </div>
 
                         <div class="container-modal-window">
                           <div class="written-comments" v-for="comment in comments" :key="comment.commentUuid">
@@ -186,7 +178,16 @@
                               <div class="written-text"> {{ comment.content }}</div>
                               <div class="post-date"> 작성일 : {{ (comment.createAt[0]) + "-" + String(comment.createAt[1]).padStart(2, '0') + "-" + String(comment.createAt[2]).padStart(2, '0') }}</div>
                           </div> 
-                      </div>
+                        </div>
+
+                        <div class="input-container">
+                          <input type="text" id="write-comment" v-model="inputComment" placeholder="댓글 작성하기" class="input-long" v-on:keyup.enter="addNewComment"/>
+                          <button @click="addNewComment" class="send-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                            </svg>
+                          </button>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -452,6 +453,7 @@
   padding-left: 20px;
   overflow: hidden; /*추가*/
   display: flex; /*추가*/
+  align-items: center;
 }
 .input-container{
   display: flex;
@@ -487,18 +489,20 @@ input:focus{
   text-align: left;
   padding: 10px 0 10px 15px;
   width: 90%;
-  height: 90px;
+  height: 15vh;
   margin: 16px 0 0 10px; /*추가*/
   border-radius: 5px; /*추가*/
 }
 .container-modal-window{
-  height: 47vh;
-  width: 77vw;
+  height: 45vh;
+  width: 80vw;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
 }
 .writer-id{
   font-weight: bold;
