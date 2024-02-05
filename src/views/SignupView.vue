@@ -13,17 +13,10 @@
                             이메일 형식이 올바르지 않습니다.
                         </p>
                     </div>
-                    <div class="email-confirm-view">
                         <input
                             type="text"
                             v-model="email"
                             id="email" /> 
-
-                        <ButtonComponent msg="이메일 확인" parameter = "" id="email-confirm-button"/>
-                    </div>
-                    
-                    <div class="input-text">인증번호 입력</div>
-                    <input type="text">
                     <div class="valid-view">
                         <div class="input-text">비밀번호</div>
                         <p
@@ -52,7 +45,8 @@
 
                     <div class="input-text">닉네임</div>
                     <input type="text"
-                            v-model="nickname">
+                            v-model="nickname"
+                            v-on:keyup.enter="signup">
                 </div>
             </div>
 
@@ -131,11 +125,6 @@
     padding: 5px 0 10px 0;
 }
 
-.email-confirm-view{
-    display: flex;
-    align-items: center;
-}
-
 input{
     width: 350px;
     height: 30px;
@@ -146,18 +135,6 @@ input{
 
 input:focus{
     outline: 0;
-}
-
-#email{
-    width: 230px;
-}
-
-#email-confirm-button{
-    width: 120px;
-    height: 32px;
-    margin: 0;
-    padding: 1px 2px 1px 0px;
-    border-radius: 0;
 }
 
 .input-error {

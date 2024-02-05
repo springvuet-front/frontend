@@ -103,9 +103,9 @@
       </div>
     </div>
   </div>
-  </template>
-  
-  <style scoped>
+</template>
+
+<style scoped>
   .container{
     padding: 20px 90px;
     height: 100vh;
@@ -324,9 +324,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 5px;
   }
   .inputToDoList input[type="text"]{
-    width: 170px;
+    width: 180px;
     height: 30px;
     border: solid;
     border-bottom-left-radius: 7px;
@@ -413,10 +414,9 @@
     width: 30px;
     height: 50px;
   }
-  
-  </style>
-      
-  <script>
+</style>
+    
+<script>
   import api from '@/axios.js';
   import LeftMenu from '@/components/LeftMenu.vue';
   import ButtonComponent from '@/components/ButtonComponent.vue';

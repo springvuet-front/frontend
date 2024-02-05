@@ -12,7 +12,7 @@ import CreateNewView from "../views/CreateNewView.vue"
 const routes = [
   { path: '/', name: 'firstpage', component: FirstpageView },
   { path: '/home', name: 'home', component: HomeView },
-  { path: '/bookmark', name: 'bookmark', component: BookmarkView },
+  { path: '/bookmark/:teampageUuid', name: 'bookmark', component: BookmarkView, props: true },
   { path: '/login', name: 'login', component: LoginView },
   { path: '/signup', name: 'signup', component: SignupView },
   { path: '/mypage', name: 'mypage', component: MypageView },
