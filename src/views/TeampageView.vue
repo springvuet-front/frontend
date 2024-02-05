@@ -61,8 +61,8 @@
         </div>
 
         <div class="flex-right">
-            <div class="right-menu-members">
-                <h3>팀명</h3>
+            <div class="right-menu-members" v-if="project">
+                <h3>{{ project.teampageDetailResponseDto.teamName }}</h3>
                 <hr>
                 <div class="members">
                     <div class="members-left">
@@ -518,7 +518,7 @@ input{
 
 <script>
 import api from '@/axios.js';
-import { parseYearTime } from '@/utils/date.js';
+import { parseDateTime, parseYearTime } from '@/utils/date.js';
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
@@ -565,12 +565,13 @@ export default {
             useDefaultTheme: true,
             useHolidayTheme: true,
             useTodayIcons: "-",
-            items: [
-                {
-                    id: "e1",
-                    startDate: this.thisMonth(15, 18, 30),
-                    title: "그냥"
-                },
+            // items: [
+            //     {
+            //         id: "e1", //For문 구별자
+            //         startDate: this.thisMonth(15, 18, 30), //해당 달 받아와서(시작 날짜)
+            //         endDate: this.thisMonth(17),
+            //         title: "그냥"
+            //     },
                 // {
                 //     id: "e2",
                 //     startDate: this.thisMonth(15),
@@ -583,7 +584,8 @@ export default {
                 //     title: "Multi-day item with a long title and times",
                 // },
                 //... the rest of your items
-            ],
+            // ],
+            items: [],
         }
     }
     },
@@ -592,6 +594,17 @@ export default {
     api.get(`/teampage/${teampageUuid}`)
     .then(response => {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+      this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      for (let schedule of this.teamScheduleDto) {
+            let startDate = parseDateTime(schedule.scheduleStart);
+            let endDate = parseDateTime(schedule.scheduleEnd);
+            this.state.items.push({
+                id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
+                startDate: `${startDate.month}-${startDate.date}`,  // 파싱한 월-일을 문자열로 변환
+                endDate: `${endDate.month}-${endDate.date}`,
+                title: schedule.scheduleContent
+            });
+        }
         })
     .catch(error => {
       console.error(error);
