@@ -64,17 +64,27 @@
             <div class="right-menu-members">
                 <h3>팀명</h3>
                 <hr>
-                <div class="members">
-                    <div class="members-left">
-                        <div class="member1">팀원1</div>
-                        <div class="member2">팀원2</div>
-                        <div class="member3">팀원3</div>
+                <div class="teammates-list" >
+                    <div class="members-right">
+                        <ul>
+                            <!-- <li v-for="item in teammates.slice(0,3)" :key="item.id">
+                                {{ item.nickname }}
+                            </li> -->
+                            <li v-for="(item, index) in teammates" :key="index">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="members-right">
-                        <div class="member4">팀원4</div>
-                        <div class="member5">팀원5</div>
-                        <div class="member6">팀원6</div>
+                    <div class="members-left">
+                        <ul>
+                            <!-- <li v-for="item in teammates.slice(3,6)" :key="item.id">
+                                {{ item.nickname }}
+                            </li> -->
+                            <li v-for="(item, index) in teammates" :key="index">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -592,6 +602,16 @@ export default {
     api.get(`/teampage/${teampageUuid}`)
     .then(response => {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+      this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      for (let schedule of this.teamScheduleDto) {
+            this.state.items.push({
+                id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
+                startDate: this.formatYear(schedule.scheduleStart),
+                endDate: this.formatYear(schedule.scheduleEnd),
+                title: schedule.scheduleContent
+            });
+        }
+        console.log(this.state.items)
         })
     .catch(error => {
       console.error(error);
@@ -690,28 +710,52 @@ export default {
         },
         
         saveBtn() {
-            const projectNameInput = document.getElementById('projectname');
-            const teamNameInput = document.getElementById('teamname');
-            //const teamMemberInput = document.getElementById('teammember');
-            const projectStartDateInput = document.getElementById('startdate');
-            const projectEndDateInput = document.getElementById('enddate');
-            const githubLinkInput = document.getElementById('githublink');
+            // const projectNameInput = document.getElementById('projectname');
+            // const teamNameInput = document.getElementById('teamname');
+            // //const teamMemberInput = document.getElementById('teammember');
+            // const projectStartDateInput = document.getElementById('startdate');
+            // const projectEndDateInput = document.getElementById('enddate');
+            // const githubLinkInput = document.getElementById('githublink');
 
-            const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
-            const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
+            // const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
+            // const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
             
-            //teamMemberInput.value = '하암';
-            projectStartDateInput.value = this.newProjectStartDate;
-            projectEndDateInput.value = this.newProjectEndDate;
-            githubLinkInput.value = '흠';
+            // //teamMemberInput.value = '하암';
+            // projectStartDateInput.value = this.newProjectStartDate;
+            // projectEndDateInput.value = this.newProjectEndDate;
+            // githubLinkInput.value = '흠';
 
-            console.log(projectName); //변경하는 이름
-            console.log(teamName); //이것도
-        },
+            // console.log(projectName); //변경하는 이름
+            // console.log(teamName); //이것도
+            const url = `/teampage/${this.teampageUuid}/edit`;
+            const projectName = document.getElementById('projectname').value;
+            const teamName = document.getElementById('teamname').value;
+            const start = this.newProjectStartDate + "00:00:00";
+            const end = this.newProjectEndDate + "00:00:00";
+            const github = document.getElementById('githublink').value;
+
+            const data = {
+                    projectName,
+                    teamName,
+                    start,
+                    end,
+                    github
+            };
+
+            api.put(url, data)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+        console.log(error);
+        });
+            
+    },
 
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')
         },
+        
         formatYear(when) {
             let {year, month, date} = parseYearTime(when);
             return `${year}-${month}-${date}`;
