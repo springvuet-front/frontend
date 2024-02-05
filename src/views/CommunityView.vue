@@ -93,13 +93,6 @@
                         <div class="modal-info-modify">
                           <div class="post-title-modify">
                             <label class="post-title-label">수정하기</label>
-                            <div class="modal-btn">
-                              <div class="close-btn" @click="modalOpen_modify(index)">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                              </div>
-                            </div>
                           </div>
                           <div class="select-container-modify">
                               <select
@@ -726,21 +719,29 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       },
       addNewPost() {
         const newPost = {
-          data: {
-            post_part: this.partModel2,
-            post_state: this.stateModel2,
-            post_title: this.inputTitle_community, // write-title input의 값을 가져옴
-            post_body: this.inputBody_community,  // write-body input의 값을 가져옴
-            post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
-            post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
-            comments_num: 0,  // 초기 댓글 개수를 0으로 설정
-          }
+          postCategory: this.partModel2,  // scheduleUuid를 id로 사용
+          postStatus: this.stateModel2,
+          postTitle: this.inputTitle_community,
+          postContent: this.inputBody_community,
+          nickname: this.nickname,
+          createAt: new Date().toISOString().slice(0, 10),
         };
-        console.log(new Date().toISOString().slice(0, 10))
-        // currentPosts 배열에 새로운 데이터 추가
-        
         if(this.inputTitle_community && this.inputBody_community){
           this.currentPosts.push(newPost);
+          api.post('/post/create', {
+            postCategory: this.partModel2,  // scheduleUuid를 id로 사용
+            postStatus: this.stateModel2,
+            postTitle: this.inputTitle_community,
+            postContent: this.inputBody_community,
+            nickname: this.nickname,
+            createAt: new Date().toISOString().slice(0, 10),
+          })
+          .then(response => {
+              console.log(response);
+          })
+          .catch(error => {
+              console.log(error);
+          });
           // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
           this.partModel2 = '웹';
           this.stateModel2 = '모집중';
@@ -764,16 +765,18 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             written_text: this.inputComment,  
             written_date: new Date().toISOString().slice(0, 10),  
         };
-        if(!this.inputComment){
+        if(!this.inputComment[this.modalIndex]){
           alert("댓글을 입력하세요");
-          this.currentComments.push([newComment]);
-        }
-        else {
+        }else {
+          if (!this.currentComments[this.modalIndex]) {
+            this.currentComments[this.modalIndex] = [];
+          }
           this.currentComments[this.modalIndex].push(newComment);
-          this.inputComment = '';
+          this.inputComment = ''; 
         }
       },
       saveBtn() {
+        this.modalCheck_modify = !this.modalCheck_modify;
       },
 
       formatYear(when) {
