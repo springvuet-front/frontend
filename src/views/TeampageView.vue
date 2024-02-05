@@ -13,11 +13,11 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
+                        <div id="startdate">{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
+                        <div id="enddate">{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
@@ -321,7 +321,8 @@ https://github.com/richardtallent/vue-simple-calendar
 
   #bar{
     height: 10px;
-    background-color: aqua;
+    background-color: #B1B2FF;
+    border-radius: 10px;
   }
 
   .right-menu-addschedule{
@@ -544,11 +545,11 @@ export default {
         // },
         project:{
             teampageDetailResponseDto: {
-          projectName: '...',
-          start: '...',
-          end: '...',
-          remainingDays: '...'
-        }
+                projectName: '...',
+                start: '...',
+                end: '...',
+                remainingDays: '...',
+            }
         },
         state: {
             showDate: this.thisMonth(1),
@@ -602,12 +603,12 @@ export default {
         todayDate(){
             return dayjs();
         },
-        dueDate(){
-            return dayjs('2024-02-07');
-        },
-        dDay(){
-            return this.dueDate.diff(this.todayDate, 'day');
-        },
+        // dueDate(){
+        //     return dayjs(this.project.teampageDetailResponseDto.end);
+        // },
+        // dDay(){
+        //     return this.dueDate.diff(this.todayDate, 'day');
+        // },
         themeClasses(){
             return{
                 "theme-default": this.state.useDefaultTheme
@@ -723,11 +724,15 @@ export default {
         this.state.newItemEndDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectStartDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectEndDate = this.isoYearMonthDay(new Date())
+    },
 
-        if (this.$refs.bar) {
-            const dDaywidth = this.$refs.bar
-            dDaywidth.style.width = this.dDay * 5 + 'px'
-        }
+    watch: {
+        'project.teampageDetailResponseDto.remainingDays': function(newVal) {
+            if (this.$refs.bar && !isNaN(newVal)) {
+                const dDaywidth = this.$refs.bar;
+                dDaywidth.style.width = newVal * 10 + 'px';
+            }
+        },
     },
 
     components: {
