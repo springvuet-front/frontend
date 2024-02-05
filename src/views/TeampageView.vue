@@ -65,16 +65,9 @@
                 <div class="teammates-list">
                     <div class="members-right">
                         <ul>
-                            <li v-for="item in teammates.slice(0,3)" :key="item.id">
-                                {{ item.nickname }}
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="members-left">
-                        <ul>
-                            <li v-for="item in teammates.slice(3,6)" :key="item.id">
-                                {{ item.nickname }}
+                            <!-- <li v-for="item in teammates.slice(0,3)" :key="item.id"> -->
+                            <li v-for="(item, index) in teammates" :key="index">
+                                - {{ item.nickname }} / {{ item.teamRole }} / {{ item.teamAdmin }}
                             </li>
                         </ul>
                     </div>
@@ -208,8 +201,8 @@
                         <div class="input-container-add" >
                             <!-- <div class="label-text"><h4>팀원</h4></div> -->
                             <input type="text" class="input-short" v-model="item.nickname"/>
-                            <input type="text" class="input-short" v-model="item.part"/>
-                            <input type="text" class="input-short" v-model="item.position"/>
+                            <input type="text" class="input-short" v-model="item.teamRole"/>
+                            <input type="text" class="input-short" v-model="item.teamAdmin"/>
                         </div>
                     </div>
                     <button class="addmemberBtn-add" type="button" @click="addMembers(index)">+</button>
@@ -534,10 +527,11 @@ input{
     }
 
     .teammates-list{
-        display: flex;
+        display: block;
         height: 130px;
-        justify-content: space-evenly;
-        align-items: center;
+        /* justify-content: space-evenly; */
+        flex-direction: row;
+        /* align-items: center; */
         overflow-y: auto;
     }
 
@@ -593,44 +587,51 @@ export default {
                 remainingDays: '...',
             },
         },
-        teammates:[
-                {
-                    id: 1,
-                    nickname: "팀원1",
-                    part:'',
-                    position:'',
+        // teammates:[
+        //         {
+        //             id: 1,
+        //             nickname: "팀원1",
+        //             part:'',
+        //             position:'',
 
-                },
-                {
-                    id: 2,
-                    nickname: "팀원2",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 3,
-                    nickname: "팀원3",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 4,
-                    nickname: "팀원4",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 5,
-                    nickname: "팀원5",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 6,
-                    nickname: "팀원6",
-                    part:'',
-                    position:'',
-                },
+        //         },
+        //         {
+        //             id: 2,
+        //             nickname: "팀원2",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 3,
+        //             nickname: "팀원3",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 4,
+        //             nickname: "팀원4",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 5,
+        //             nickname: "팀원5",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 6,
+        //             nickname: "팀원6",
+        //             part:'',
+        //             position:'',
+        //         },
+        // ],
+        teammates: [
+            {
+                nickname: '',
+                teamRole: '',
+                teamAdmin: ''
+            }
         ],
         state: {
             showDate: this.thisMonth(1),
@@ -657,6 +658,7 @@ export default {
     .then(response => {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
       this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      this.teammates = response.data.teamMembersDtos || []; 
       for (let schedule of this.teamScheduleDto) {
             this.state.items.push({
                 id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
@@ -764,32 +766,67 @@ export default {
         },
         
         saveBtn() {
-            const projectNameInput = document.getElementById('projectname');
-            const teamNameInput = document.getElementById('teamname');
-            //const teamMemberInput = document.getElementById('teammember');
-            const projectStartDateInput = document.getElementById('startdate');
-            const projectEndDateInput = document.getElementById('enddate');
-            const githubLinkInput = document.getElementById('githublink');
+            // const projectNameInput = document.getElementById('projectname');
+            // const teamNameInput = document.getElementById('teamname');
+            // //const teamMemberInput = document.getElementById('teammember');
+            // const projectStartDateInput = document.getElementById('startdate');
+            // const projectEndDateInput = document.getElementById('enddate');
+            // const githubLinkInput = document.getElementById('githublink');
 
-            const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
-            const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
+            // const projectName = projectNameInput.value; // 값을 새로운 변수에 할당합니다.
+            // const teamName = teamNameInput.value; // 값을 새로운 변수에 할당합니다.
             
             //teamMemberInput.value = '하암';
-            projectStartDateInput.value = this.newProjectStartDate;
-            projectEndDateInput.value = this.newProjectEndDate;
-            githubLinkInput.value = '흠';
+            // projectStartDateInput.value = this.newProjectStartDate;
+            // projectEndDateInput.value = this.newProjectEndDate;
+            // githubLinkInput.value = '흠';
 
-            console.log(projectName); //변경하는 이름
-            console.log(teamName); //이것도
+            // console.log(projectName); //변경하는 이름
+            // console.log(teamName); //이것도
+            const url = `/teampage/${this.teampageUuid}/edit`; // teampageUuid는 적절한 값을 사용해야 합니다.
+
+            // 입력된 값을 가져옵니다.
+            const projectName = document.getElementById('projectname').value;
+            const teamName = document.getElementById('teamname').value;
+            const start = this.newProjectStartDate;
+            const end = this.newProjectEndDate;
+            const github = document.getElementById('githublink').value;
+
+            const data = {
+                    projectName,
+                    teamName,
+                    start,
+                    end,
+                    github
+                };
+
+                api.put(url, data)
+                .then(response => {
+                    console.log(response);
+                    // 요청이 성공하면 실행되는 코드를 작성합니다.
+                    // 예를 들어, 모달을 닫거나 성공 메시지를 표시할 수 있습니다.
+                })
+                .catch(error => {
+                    console.log(error);
+                    // 요청이 실패하면 실행되는 코드를 작성합니다.
+                    // 예를 들어, 오류 메시지를 표시할 수 있습니다.
+            });
+
         },
-        saveBtn_addMem(){
-            // var i = 0;
-            // for(i=0;i<this.teammates.length;i++){
-            //     this.teammates.name=;
-            //     this.teammates.part=;
-            //     this.teammates.position=;
-            // }
-            console.log(this.teammates);
+        saveBtn_addMem() {
+            const url = `/teampage/${this.teampageUuid}/create/invite`;
+            const data = {
+                invitees: this.teammates
+            };
+
+            api.post(url, data)
+            .then(response => {
+                console.log(response);
+                console.log(this.teammates);
+            })
+            .catch(error => {
+                console.log(error);
+            });
         },
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')

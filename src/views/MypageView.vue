@@ -40,15 +40,16 @@
   <!-- 프로젝트들 -->
   <div class="b_right">
     <div class="bproject current">
-      <div class="title">현재 진행중인 프로젝트</div> 
+      <div class="title">현재 진행중인 프로젝트  <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" /></div> 
       <!-- <ButtonComponent class="addNewBtnStyle" msg="새 프로젝트 만들기" @click="$router.push('/createnew')" /> -->
+      
+      
       <!-- currentProject -->
       <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.currentTeams">
         <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
           <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
-        <ButtonComponent class="addNewBtnStyle" msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
         <!-- <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink"> -->
         <div v-for="teampage in data.myTeamResponseDto.currentTeams" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)">
           
@@ -390,15 +391,7 @@
   visibility:hidden;
 }
 /* addProjectBtn */
-.addNewBtnStyle{
-  width: 200px;
-  height: 200px;
-  background-color: #D2DAFF;
-  border-radius: 15px;
-  display: block;
-  font-size: 12pt;
-  border: 0;
-}
+
 .addNewBtnStyle:hover{
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
