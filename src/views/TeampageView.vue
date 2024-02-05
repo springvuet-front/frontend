@@ -65,16 +65,9 @@
                 <div class="teammates-list">
                     <div class="members-right">
                         <ul>
-                            <li v-for="item in teammates.slice(0,3)" :key="item.id">
-                                {{ item.nickname }}
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="members-left">
-                        <ul>
-                            <li v-for="item in teammates.slice(3,6)" :key="item.id">
-                                {{ item.nickname }}
+                            <!-- <li v-for="item in teammates.slice(0,3)" :key="item.id"> -->
+                            <li v-for="(item, index) in teammates" :key="index">
+                                - {{ item.nickname }} / {{ item.teamRole }} / {{ item.teamAdmin }}
                             </li>
                         </ul>
                     </div>
@@ -208,8 +201,8 @@
                         <div class="input-container-add" >
                             <!-- <div class="label-text"><h4>팀원</h4></div> -->
                             <input type="text" class="input-short" v-model="item.nickname"/>
-                            <input type="text" class="input-short" v-model="item.part"/>
-                            <input type="text" class="input-short" v-model="item.position"/>
+                            <input type="text" class="input-short" v-model="item.teamRole"/>
+                            <input type="text" class="input-short" v-model="item.teamAdmin"/>
                         </div>
                     </div>
                     <button class="addmemberBtn-add" type="button" @click="addMembers(index)">+</button>
@@ -594,44 +587,51 @@ export default {
                 remainingDays: '...',
             },
         },
-        teammates:[
-                {
-                    id: 1,
-                    nickname: "팀원1",
-                    part:'',
-                    position:'',
+        // teammates:[
+        //         {
+        //             id: 1,
+        //             nickname: "팀원1",
+        //             part:'',
+        //             position:'',
 
-                },
-                {
-                    id: 2,
-                    nickname: "팀원2",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 3,
-                    nickname: "팀원3",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 4,
-                    nickname: "팀원4",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 5,
-                    nickname: "팀원5",
-                    part:'',
-                    position:'',
-                },
-                {
-                    id: 6,
-                    nickname: "팀원6",
-                    part:'',
-                    position:'',
-                },
+        //         },
+        //         {
+        //             id: 2,
+        //             nickname: "팀원2",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 3,
+        //             nickname: "팀원3",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 4,
+        //             nickname: "팀원4",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 5,
+        //             nickname: "팀원5",
+        //             part:'',
+        //             position:'',
+        //         },
+        //         {
+        //             id: 6,
+        //             nickname: "팀원6",
+        //             part:'',
+        //             position:'',
+        //         },
+        // ],
+        teammates: [
+            {
+                nickname: '',
+                teamRole: '',
+                teamAdmin: ''
+            }
         ],
         state: {
             showDate: this.thisMonth(1),
@@ -658,6 +658,7 @@ export default {
     .then(response => {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
       this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      this.teammates = response.data.teamMembersDtos || []; 
       for (let schedule of this.teamScheduleDto) {
             this.state.items.push({
                 id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
@@ -783,14 +784,20 @@ export default {
             console.log(projectName); //변경하는 이름
             console.log(teamName); //이것도
         },
-        saveBtn_addMem(){
-            // var i = 0;
-            // for(i=0;i<this.teammates.length;i++){
-            //     this.teammates.name=;
-            //     this.teammates.part=;
-            //     this.teammates.position=;
-            // }
-            console.log(this.teammates);
+        saveBtn_addMem() {
+            const url = `/teampage/${this.teampageUuid}/create/invite`;
+            const data = {
+                invitees: this.teammates
+            };
+
+            api.post(url, data)
+            .then(response => {
+                console.log(response);
+                console.log(this.teammates);
+            })
+            .catch(error => {
+                console.log(error);
+            });
         },
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')
