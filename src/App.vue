@@ -102,9 +102,4 @@ border: 2px solid transparent;
 };
 
 
-</script> -->
-<script>
-
-export default {
-};
-</script> -->
+</script>
