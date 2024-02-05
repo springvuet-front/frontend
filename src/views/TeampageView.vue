@@ -48,8 +48,7 @@
                         :period-changed-callback="periodChanged"
                         :current-period-label="state.useTodayIcons ? 'icons' : ''"
                         :displayWeekNumbers="state.displayWeekNumbers"
-                        @click-date="onClickDay"
-                        @click-item="onClickItem"
+                        
                     >
                         <template #header="{ headerProps }">
                             <CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
@@ -700,6 +699,7 @@ export default {
 
         modalOpen2() {
             this.modalCheck2 = !this.modalCheck2
+            console.log("Modal open")
         },
 
         thisMonth(d, h = 0, m = 0) {
