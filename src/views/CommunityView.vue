@@ -797,20 +797,33 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         
       },
       addNewComment() {
-        const newComment = {
-            writer_id: "새로운 작성자", // 아이디 가져오기 (+작성자일 경우 '작성자' 붙이기)
-            written_text: this.inputComment,  
-            written_date: new Date().toISOString().slice(0, 10),  
-        };
-        if(!this.inputComment[this.modalIndex]){
-          alert("댓글을 입력하세요");
-        }else {
-          if (!this.currentComments[this.modalIndex]) {
-            this.currentComments[this.modalIndex] = [];
-          }
-          this.currentComments[this.modalIndex].push(newComment);
-          this.inputComment = ''; 
-        }
+        // const newComment = {
+        //     writer_id: "새로운 작성자", // 아이디 가져오기 (+작성자일 경우 '작성자' 붙이기)
+        //     written_text: this.inputComment,  
+        //     written_date: new Date().toISOString().slice(0, 10),  
+        // };
+        // if(!this.inputComment[this.modalIndex]){
+        //   alert("댓글을 입력하세요");
+        // }else {
+        //   if (!this.currentComments[this.modalIndex]) {
+        //     this.currentComments[this.modalIndex] = [];
+        //   }
+        //   this.currentComments[this.modalIndex].push(newComment);
+        //   this.inputComment = ''; 
+        // }
+        const postUuid = this.postDetail.postUuid;
+          api.post(`/post/${postUuid}/comment/create`, {
+            content: this.inputComment
+          })
+            .then(response => {
+              // 댓글 작성 성공. 댓글 목록을 새로고침하거나, 현재 댓글을 목록에 추가
+              this.comments.push(response.data);
+              this.inputComment = '';  // 입력 필드 초기화
+              console.log()
+            })
+            .catch(error => {
+              console.error(error);
+            });
       },
       saveBtn() {
         this.modalCheck_modify = !this.modalCheck_modify;
