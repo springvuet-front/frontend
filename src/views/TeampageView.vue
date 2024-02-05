@@ -38,7 +38,6 @@
                     <CalendarView
                         :items="state.items"
                         :show-date="state.showDate"
-                        :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
                         :disable-past="state.disablePast"
                         :disable-future="state.disableFuture"
                         :date-classes="myDateClasses()"
@@ -542,7 +541,7 @@ input{
 
 <script>
 import api from '@/axios.js';
-import { parseDateTime, parseYearTime } from '@/utils/date.js';
+import { parseYearTime } from '@/utils/date.js';
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
@@ -615,26 +614,6 @@ export default {
             useDefaultTheme: true,
             useHolidayTheme: true,
             useTodayIcons: "-",
-            // items: [
-            //     {
-            //         id: "e1", //For문 구별자
-            //         startDate: this.thisMonth(15, 18, 30), //해당 달 받아와서(시작 날짜)
-            //         endDate: this.thisMonth(17),
-            //         title: "그냥"
-            //     },
-                // {
-                //     id: "e2",
-                //     startDate: this.thisMonth(15),
-                //     title: "Single-day item with a long title",
-                // },
-                // {
-                //     id: "e3",
-                //     startDate: this.thisMonth(7, 9, 25),
-                //     endDate: this.thisMonth(10, 16, 30),
-                //     title: "Multi-day item with a long title and times",
-                // },
-                //... the rest of your items
-            // ],
             items: [],
         }
     }
@@ -646,15 +625,14 @@ export default {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
       this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
       for (let schedule of this.teamScheduleDto) {
-            let startDate = parseDateTime(schedule.scheduleStart);
-            let endDate = parseDateTime(schedule.scheduleEnd);
             this.state.items.push({
                 id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
-                startDate: `${startDate.month}-${startDate.date}`,  // 파싱한 월-일을 문자열로 변환
-                endDate: `${endDate.month}-${endDate.date}`,
+                startDate: this.formatYear(schedule.scheduleStart),
+                endDate: this.formatYear(schedule.scheduleEnd),
                 title: schedule.scheduleContent
             });
         }
+        console.log(this.state.items)
         })
     .catch(error => {
       console.error(error);
@@ -665,12 +643,6 @@ export default {
         todayDate(){
             return dayjs();
         },
-        // dueDate(){
-        //     return dayjs(this.project.teampageDetailResponseDto.end);
-        // },
-        // dDay(){
-        //     return this.dueDate.diff(this.todayDate, 'day');
-        // },
         themeClasses(){
             return{
                 "theme-default": this.state.useDefaultTheme
@@ -778,6 +750,7 @@ export default {
         formatYear(when) {
             let {year, month, date} = parseYearTime(when);
             return `${year}-${month}-${date}`;
+            
     },
 
     },
