@@ -323,9 +323,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 5px;
 }
 .inputToDoList input[type="text"]{
-  width: 170px;
+  width: 180px;
   height: 30px;
   border: solid;
   border-bottom-left-radius: 7px;
