@@ -1,7 +1,8 @@
 <template>
 <LeftMenu/>
 <div id="back">
-  <div class="bTitle">새 프로젝트 만들기</div>
+  <h2>새 프로젝트 만들기</h2>
+  <div class="inputfield">
   <div class="bInputText">
     <div class="elementName">프로젝트명</div><input type="text" v-model="projectName">
   </div>
@@ -33,30 +34,37 @@
   <div class="bInputText">
     <div class="elementName">깃허브링크</div><input type="text" v-model="projectGitLink">
   </div>
+</div>
   <div class="bButton">
     <ButtonComponent parameter="" msg="프로젝트 생성하기" @click="createProject"/>
     <ButtonComponent parameter="mypage" msg="취소하기"/>
   </div>
 </div>
 </template>
-<style>
+<style scoped>
 #back{
   margin-left: 100px;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  line-height:2.0;
+  height: 100vh;
+}
+
+h2{
+  padding-left: 30px;
+  margin: 0;
 }
 .bInputText{
   display: flex;
   align-items: center;
   flex-direction: row;
-  padding: 20px;
+  padding: 30px;
 }
 .bInputDate{
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width: 50vw;
 }
 .bTitle{
   font-size: 25px;
@@ -71,10 +79,13 @@
   font-weight: 550;
   font-size: 12pt;
 }
+.inputfield{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 [type="radio"] {
   display: none;
-}
-[type="radio"]+label{
 }
 .bInputField label{
   cursor: pointer;
@@ -88,7 +99,7 @@
   color: white;
 }
 .elementName{
-  width: 200px;
+  width: 100px;
   text-align: right;
   padding-right: 20px;
   font-weight: bold;
@@ -99,8 +110,11 @@
   justify-content: center;
   margin-top: 50px;
 }
+.bButton button{
+  margin: 30px;
+}
 input{
-  width: 800px;
+  width: 50vw;
   height: 30px;
   border: 0;
   background-color: #C6C7FF;
