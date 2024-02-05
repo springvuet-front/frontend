@@ -91,10 +91,19 @@
                     <div class="modal-container">
                       <div class="flex-box">
                         <div class="modal-info-modify">
-                          <div class="post-title">수정하기</div>
+                          <div class="post-title-modify">
+                            <label class="post-title-label">수정하기</label>
+                            <div class="modal-btn">
+                              <div class="close-btn" @click="modalOpen_modify(index)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
                           <div class="select-container-modify">
                               <select
-                                v-model="partModel2"
+                                v-model="currentPosts[modalIndex_modify].postCategory"
                                 class="part-select2"
                                 v-bind:id="input_id"
                                 v-on:input="updateValue($event.target.value)"
@@ -102,7 +111,7 @@
                                 <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
                               </select>
                               <select
-                                v-model="stateModel2"
+                                v-model="currentPosts[modalIndex_modify].postStatus"
                                 class="state-select2"
                               > 
                                 <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
@@ -114,10 +123,9 @@
                                 @input="value => { preselect_value = value }"
                               ></SelectBox>
                           </div>
-                          <br/>
                           <div class="input-container-modify">
-                            <input type="text" class="write-title"/>
-                            <textarea type="text" class="write-body"/>
+                            <input type="text" class="write-title-modify" v-model="currentPosts[modalIndex_modify].postTitle"/>
+                            <textarea type="text" class="write-body-modify" v-model="currentPosts[modalIndex_modify].postContent"/>
                           </div>
                           <div class="botton-container-modify">
                               <div class="btn-container-right">
@@ -128,6 +136,7 @@
                                 <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
                               </div>
                           </div>
+                          
                           <!-- </div> -->
 
                           <!-- <>수정하기</h5>
@@ -138,11 +147,8 @@
                                   <div class="edit-body">
                                       
                                   </div>
-                              </div> -->
-                              
-                        
+                              </div> -->   
                       </div>
-                      
                     </div>
                   </div>
                 </div>        
@@ -165,48 +171,30 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                   </svg>
                 </div>
-                <!-- <div class="comment-number">{{ currentComments[index].length }} </div> -->
                 <div class="comment-number">0 </div>
                 <Button class="comment-button" @click="modalOpen(index)">댓글 달기</Button>
 
                 <div class="modal-wrap" v-show="modalCheck">
                   <div class="modal-container">
                     <div class="flex-box">
-                      <div class="modal-info">
+                      <div class="modal-info2">
                         <div class="post-title"> {{ currentPosts[modalIndex].postTitle }} </div>
                         <div class="post-body">{{ currentPosts[modalIndex].postContent }}</div>
-                        <div class="post-info">
+                        <div class="post-info2">
                           <div class="post-writer"> 작성자 : {{ currentPosts[modalIndex].nickname }}</div>
                           <div class="post-date"> 등록일 : {{ currentPosts[modalIndex].createAt }}</div>
                         </div>
-                        <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
-                        <div class="container-modal-window">
-                          
-                        <!-- <div class="written-comments" v-for="(item, index) in currentPosts[modalIndex].post_Comment" :key="index">
-                          <div class="writer-id"> {{ item.writer_id }}</div>
-                          <div class="written-text"> {{ item.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
-                        </div> -->
-                        <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
-                          <div class="writer-id"> {{ item.writer_id }}</div>
-                          <div class="written-text"> {{ item.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
 
-                          <div class="delete-comment">
-                            <div class="close-btn" @click="deleteComment(index)">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                              </svg>
-                            </div>
+                        <div class="modal-btn">
+                          <div class="close-btn" @click="modalOpen(index)">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
                           </div>
                         </div>
 
-                        
-
-                        
-
-                      </div>
-                      <div class="input-container">
+                        <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
+                        <div class="input-container">
                           <div class="label-text">
                           </div>
                           <div> 
@@ -217,21 +205,32 @@
                               </svg>
                             </button>
                           </div>
-                        </div>
-                    </div>
-                    <div class="modal-btn">
-                      <div class="close-btn" @click="modalOpen(index)">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
+                      </div>
+
+                        <div class="comment-scroll">
+                          <div class="container-modal-window">
+                            <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
+                              <div class="writer-id"> {{ item.writer_id }}</div>
+                              <div class="written-text"> {{ item.written_text }}</div>
+                              <div class="post-date"> 작성일 : {{ item.written_date }}</div>
+
+                              <div class="delete-comment">
+                                <div class="close-btn" @click="deleteComment(index)">
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div> 
+                          </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>    
             </div>
-            </div>   
-        </div> <!-- 게시물 보이는 부분 끝-->
+          </div>   
+        </div> 
       </div>
           <!-- 댓글달기 모달창 끝 -->
       </div>
@@ -471,6 +470,8 @@
   background-color: #D2DAFF;
   color: black;
   padding-left: 20px;
+  overflow: hidden; /*추가*/
+  display: flex; /*추가*/
 }
 .input-container{
   display: flex;
@@ -483,8 +484,8 @@
   width: 10vw;
 }
 .input-long{
-  width: 1000px;
-  height: 30px;
+  width: 70vw; /*수정*/
+  height: 32px; /*수정*/
   color: white;
   font-size: 13pt;
 }
@@ -502,6 +503,8 @@
   padding: 10px 0 10px 15px;
   width: 90%;
   height: 100px;
+  margin: 16px 0 0 10px; /*추가*/
+  border-radius: 5px; /*추가*/
 }
 .container-modal-window{
   height: 400px;
@@ -527,7 +530,15 @@
 .write-comment::placeholder {
   color: rgba(255, 255, 255, 0.747);
 }
-
+.comment-scroll{ /*추가*/
+  overflow-y: scroll;
+}
+.modal-info2{ /*추가*/
+  justify-content: flex-start;
+}
+.post-info2{ /*추가*/
+  justify-content: flex-end;
+}
 
 /* 수정하기 모달창 */
 .modifying-button {
@@ -547,7 +558,55 @@
   font-weight: bold;
   text-decoration: underline;
 }
-
+.post-title-modify{
+  display:flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 30pt;
+  margin-left: 15px;
+}
+.modal-info-modify{
+  /* display:flex;
+  flex-direction: column; */
+  display: grid;
+  grid-template-rows: 10vh 20vh 30vh 20vh;
+}
+.select-container-modify{
+  display:flex;
+  flex-direction: column;
+  /* background-color:black; */
+}
+.input-container-modify{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color:pink; */
+  margin-left: 10px;
+}
+.write-title-modify{
+  background-color: #B1B2FF;
+  padding-inline: 10px;
+  width: 97%;
+  height: 35px;
+  border-width: 0px;
+  font-size: 15pt;
+  /* margin-top: 25px; */
+}
+.write-body-modify{
+  background-color: #B1B2FF;
+  margin-top: 13px;
+  padding-inline: 10px;
+  padding-top: 5px;
+  width: 97%;
+  height: 100px;
+  border-width: 0px;
+  font-size: 15pt;
+  resize:none;
+}
+.botton-container-modify{
+  display:flex;
+  justify-content: center;
+}
 .textCount{
   margin-left: 10px;
 }
@@ -625,7 +684,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
                   postTitle: post.postTitle,
                   postContent: post.postContent,
                   nickname: post.nickname,
-                  createAt: post.createAt[0] + "-" + post.createAt[1] + "-" + post.createAt[2],
+                  createAt: String(post.createAt[0]) + "-" + String(post.createAt[1]).padStart(2, '0') + "-" + String(post.createAt[2]).padStart(2, '0'),
                   //comments_num: 3,
               });
           }
@@ -677,6 +736,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             comments_num: 0,  // 초기 댓글 개수를 0으로 설정
           }
         };
+        console.log(new Date().toISOString().slice(0, 10))
         // currentPosts 배열에 새로운 데이터 추가
         
         if(this.inputTitle_community && this.inputBody_community){
@@ -700,28 +760,20 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
       },
       addNewComment() {
         const newComment = {
-          // data: {
-          //   //아이디 가져오기 + 작성자일 경우 '작성자' 붙이기
-          //   written_text: this.$refs.writtenText.value,  // written-text input의 값을 가져옴
-          //   post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
-          // }
-            written_text: this.inputComment,
-            written_date: new Date().toISOString().slice(0, 10)
-          };
-        // currentPosts 배열에 새로운 데이터 추가
-        if(!this.currentComments[this.modalIndex]){
-          console.log("없음");
+            writer_id: "새로운 작성자", // 아이디 가져오기 (+작성자일 경우 '작성자' 붙이기)
+            written_text: this.inputComment,  
+            written_date: new Date().toISOString().slice(0, 10),  
+        };
+        if(!this.inputComment){
+          alert("댓글을 입력하세요");
           this.currentComments.push([newComment]);
         }
-        else{
+        else {
           this.currentComments[this.modalIndex].push(newComment);
-          // 등록 후 입력 필드 초기화 (선택 필드는 초기값으로 되돌리고, 텍스트 필드는 비움)
           this.inputComment = '';
         }
-        
       },
       saveBtn() {
-
       },
 
       formatYear(when) {
