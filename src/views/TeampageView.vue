@@ -2,10 +2,10 @@
     <LeftMenu />
 
     <div id="container">
-        <div class="flex-left">
+        <div class="flex-left" v-if="project && project.teampageDetailResponseDto">
             <div class="project-info">
                 <div class="team-info">
-                    <h2>{{ project.exProjectName }}</h2>
+                    <h2>{{ project.teampageDetailResponseDto.projectName }}</h2>
                     <ButtonComponent msg="수정하기" @click="modalOpen" />
                 </div>
 
@@ -13,18 +13,18 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ project.ProjectStartDate }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ project.ProjectEndDate }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
                 <div class="end-bar">
                     <h5>프로젝트 마감까지</h5>
                     <div id="bar" ref="bar"></div>
-                    <h5>D-{{ dDay }}</h5>
+                    <h5>D-{{ project.teampageDetailResponseDto.remainingDays }}</h5>
                 </div>
                 
                 <div class="btn-container">
@@ -517,6 +517,8 @@ input{
 </style>
 
 <script>
+import api from '@/axios.js';
+import { parseYearTime } from '@/utils/date.js';
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
@@ -527,17 +529,26 @@ import dayjs from "dayjs"
 
 export default {
   name: 'TeampageView',
+  props: ['teampageUuid'],
   data() {
     return {
         modalCheck: false,
         modalCheck2: false,
-        project: {
-            exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
-            exTeamName: '스프링뷰트',
-            newProjectStartDate: '',
-            newProjectEndDate: '',
-            ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
-            ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
+        // project: {
+        //     exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
+        //     exTeamName: '스프링뷰트',
+        //     newProjectStartDate: '',
+        //     newProjectEndDate: '',
+        //     ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
+        //     ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
+        // },
+        project:{
+            teampageDetailResponseDto: {
+          projectName: '...',
+          start: '...',
+          end: '...',
+          remainingDays: '...'
+        }
         },
         state: {
             showDate: this.thisMonth(1),
@@ -576,6 +587,17 @@ export default {
         }
     }
     },
+    created(){
+    const teampageUuid = this.$route.params.teampageUuid;
+    api.get(`/teampage/${teampageUuid}`)
+    .then(response => {
+      this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+        })
+    .catch(error => {
+      console.error(error);
+        });
+    },
+
     computed:{
         todayDate(){
             return dayjs();
@@ -689,7 +711,12 @@ export default {
 
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')
-        }
+        },
+        formatYear(when) {
+            let {year, month, date} = parseYearTime(when);
+            return `${year}-${month}-${date}`;
+    },
+
     },
     mounted() {
         this.state.newItemStartDate = this.isoYearMonthDay(new Date())

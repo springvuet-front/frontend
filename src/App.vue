@@ -1,8 +1,7 @@
 <template>
   <router-view/>
   <div>
-    백엔드에서 가져온 데이터입니다.
-    {{ hello }}
+   
   </div>
 </template>
 
@@ -92,8 +91,7 @@ border: 2px solid transparent;
 
 </style>
 
-<!-- <script>
-import axios from 'axios';
+<script>
 
   export default {
   name: 'App',
@@ -103,8 +101,10 @@ import axios from 'axios';
 };
 
 
-</script> -->
-<script>
+</script>
+
+
+<!-- <script>
 import axios from 'axios';
 
 export default {
@@ -117,4 +117,4 @@ export default {
       .catch(error => console.log(error))
   }
 };
-</script>
+</script> -->
