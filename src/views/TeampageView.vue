@@ -13,11 +13,11 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
+                        <div id="startdate">{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
+                        <div id="enddate">{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
@@ -64,17 +64,21 @@
             <div class="right-menu-members" v-if="project">
                 <h3>{{ project.teampageDetailResponseDto.teamName }}</h3>
                 <hr>
-                <div class="members">
-                    <div class="members-left">
-                        <div class="member1">팀원1</div>
-                        <div class="member2">팀원2</div>
-                        <div class="member3">팀원3</div>
+                <div class="teammates-list">
+                    <div class="members-right">
+                        <ul>
+                            <li v-for="item in teammates.slice(0,3)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="members-right">
-                        <div class="member4">팀원4</div>
-                        <div class="member5">팀원5</div>
-                        <div class="member6">팀원6</div>
+                    <div class="members-left">
+                        <ul>
+                            <li v-for="item in teammates.slice(3,6)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -321,11 +325,12 @@ https://github.com/richardtallent/vue-simple-calendar
 
   #bar{
     height: 10px;
-    background-color: aqua;
+    background-color: #B1B2FF;
+    border-radius: 10px;
   }
 
   .right-menu-addschedule{
-    height: 220px;
+    height: 240px;
     padding: 20px;
     margin: 5px;
     border-radius: 5px;
@@ -343,6 +348,8 @@ https://github.com/richardtallent/vue-simple-calendar
   .members{
     display: flex;
     padding: 20px;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .calendar-container{
@@ -510,8 +517,15 @@ input{
         margin-left: 25px;
     }
 
-    .members-right{
-        margin-left: 30px;
+    .teammates-list{
+        display: flex;
+        height: 130px;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    ul li{
+        padding: 5px;
     }
 
 </style>
@@ -544,12 +558,38 @@ export default {
         // },
         project:{
             teampageDetailResponseDto: {
-          projectName: '...',
-          start: '...',
-          end: '...',
-          remainingDays: '...'
-        }
+                projectName: '...',
+                start: '...',
+                end: '...',
+                remainingDays: '...',
+            },
         },
+        teammates:[
+                {
+                    id: 1,
+                    nickname: "팀원1",
+                },
+                {
+                    id: 2,
+                    nickname: "팀원2",
+                },
+                {
+                    id: 3,
+                    nickname: "팀원3",
+                },
+                {
+                    id: 4,
+                    nickname: "팀원4",
+                },
+                {
+                    id: 5,
+                    nickname: "팀원5",
+                },
+                {
+                    id: 6,
+                    nickname: "팀원6",
+                },
+        ],
         state: {
             showDate: this.thisMonth(1),
             message: "",
@@ -615,12 +655,12 @@ export default {
         todayDate(){
             return dayjs();
         },
-        dueDate(){
-            return dayjs('2024-02-07');
-        },
-        dDay(){
-            return this.dueDate.diff(this.todayDate, 'day');
-        },
+        // dueDate(){
+        //     return dayjs(this.project.teampageDetailResponseDto.end);
+        // },
+        // dDay(){
+        //     return this.dueDate.diff(this.todayDate, 'day');
+        // },
         themeClasses(){
             return{
                 "theme-default": this.state.useDefaultTheme
@@ -736,11 +776,15 @@ export default {
         this.state.newItemEndDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectStartDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectEndDate = this.isoYearMonthDay(new Date())
+    },
 
-        if (this.$refs.bar) {
-            const dDaywidth = this.$refs.bar
-            dDaywidth.style.width = this.dDay * 5 + 'px'
-        }
+    watch: {
+        'project.teampageDetailResponseDto.remainingDays': function(newVal) {
+            if (this.$refs.bar && !isNaN(newVal)) {
+                const dDaywidth = this.$refs.bar;
+                dDaywidth.style.width = newVal * 10 + 'px';
+            }
+        },
     },
 
     components: {
