@@ -1,17 +1,21 @@
 <template>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <router-view/>
-  <div>
-    백엔드에서 가져온 데이터입니다.
-    {{ hello }}
-  </div>
 </template>
 
 <style>
 body{
   margin: 0;
 }
+
+body * {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*text-align: center;*/
@@ -40,6 +44,7 @@ top: 0;
 width: 100%;
 height: 100%;
 background: rgba(0, 0, 0, 0.4);
+z-index: 150;
 }
 
 .modal-wrap2 {
@@ -48,6 +53,7 @@ left: 0;
 top: 0;
 width: 100%;
 height: 100%;
+z-index: 200;
 }
 /* modal or popup */
 .modal-container {
@@ -79,21 +85,20 @@ flex-direction: column;
     }
   
 ::-webkit-scrollbar-thumb {
-background-color: #e6e6e6;
+background-color:rgb(199, 199, 199) ;
 border-radius: 10px;
 background-clip: padding-box;
 border: 2px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(199, 199, 199);
-    border-radius: 10px;
+  background-color: #e6e6e6;
+  border-radius: 10px;
 }
 
 </style>
 
-<!-- <script>
-import axios from 'axios';
+<script>
 
   export default {
   name: 'App',
@@ -103,18 +108,4 @@ import axios from 'axios';
 };
 
 
-</script> -->
-<script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {hello: ''};
-  },
-  created() {
-    axios.get('/api/main')
-      .then(response => (this.hello = response.data))
-      .catch(error => console.log(error))
-  }
-};
 </script>

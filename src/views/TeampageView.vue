@@ -2,10 +2,10 @@
     <LeftMenu />
 
     <div id="container">
-        <div class="flex-left">
+        <div class="flex-left" v-if="project && project.teampageDetailResponseDto">
             <div class="project-info">
                 <div class="team-info">
-                    <h2>{{ project.exProjectName }}</h2>
+                    <h2>{{ project.teampageDetailResponseDto.projectName }}</h2>
                     <ButtonComponent msg="수정하기" @click="modalOpen" />
                 </div>
 
@@ -13,18 +13,18 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div>{{ project.ProjectStartDate }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div>{{ project.ProjectEndDate }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
                 <div class="end-bar">
                     <h5>프로젝트 마감까지</h5>
                     <div id="bar" ref="bar"></div>
-                    <h5>D-{{ dDay }}</h5>
+                    <h5>D-{{ project.teampageDetailResponseDto.remainingDays }}</h5>
                 </div>
                 
                 <div class="btn-container">
@@ -38,7 +38,6 @@
                     <CalendarView
                         :items="state.items"
                         :show-date="state.showDate"
-                        :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
                         :disable-past="state.disablePast"
                         :disable-future="state.disableFuture"
                         :date-classes="myDateClasses()"
@@ -49,8 +48,7 @@
                         :period-changed-callback="periodChanged"
                         :current-period-label="state.useTodayIcons ? 'icons' : ''"
                         :displayWeekNumbers="state.displayWeekNumbers"
-                        @click-date="onClickDay"
-                        @click-item="onClickItem"
+                        
                     >
                         <template #header="{ headerProps }">
                             <CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
@@ -61,20 +59,24 @@
         </div>
 
         <div class="flex-right">
-            <div class="right-menu-members">
-                <h3>팀명</h3>
+            <div class="right-menu-members" v-if="project">
+                <h3>{{ project.teampageDetailResponseDto.teamName }}</h3>
                 <hr>
-                <div class="members">
-                    <div class="members-left">
-                        <div class="member1">팀원1</div>
-                        <div class="member2">팀원2</div>
-                        <div class="member3">팀원3</div>
+                <div class="teammates-list">
+                    <div class="members-right">
+                        <ul>
+                            <li v-for="item in teammates.slice(0,3)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="members-right">
-                        <div class="member4">팀원4</div>
-                        <div class="member5">팀원5</div>
-                        <div class="member6">팀원6</div>
+                    <div class="members-left">
+                        <ul>
+                            <li v-for="item in teammates.slice(3,6)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -140,7 +142,7 @@
                         <h4>프로젝트명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exProjectName" id="projectname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.projectName" id="projectname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -149,7 +151,7 @@
                         <h4>팀명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exTeamName" id="teamname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.teamName" id="teamname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -176,7 +178,7 @@
                         <h4>깃허브 링크</h4>
                         </div>
                         <div>
-                        <input type="text" id="githublink" value="https://github.com/springvuet-front/" class="input-long"/>
+                        <input type="text" id="githublink" :value="project.teampageDetailResponseDto.github" class="input-long"/>
                         </div>
                     </div>
 
@@ -200,49 +202,20 @@
     <div class="modal-wrap2" v-show="modalCheck2">
         <div class="modal-container">
             <div class="flex-box">
-                <div class="modal-info">
+                <div class="modal-info-add">
                     <h2>팀원 추가하기</h2>
-                    <div class="container-modal-window">
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀장</h4>
-                            </div>
-                            <input type="text" id="leader" class="input-short"/>
+                    <div class="container-modal-window-add" id="input-contain" v-for="(item, index) in teammates" :key="index">
+                        <div class="input-container-add" >
+                            <!-- <div class="label-text"><h4>팀원</h4></div> -->
+                            <input type="text" class="input-short" v-model="item.nickname"/>
+                            <input type="text" class="input-short" v-model="item.part"/>
+                            <input type="text" class="input-short" v-model="item.position"/>
                         </div>
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원1</h4>
-                            </div>
-                            <input type="text" id="member1" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원2</h4>
-                            </div>
-                            <input type="text" id="member2" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원3</h4>
-                            </div>
-                            <input type="text" id="member3" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원4</h4>
-                            </div>
-                            <input type="text" id="member4" class="input-short"/>
-                        </div>
-
                     </div>
-                    <div class="btn-container-right">
-                        <ButtonComponent msg="저장하기" @click="saveBtn"/>
-                    </div>
+                    <button class="addmemberBtn-add" type="button" @click="addMembers(index)">+</button>
                 </div>
             
+                
                 <div class="modal-btn">
                     <div class="close-btn" @click="modalOpen2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
@@ -250,6 +223,11 @@
                         </svg>
                     </div>
                 </div>
+                
+            </div>
+            
+            <div class="btn-container-right-add">
+                <ButtonComponent msg="저장하기" @click="saveBtn_addMem"/>
             </div>
         </div>
     </div>
@@ -261,6 +239,7 @@
 https://madewithvuejs.com/vue-simple-calendar
 https://github.com/richardtallent/vue-simple-calendar 
 */
+
   #container{
     padding: 2vh 0px 2vh 90px;
     height: 96vh;
@@ -316,8 +295,10 @@ https://github.com/richardtallent/vue-simple-calendar
   .btn-container-right{
     display: flex;
     justify-content: flex-end;
+    padding-top: 30px;
     padding-bottom: 30px;
   }
+
 
   #bar{
     height: 10px;
@@ -325,7 +306,7 @@ https://github.com/richardtallent/vue-simple-calendar
   }
 
   .right-menu-addschedule{
-    height: 220px;
+    height: 240px;
     padding: 20px;
     margin: 5px;
     border-radius: 5px;
@@ -343,6 +324,8 @@ https://github.com/richardtallent/vue-simple-calendar
   .members{
     display: flex;
     padding: 20px;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .calendar-container{
@@ -434,6 +417,7 @@ https://github.com/richardtallent/vue-simple-calendar
         width: 80vw;
         height: 70vh;
     }
+    
 
     h2, h4{
     margin: 0;
@@ -456,7 +440,15 @@ input{
   }
 
   .container-modal-window{
-    padding-top: 30px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+.container-modal-window-add{
+    padding-top: 5px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -471,14 +463,45 @@ input{
     margin: 10px;
     padding: 10px;
   }
-
+  /* 팀원추가수정사항 */
+   .input-container-add{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 72vw;
+    margin: 0px;
+    padding: 0px;
+  }
+  .addmemberBtn-add{
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    background-color: #D2DAFF;
+    margin-left: 35vw;
+    margin-top: 5px;
+    border:0;
+}
+.btn-container-right-add{
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 30px;
+  }
   .input-long{
     width: 60vw;
   }
 
   .input-short{
-    width: 30vw;
+    width: 20vw;
+    margin: 10px;
   }
+
+  .modal-info-add{
+    width: 80vw;
+    height: 70vh;
+    overflow-y: auto;
+}
 
   .btn-container{
     display: flex;
@@ -510,13 +533,32 @@ input{
         margin-left: 25px;
     }
 
-    .members-right{
+    .teammates-list{
+        display: flex;
+        height: 130px;
+        justify-content: space-evenly;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+    ul li{
+        padding: 5px;
+    }
+
+    ul{
+        list-style: none;
+    }
+
+    .modal-info h2{
         margin-left: 30px;
+        margin-top: 30px;
     }
 
 </style>
 
 <script>
+import api from '@/axios.js';
+import { parseYearTime } from '@/utils/date.js';
 import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
@@ -527,18 +569,69 @@ import dayjs from "dayjs"
 
 export default {
   name: 'TeampageView',
+  props: ['teampageUuid'],
   data() {
     return {
+        // inputMember_name:[],
+        // inputMember_part:[],
+        // inputMember_position:[],
         modalCheck: false,
         modalCheck2: false,
-        project: {
-            exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
-            exTeamName: '스프링뷰트',
-            newProjectStartDate: '',
-            newProjectEndDate: '',
-            ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
-            ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
+        // project: {
+        //     exProjectName: '개발 전용 웹 페이지 만들기리기리기억되리',
+        //     exTeamName: '스프링뷰트',
+        //     newProjectStartDate: '',
+        //     newProjectEndDate: '',
+        //     ProjectStartDate: '2024-01-02', // 프로젝트 시작일 데이터
+        //     ProjectEndDate: '2024-02-07', // 프로젝트 마감일 데이터
+        // },
+        project:{
+            teampageDetailResponseDto: {
+                projectName: '...',
+                start: '...',
+                end: '...',
+                remainingDays: '...',
+            },
         },
+        teammates:[
+                {
+                    id: 1,
+                    nickname: "팀원1",
+                    part:'',
+                    position:'',
+
+                },
+                {
+                    id: 2,
+                    nickname: "팀원2",
+                    part:'',
+                    position:'',
+                },
+                {
+                    id: 3,
+                    nickname: "팀원3",
+                    part:'',
+                    position:'',
+                },
+                {
+                    id: 4,
+                    nickname: "팀원4",
+                    part:'',
+                    position:'',
+                },
+                {
+                    id: 5,
+                    nickname: "팀원5",
+                    part:'',
+                    position:'',
+                },
+                {
+                    id: 6,
+                    nickname: "팀원6",
+                    part:'',
+                    position:'',
+                },
+        ],
         state: {
             showDate: this.thisMonth(1),
             message: "",
@@ -554,37 +647,34 @@ export default {
             useDefaultTheme: true,
             useHolidayTheme: true,
             useTodayIcons: "-",
-            items: [
-                {
-                    id: "e1",
-                    startDate: this.thisMonth(15, 18, 30),
-                    title: "그냥"
-                },
-                // {
-                //     id: "e2",
-                //     startDate: this.thisMonth(15),
-                //     title: "Single-day item with a long title",
-                // },
-                // {
-                //     id: "e3",
-                //     startDate: this.thisMonth(7, 9, 25),
-                //     endDate: this.thisMonth(10, 16, 30),
-                //     title: "Multi-day item with a long title and times",
-                // },
-                //... the rest of your items
-            ],
+            items: [],
         }
     }
     },
+    created(){
+    const teampageUuid = this.$route.params.teampageUuid;
+    api.get(`/teampage/${teampageUuid}`)
+    .then(response => {
+      this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+      this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      for (let schedule of this.teamScheduleDto) {
+            this.state.items.push({
+                id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
+                startDate: this.formatYear(schedule.scheduleStart),
+                endDate: this.formatYear(schedule.scheduleEnd),
+                title: schedule.scheduleContent
+            });
+        }
+        console.log(this.state.items)
+        })
+    .catch(error => {
+      console.error(error);
+        });
+    },
+
     computed:{
         todayDate(){
             return dayjs();
-        },
-        dueDate(){
-            return dayjs('2024-02-07');
-        },
-        dDay(){
-            return this.dueDate.diff(this.todayDate, 'day');
         },
         themeClasses(){
             return{
@@ -593,6 +683,11 @@ export default {
         },
     },
     methods: {
+        addMembers(index){
+            var parentNode = document.getElementById("input-contain");
+            console.log(parentNode);
+            this.teammates.push({id: index, nickname:'', part:'', position:''});
+       },
         modalOpen() {
             this.modalCheck = !this.modalCheck
             const projectNameInput = document.getElementById('projectname');
@@ -604,6 +699,7 @@ export default {
 
         modalOpen2() {
             this.modalCheck2 = !this.modalCheck2
+            console.log("Modal open")
         },
 
         thisMonth(d, h = 0, m = 0) {
@@ -686,10 +782,24 @@ export default {
             console.log(projectName); //변경하는 이름
             console.log(teamName); //이것도
         },
-
+        saveBtn_addMem(){
+            // var i = 0;
+            // for(i=0;i<this.teammates.length;i++){
+            //     this.teammates.name=;
+            //     this.teammates.part=;
+            //     this.teammates.position=;
+            // }
+            console.log(this.teammates);
+        },
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')
-        }
+        },
+        formatYear(when) {
+            let {year, month, date} = parseYearTime(when);
+            return `${year}-${month}-${date}`;
+            
+    },
+
     },
     mounted() {
         this.state.newItemStartDate = this.isoYearMonthDay(new Date())

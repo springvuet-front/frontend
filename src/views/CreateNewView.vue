@@ -6,6 +6,21 @@
     <div class="elementName">프로젝트명</div><input type="text" v-model="projectName">
   </div>
   <div class="bInputText">
+    <div class="elementName">분야</div>
+    <div class="bInputField">
+      <label :class="{ radioChecked:projectField === radioValue1 }"><input type="radio" v-bind:value="radioValue1" v-model="projectField">웹</label>
+      <label :class="{ radioChecked:projectField === radioValue2 }"><input type="radio" v-bind:value="radioValue2" v-model="projectField">앱</label>
+      <label :class="{ radioChecked:projectField === radioValue3 }"><input type="radio" v-bind:value="radioValue3" v-model="projectField">데이터분석</label>
+      <!-- <span>{{projectField}}</span> -->
+      <!-- <input type="radio" v-model="projectField" value="웹"/>
+      <label>웹</label>
+      <input type="radio" v-model="projectField" value="앱"/>
+      <label>앱</label>
+      <input type="radio" v-model="projectField" value="데분"/>
+      <label>데분</label> -->
+    </div>
+  </div>
+  <div class="bInputText">
     <div class="elementName">팀명</div><input type="text" v-model="projectTeam">
   </div>
   <div class="bInputText">
@@ -47,6 +62,30 @@
   font-size: 25px;
   padding-top: 20px;
   font-weight: bold;
+}
+.bInputField{
+  display:flex;
+  width: 800px;
+  flex-direction: row;
+  justify-content: space-around;
+  font-weight: 550;
+  font-size: 12pt;
+}
+[type="radio"] {
+  display: none;
+}
+[type="radio"]+label{
+}
+.bInputField label{
+  cursor: pointer;
+  border: 2px solid #C6C7FF;
+  border-radius: 15px;
+  width: 150px;
+  text-align: center;
+}
+.radioChecked{
+  background-color: #C6C7FF;
+  color: white;
 }
 .elementName{
   width: 200px;
@@ -91,9 +130,14 @@ export default {
     return {
       projectName:'',
       projectTeam:'',
+      projectField:'',
       projectStartDate:'',
       projectEndDate:'',
       projectGitLink:'',
+
+      radioValue1: '웹',
+      radioValue2: '앱',
+      radioValue3: '데분'
     }
   },
   methods: {
