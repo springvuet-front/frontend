@@ -130,7 +130,7 @@
 
                 <div class="post-info">
                   <div class="post-writer"> 작성자 : {{ item.nickname }}</div>
-                  <div class="post-date"> 등록일 : {{ formatYear(item.createAt) }}</div>
+                  <div class="post-date"> 등록일 : {{ item.createAt }}</div>
                 </div>
               </div>
             
