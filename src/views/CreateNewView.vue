@@ -110,7 +110,7 @@ input:focus{
   outline: 0;
 }
 input[type=date]{
-  width: 90px;
+  width: 105px;
 }
 
 </style>
