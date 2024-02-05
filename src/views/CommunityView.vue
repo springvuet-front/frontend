@@ -493,13 +493,15 @@ input:focus{
   border-radius: 5px; /*추가*/
 }
 .container-modal-window{
-  height: 47vh;
-  width: 77vw;
+  height: 45vh;
+  width: 80vw;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 10px;
+  flex-direction: column;
+  align-items: center;
 }
 .writer-id{
   font-weight: bold;
