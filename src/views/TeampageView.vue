@@ -538,7 +538,6 @@ input{
         display: block;
         height: 130px;
         /* justify-content: space-evenly; */
-        justify-content: center;
         flex-direction: row;
         /* align-items: center; */
         overflow-y: auto;
