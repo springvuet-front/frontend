@@ -295,7 +295,8 @@ https://github.com/richardtallent/vue-simple-calendar
 
   #bar{
     height: 10px;
-    background-color: aqua;
+    background-color: #B1B2FF;
+    border-radius: 10px;
   }
 
   .right-menu-addschedule{
@@ -553,7 +554,7 @@ input{
 <script>
 import api from '@/axios.js';
 import { parseYearTime } from '@/utils/date.js';
-import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
+import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
 import LeftMenu from "@/components/LeftMenu.vue"
 import ButtonComponent from "@/components/ButtonComponent.vue"
 import "../calendar-style/style.css"
@@ -653,25 +654,25 @@ export default {
     }
     },
     created(){
-    const teampageUuid = this.$route.params.teampageUuid;
-    api.get(`/teampage/${teampageUuid}`)
-    .then(response => {
-      this.project = response.data || {} ;  // 응답 데이터를 project에 저장
-      this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
-      this.teammates = response.data.teamMembersDtos || []; 
-      for (let schedule of this.teamScheduleDto) {
-            this.state.items.push({
-                id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
-                startDate: this.formatYear(schedule.scheduleStart),
-                endDate: this.formatYear(schedule.scheduleEnd),
-                title: schedule.scheduleContent
+        const teampageUuid = this.$route.params.teampageUuid;
+        api.get(`/teampage/${teampageUuid}`)
+        .then(response => {
+        this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+        this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+        this.teammates = response.data.teamMembersDtos || []; 
+        for (let schedule of this.teamScheduleDto) {
+                this.state.items.push({
+                    id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
+                    startDate: this.formatYear(schedule.scheduleStart),
+                    endDate: this.formatYear(schedule.scheduleEnd),
+                    title: schedule.scheduleContent
+                });
+            }
+            console.log(this.state.items)
+            })
+        .catch(error => {
+        console.error(error);
             });
-        }
-        console.log(this.state.items)
-        })
-    .catch(error => {
-      console.error(error);
-        });
     },
 
     computed:{
@@ -747,22 +748,48 @@ export default {
         },
 
         clickTestAddItem() {
+            const url = `/teampage/${this.teampageUuid}/schedule/create`;
+            const data = {
+                scheduleContent: this.state.newItemTitle,
+                scheduleStart: this.state.newItemStartDate,
+                scheduleEnd: this.state.newItemSEndDate
+            }
             if (this.state.newItemTitle == "") alert("일정명을 입력해주세요!")
 
             else{
-                this.state.items.push({
-                    startDate: CalendarMath.fromIsoStringToLocalDate(this.state.newItemStartDate),
-                    endDate: CalendarMath.fromIsoStringToLocalDate(this.state.newItemEndDate),
-                    title: this.state.newItemTitle,
-                    id: "e" + Math.random().toString(36).substring(2, 11),
-                })
-                this.state.message = "You added a calendar item!"
+                this.state.items.push(data)
 
-                var el = document.getElementsByClassName('input-text');
-                for(var i=0; i<el.length; i++){
-                    el[i].value = '';
-                }
+                api.post(url,data)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+                this.state.newItemTitle = '';
+
             }
+
+            // else{
+            //     this.state.items.push({
+            //         title: this.state.newItemTitle,
+            //         startDate: CalendarMath.fromIsoStringToLocalDate(this.state.newItemStartDate),
+            //         endDate: CalendarMath.fromIsoStringToLocalDate(this.state.newItemEndDate),
+            //     })
+            //     this.state.message = "You added a calendar item!"
+            //     api.post(`/teampage/${this.teampageUuid}/schedule/create`, {
+            //         title: this.state.newItemTitle,
+            //         startDate: this.state.newItemStartDate,
+            //         endDate: this.state.newItemSEndDate,
+            //     })
+            //     .then(response => {
+            //         console.log(response);
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
+            //     this.state.newItemTitle = '';
+            // }
         },
         
         saveBtn() {
@@ -849,6 +876,15 @@ export default {
             dDaywidth.style.width = this.dDay * 5 + 'px'
         }
     },
+
+    watch: {
+    'project.teampageDetailResponseDto.remainingDays': function(newVal) {
+        if (this.$refs.bar && !isNaN(newVal)) {
+            const dDaywidth = this.$refs.bar;
+            dDaywidth.style.width = newVal * 10 + 'px';
+        }
+    },
+},
 
     components: {
         LeftMenu, ButtonComponent, CalendarView, CalendarViewHeader,
