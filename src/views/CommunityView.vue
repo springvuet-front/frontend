@@ -6,48 +6,25 @@
       <div class="top">
         <div class="select">
         <h2>모집 커뮤니티</h2>
-          <select
-            v-model="partModel"
-            class="part-select"
-            v-bind:id="input_id"
-            v-on:input="updateValue($event.target.value)"
-          > 
+          <select v-model="partModel" class="part-select" v-bind:id="input_id" v-on:input="updateValue($event.target.value)"> 
             <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
           </select>
-          <select
-            v-model="stateModel"
-            class="state-select"
-          > 
+          <select v-model="stateModel" class="state-select"> 
             <option v-for="(item, index) in states" :key="index">{{ item }}</option>
           </select>
-          <SelectBox
-            v-model="preselect_value"
-            :items="somethings"
-            :input_id="'my_selectbox'"
-            @input="value => { preselect_value = value }" />
+          <SelectBox v-model="preselect_value" :items="somethings" :input_id="'my_selectbox'" @input="value => { preselect_value = value }" />
         </div>
 
       <div class="new-post">
       <div class="bSelect">
-        <select
-          v-model="partModel2"
-          class="part-select2"
-          v-bind:id="input_id"
-          v-on:input="updateValue($event.target.value)"
-        > 
+        <select v-model="partModel2" class="part-select2" v-bind:id="input_id" v-on:input="updateValue($event.target.value)"> 
           <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
         </select>
-        <select
-          v-model="stateModel2"
-          class="state-select2"
-        > 
+        <select v-model="stateModel2" class="state-select2"> 
           <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
         </select>
         <SelectBox
-          v-model="preselect_value"
-          :items="somethings"
-          :input_id="'my_selectbox'"
-          @input="value => { preselect_value = value }"
+          v-model="preselect_value" :items="somethings" :input_id="'my_selectbox'" @input="value => { preselect_value = value }"
         ></SelectBox>
       </div>
       <div class="bInput">
@@ -68,7 +45,6 @@
             <!--기존 게시글 보이는 부분-->
         <div v-for="(item, index) in currentPosts" :key="index">
           <div v-if="(partModel === '전체' || partModel === item.postCategory) && (stateModel === '전체' || stateModel === item.postStatus)">
-          <!-- <div v-if="partModel===item.data.post_part && stateModel===item.data.post_state"> -->
             <div class="posts">
               <div class="posts-part-state">
                 <div class="post-part">{{ item.postCategory }}</div>
@@ -82,9 +58,6 @@
 
                 <!-- 수정하기 모달창-->
                 <div class="modifying">
-                  <div class="modifying-icon">
-                    
-                  </div>
                   <Button class="modifying-button" @click="modalOpen_modify(index)">수정하기</Button>
 
                   <div class="modal-wrap" v-show="modalCheck_modify">
@@ -95,59 +68,33 @@
                             <label class="post-title-label">수정하기</label>
                           </div>
                           <div class="select-container-modify">
-                              <select
-                                v-model="currentPosts[modalIndex_modify].postCategory"
-                                class="part-select2"
-                                v-bind:id="input_id"
-                                v-on:input="updateValue($event.target.value)"
-                              > 
-                                <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
-                              </select>
-                              <select
-                                v-model="currentPosts[modalIndex_modify].postStatus"
-                                class="state-select2"
-                              > 
-                                <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
-                              </select>
-                              <SelectBox
-                                v-model="preselect_value"
-                                :items="somethings"
-                                :input_id="'my_selectbox'"
-                                @input="value => { preselect_value = value }"
-                              ></SelectBox>
+                            <select v-model="currentPosts[modalIndex_modify].postCategory" class="part-select2" v-bind:id="input_id"  v-on:input="updateValue($event.target.value)"> 
+                              <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
+                            </select>
+                            <select v-model="currentPosts[modalIndex_modify].postStatus" class="state-select2"> 
+                              <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
+                            </select>
+                            <SelectBox v-model="preselect_value" :items="somethings" :input_id="'my_selectbox'" @input="value => { preselect_value = value }"
+                            ></SelectBox>
                           </div>
                           <div class="input-container-modify">
                             <input type="text" class="write-title-modify" v-model="currentPosts[modalIndex_modify].postTitle"/>
                             <textarea type="text" class="write-body-modify" v-model="currentPosts[modalIndex_modify].postContent"/>
                           </div>
                           <div class="botton-container-modify">
-                              <div class="btn-container-right">
-                                <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
-                              </div>
-                              <div class="modal-btn">
-                                <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
-                                <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
-                              </div>
-                          </div>
-                          
-                          <!-- </div> -->
-
-                          <!-- <>수정하기</h5>
-                            <div class="project-date">
-                                  <div class="edit-title">
-                                      <input msg="{{ item.data.post_title }}"  >
-                                  </div>
-                                  <div class="edit-body">
-                                      
-                                  </div>
-                              </div> -->   
+                            <div class="btn-container-right">
+                              <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
+                            </div>
+                            <div class="modal-btn">
+                              <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
+                            </div>
+                          </div>  
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>        
-              </div>
-              
-              <!-- 수정하기 모달창 끝 -->
+                  </div>        
+                </div>
+                <!-- 수정하기 모달창 끝 -->
               <!-- 삭제하기 -->
               <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
@@ -198,7 +145,7 @@
                               </svg>
                             </button>
                           </div>
-                      </div>
+                        </div>
 
                         <div class="comment-scroll">
                           <div class="container-modal-window">
@@ -216,15 +163,15 @@
                               </div>
                             </div> 
                           </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>    
-            </div>
-          </div>   
-        </div> 
-      </div>
+                </div>    
+              </div>
+            </div>   
+          </div> 
+        </div>
           <!-- 댓글달기 모달창 끝 -->
       </div>
     </div>
@@ -246,7 +193,6 @@
 }
 .container{padding: 20px 90px}
 #back{
-  /* margin-left: 10px; */
   display: flex;
   flex-direction: column;
   line-height:2.0;
@@ -349,7 +295,7 @@
 .write-title{
   background-color: #B1B2FF;
   padding-inline: 10px;
-  width: 770px;
+  width: 50vw;
   height: 35px;
   border-width: 0px;
   font-size: 15pt;
@@ -362,7 +308,7 @@
   margin-top: 13px;
   padding-inline: 10px;
   padding-top: 5px;
-  width : 770px;
+  width : 50vw;
   height: 100px;
   border-width: 0px;
   font-size: 15pt;
@@ -463,8 +409,8 @@
   background-color: #D2DAFF;
   color: black;
   padding-left: 20px;
-  overflow: hidden; /*추가*/
-  display: flex; /*추가*/
+  overflow: hidden; 
+  display: flex; 
 }
 .input-container{
   display: flex;
@@ -477,8 +423,8 @@
   width: 10vw;
 }
 .input-long{
-  width: 70vw; /*수정*/
-  height: 32px; /*수정*/
+  width: 70vw; 
+  height: 32px; 
   color: white;
   font-size: 13pt;
 }
@@ -496,8 +442,8 @@
   padding: 10px 0 10px 15px;
   width: 90%;
   height: 100px;
-  margin: 16px 0 0 10px; /*추가*/
-  border-radius: 5px; /*추가*/
+  margin: 16px 0 0 10px; 
+  border-radius: 5px;
 }
 .container-modal-window{
   height: 400px;
@@ -523,13 +469,13 @@
 .write-comment::placeholder {
   color: rgba(255, 255, 255, 0.747);
 }
-.comment-scroll{ /*추가*/
+.comment-scroll{
   overflow-y: scroll;
 }
-.modal-info2{ /*추가*/
+.modal-info2{ 
   justify-content: flex-start;
 }
-.post-info2{ /*추가*/
+.post-info2{ 
   justify-content: flex-end;
 }
 
@@ -542,7 +488,6 @@
     font-weight: bold;
     text-decoration: underline;
 }
-
 .delete-button{
   background: none;
   border: none;
@@ -559,8 +504,6 @@
   margin-left: 15px;
 }
 .modal-info-modify{
-  /* display:flex;
-  flex-direction: column; */
   display: grid;
   grid-template-rows: 10vh 20vh 30vh 20vh;
 }
