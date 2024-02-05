@@ -163,7 +163,6 @@
                         </div>
 
                         <hr class="horizontal-divider" style="width: 100%;">
-
                         <div class="container-modal-window">
                           <div class="written-comments" v-for="comment in comments" :key="comment.commentUuid">
                               <div class="writer-id"> {{ comment.nickname }}
@@ -494,15 +493,13 @@ input:focus{
   border-radius: 5px; /*추가*/
 }
 .container-modal-window{
-  height: 45vh;
-  width: 80vw;
+  height: 47vh;
+  width: 77vw;
   overflow-x: hidden;
   overflow-y: scroll;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-top: 10px;
-  flex-direction: column;
-  align-items: center;
 }
 .writer-id{
   font-weight: bold;
