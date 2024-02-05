@@ -1,17 +1,17 @@
 <template>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300&display=swap" rel="stylesheet">
   <router-view/>
-  <div>
-    백엔드에서 가져온 데이터입니다.
-    {{ hello }}
-  </div>
 </template>
 
 <style>
 body{
+  font-family: 'IBM Plex Sans KR', sans-serif;
   margin: 0;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*text-align: center;*/
@@ -92,8 +92,7 @@ border: 2px solid transparent;
 
 </style>
 
-<!-- <script>
-import axios from 'axios';
+<script>
 
   export default {
   name: 'App',
@@ -103,18 +102,4 @@ import axios from 'axios';
 };
 
 
-</script> -->
-<script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {hello: ''};
-  },
-  created() {
-    axios.get('/api/main')
-      .then(response => (this.hello = response.data))
-      .catch(error => console.log(error))
-  }
-};
 </script>

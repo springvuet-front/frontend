@@ -16,7 +16,7 @@ const routes = [
   { path: '/login', name: 'login', component: LoginView },
   { path: '/signup', name: 'signup', component: SignupView },
   { path: '/mypage', name: 'mypage', component: MypageView },
-  { path: '/teampage', name: 'teampage', component: TeampageView },
+  { path: '/teampage/:teampageUuid', name: 'TeampageView', component: TeampageView, props: true},
   { path: '/community', name: 'community', component: CommunityView },
   //{ path: '/bookmark', name: 'bookmark',
     // route level code-splitting
