@@ -28,7 +28,7 @@
                 </div>
                 
                 <div class="btn-container">
-                    <ButtonComponent msg="북마크" parameter="bookmark"/>
+                    <ButtonComponent msg="북마크" @click="goToBookmarkPage(this.teampageUuid)"/>
                     <ButtonComponent msg="깃허브" @click="onclickgithub" />
                 </div>
             </div>
@@ -861,8 +861,11 @@ export default {
         formatYear(when) {
             let {year, month, date} = parseYearTime(when);
             return `${year}-${month}-${date}`;
-            
-    },
+        },
+        goToBookmarkPage(teampageUuid){
+            console.log(teampageUuid);
+            this.$router.push({ name: 'bookmark', params: { teampageUuid: teampageUuid } });
+        },
 
     },
     mounted() {

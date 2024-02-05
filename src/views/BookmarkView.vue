@@ -1,7 +1,7 @@
 <template>
   <LeftMenu />
   <div class="container">
-    <div class="bookMarkPageTitle"> ((팀명)) 북마크</div>
+    <div class="bookMarkPageTitle"><p id="teamname">{{ project.teampageDetailResponseDto.teamName }}</p>북마크</div>
     <div class="bookMarkContent">
       <div class="singleBookMark" v-for="(item, index) in bookMarkList" :key="index">
         <input type="text" class="bookMark title" placeholder="제목" v-model="item.bookMarkTitle"/>
@@ -15,7 +15,7 @@
         <input type="text" class="bookMark title" placeholder="제목" v-model="inputTitle"/>
         <textarea class="bookMark textArea" placeholder="url만 입력하세용" v-model="inputContent"></textArea>
           <div class="buttonArea">
-            <ButtonComponent parameter="bookmark" msg="등록하기" @click="addBookMark"/>
+            <ButtonComponent msg="등록하기" @click="addBookMark"/>
           </div>
       </div>
     </div>
@@ -32,6 +32,12 @@
   font-size: 20pt;
   font-weight: 900;
   padding-left: 60px;
+  display: flex;
+}
+
+#teamname{
+  margin: 0px 20px 0px 0px;
+  text-decoration-line: underline;
 }
 
 .bookMarkContent{
@@ -95,11 +101,23 @@ hr{
 </style>
     
 <script>
+import api from '@/axios.js';
 import LeftMenu from '@/components/LeftMenu.vue';
 import ButtonComponent from '@/components/ButtonComponent.vue';
 
 export default {
   name: 'BookmarkView',
+  props: ['teampageUuid'],
+  created(){
+    const teampageUuid = this.$route.params.teampageUuid;
+    api.get(`/teampage/${teampageUuid}`)
+        .then(response => {
+          this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+        })
+        .catch(error => {
+        console.error(error);
+    });
+  },
   components: {
     LeftMenu,
     ButtonComponent
@@ -109,15 +127,20 @@ export default {
       inputTitle: '',
       inputContent: '',
       bookMarkList: [
-        {
-          bookMarkTitle: "북마크1",
-          bookMarkContent: "내용이 있어용"
-        },
-        {
-          bookMarkTitle: "북마크2",
-          bookMarkContent: "내용이 있어용"
-        }
+        // {
+        //   bookMarkTitle: "북마크1",
+        //   bookMarkContent: "내용이 있어용"
+        // },
+        // {
+        //   bookMarkTitle: "북마크2",
+        //   bookMarkContent: "내용이 있어용"
+        // }
       ],
+      project:{
+        teampageDetailResponseDto: {
+          teamName: '...',
+        },
+      },
     }
   },
   methods : {
