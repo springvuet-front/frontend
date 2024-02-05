@@ -40,8 +40,10 @@
   <!-- 프로젝트들 -->
   <div class="b_right">
     <div class="bproject current">
-      <div class="title">현재 진행중인 프로젝트</div> 
-      <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
+      <div class="header">
+        <div class="title">현재 진행중인 프로젝트</div> 
+        <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
+      </div>
       <!-- currentProject -->
       <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.currentTeams">
         <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
@@ -126,6 +128,10 @@
   .b_left{
     display:none;
   }
+}
+
+.header{
+  display: flex;
 }
 .b_right {
   /* background-color: lightgray; */
