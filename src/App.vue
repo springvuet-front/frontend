@@ -7,9 +7,13 @@
 
 <style>
 body{
-  font-family: 'IBM Plex Sans KR', sans-serif;
   margin: 0;
 }
+
+body * {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -40,6 +44,7 @@ top: 0;
 width: 100%;
 height: 100%;
 background: rgba(0, 0, 0, 0.4);
+z-index: 150;
 }
 
 .modal-wrap2 {
