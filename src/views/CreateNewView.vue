@@ -41,7 +41,7 @@
   </div>
 </div>
 </template>
-<style>
+<style scoped>
 #back{
   margin-left: 100px;
   display: flex;
