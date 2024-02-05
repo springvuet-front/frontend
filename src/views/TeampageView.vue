@@ -752,7 +752,7 @@ export default {
             const data = {
                 scheduleContent: this.state.newItemTitle,
                 scheduleStart: this.state.newItemStartDate,
-                scheduleEnd: this.state.newItemSEndDate
+                scheduleEnd: this.state.newItemEndDate
             }
             if (this.state.newItemTitle == "") alert("일정명을 입력해주세요!")
 
