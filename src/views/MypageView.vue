@@ -3,10 +3,15 @@
 <div id="wrap">
   <div class="b_left">
     <div class="schedule">
-      <div class="title">마감 임박 일정</div>
-      <div class="listBox">
+      <div class="title">마감 임박 일정</div> 
+      <!-- schedule list로 출력(listbox)
+      이때 고민 -> schedule dto의 datetime, string 요소를 각각 지정해줘야 하는지(dto의 field 이름이랑 똑같게)-->
+      <div class="listBox" v-if="data && data.scheduleResponseDtos">
         <ul>
-          <li v-for="(schedule, index) in scheduleList" :key="index">{{ schedule.work_title }}  &#40;{{schedule.date_end.month}}/{{schedule.date_end.day}}&#41;</li>
+          <li v-for="(schedule, index) in data.scheduleResponseDtos" :key="index" >
+        {{ schedule.scheduleContent }}   ({{ formatDate(schedule.scheduleEnd) }})
+          </li>
+          <!-- <li v-for="(schedule, index) in scheduleList" :key="index">{{ schedule.work_title }}  &#40;{{schedule.date_end.month}}/{{schedule.date_end.day}}&#41;</li> -->
         </ul>
       </div>
     </div>
@@ -32,31 +37,33 @@
       </div>
     </div>
   </div>
+  <!-- 프로젝트들 -->
   <div class="b_right">
     <div class="bproject current">
-      <div class="title">현재 진행중인 프로젝트</div>
-      <div class="projectlist">
+      <div class="title">현재 진행중인 프로젝트</div> 
+      <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
+      <!-- currentProject -->
+      <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.currentTeams">
         <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
           <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
-        <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink">
+        <!-- <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink"> -->
+        <div v-for="teampage in data.myTeamResponseDto.currentTeams" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)">
           <div class="projectBox">
             <div class="project category">
-              <div class="project field">{{item.project_field}}</div>
-              <div class="project myPart">{{item.project_mypart}}</div>
+              <div class="project field">{{teampage.teamPosition}}</div>
+              <div class="project myPart">{{teampage.teamRole}}</div>
             </div>
             <div class="project info">
-              <div class="project name">{{item.project_name}}</div>
-              <div class="project team">팀: {{item.project_team}}</div>
-              <div class="project date start">시작일: {{item.project_date_start}}</div>
-              <div class="project date end">마감일: {{item.project_date_end}}</div>
+              <div class="project name">{{teampage.projectName}}</div>
+              <div class="project team">팀: {{teampage.teamName}}</div>
+              <div class="project date start">시작일: {{formatYear(teampage.start)}}</div>
+              <div class="project date end">마감일: {{formatYear(teampage.end)}}</div>
             </div>
           </div>
         </div>
-        <router-link to="createnew">
-          <button type="button" v-if="currentEndIndex===currentProjectList.length + 1" class="addProjectBtn" @click="addProject">새 프로젝트 만들기</button>
-        </router-link>
+        
         <button type="button" class="showNextbtn" @click="showCurrentNext" @mouseover="mouseOverNextBtn" :disabled="isDisabledCurrentNext">
           <img class="showbtnimg" v-if="isDisabledCurrentNext" alt="▶" src="../assets/shownextbtn.png" />
           <img class="showbtnimg" v-if="isDisabledCurrentNext===false" alt="▶" src="../assets/shownextbtn_active.png" />
@@ -65,7 +72,8 @@
     </div>
     <div class="bproject complete">
       <div class="title">진행 완료된 프로젝트</div>
-      <div class="projectlist">
+      <!-- completedProject -->
+      <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.completedTeams" >
         <button type="button" class="showPastbtn" @click="showCompletePast" :disabled="isDisabledCompletePast">
           <img class="showbtnimg" v-if="isDisabledCompletePast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCompletePast===false" alt="◀" src="../assets/showpastbtn_active.png" />
@@ -73,14 +81,14 @@
         <div v-for="(item, index) in visibleCompleteProject" :key="index">
           <div class="projectBox">
             <div class="project category">
-              <div class="project field">{{item.project_field}}</div>
-              <div class="project myPart">{{item.project_mypart}}</div>
+              <div class="project field">{{item.teamPosition}}</div>
+              <div class="project myPart">{{item.teamRole}}</div>
             </div>
             <div class="project info">
-              <div class="project name">{{item.project_name}}</div>
-              <div class="project team">팀: {{item.project_team}}</div>
-              <div class="project date start">시작일: {{item.project_date_start}}</div>
-              <div class="project date end">마감일: {{item.project_date_end}}</div>
+              <div class="project name">{{item.projectName}}</div>
+              <div class="project team">팀: {{item.teamName}}</div>
+              <div class="project date start">시작일: {{formatYear(item.start)}}</div>
+              <div class="project date end">마감일: {{formatYear(item.end)}}</div>
             </div>
           </div>
         </div>
@@ -397,108 +405,126 @@
 </style>
     
 <script>
+import api from '@/axios.js';
 import LeftMenu from '@/components/LeftMenu.vue';
-  
+import ButtonComponent from '@/components/ButtonComponent.vue';
+import { parseDateTime, parseYearTime } from '@/utils/date.js';
+
 export default {
   name: 'MypageView',
   components: {
     LeftMenu,
+    ButtonComponent,
   },
   data () {
     return {
       hoveredProjectName: 0,
-      scheduleList: [ 
-        { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
-        { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
-      ],
-      currentProjectList: [
-        { 
-          project_field: "웹", 
-          project_mypart: "백", 
-          project_name: "개발사이트 만들기", 
-          project_team: "스프링뷰트", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "웹", 
-          project_mypart: "프론트", 
-          project_name: "글씨넘치면어떻게하지", 
-          project_team: "스프링뷰트", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "웹", 
-          project_mypart: "프론트", 
-          project_name: "3", 
-          project_team: "스프링뷰트", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "앱", 
-          project_mypart: "프론트", 
-          project_name: "4", 
-          project_team: "스프링뷰트", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-      ],
-      completeProjectList: [
-        { 
-          project_field: "웹", 
-          project_mypart: "백", 
-          project_name: "프로젝트1", 
-          project_team: "팀1", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "웹", 
-          project_mypart: "프론트", 
-          project_name: "프로젝트2", 
-          project_team: "팀2", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "웹", 
-          project_mypart: "프론트", 
-          project_name: "프로젝트3", 
-          project_team: "팀3", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        {
-          project_field: "웹", 
-          project_mypart: "프론트", 
-          project_name: "프로젝트4", 
-          project_team: "팀4", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        },
-        { 
-          project_field: "데분", 
-          project_mypart: "프론트", 
-          project_name: "프로젝트5", 
-          project_team: "팀5", 
-          project_date_start: "2022-03-21",
-          project_date_end: "2022-05-21",
-        }
-      ],
+      // scheduleList: [ 
+      //   { project_index: '', work_title: '기획발표회', date_end: { year: 2023, month: 1, day: 17 }},
+      //   { project_index: '', work_title: '정기회의', date_end: {year: 2023, month: 1, day: 20 }} 
+      // ],
+      scheduleList: null,
+      // currentProjectList: [
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "백", 
+      //     project_name: "개발사이트 만들기", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "글씨넘치면어떻게하지", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "3", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "앱", 
+      //     project_mypart: "프론트", 
+      //     project_name: "4", 
+      //     project_team: "스프링뷰트", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      // ],
+      // completeProjectList: [
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "백", 
+      //     project_name: "프로젝트1", 
+      //     project_team: "팀1", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트2", 
+      //     project_team: "팀2", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트3", 
+      //     project_team: "팀3", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   {
+      //     project_field: "웹", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트4", 
+      //     project_team: "팀4", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   },
+      //   { 
+      //     project_field: "데분", 
+      //     project_mypart: "프론트", 
+      //     project_name: "프로젝트5", 
+      //     project_team: "팀5", 
+      //     project_date_start: "2022-03-21",
+      //     project_date_end: "2022-05-21",
+      //   }
+      // ],
+      currentProjectList: null,
       currentProjectPage: 1,
       currentStartIndex: 0,
       currentEndIndex: 3,
       completeStartIndex: 0,
       completeEndIndex: 3,
       disabledCurrentNext: false,
-      
       /* toDoList */
       saveToDoList: [],
       inputChecked: false,
       inputToDoContent: '',
-    }
+      data:null
+      
+    };
+  },
+  created() {
+    api.get('/mypage')
+    .then(response => {
+      this.data = response.data || {} ;
+      this.currentProjectList = this.data.myTeamResponseDto.currentTeams;
+      this.completeProjectList = this.data.myTeamResponseDto.completedTeams;
+    })
+    .catch(error => {
+      console.error(error);
+    });
   },
   methods: {
     addToDoList(){
@@ -547,12 +573,31 @@ export default {
     pageLink(){
       this.$router.push({path: 'teampage'})
       //router.push({ name: 'user', params: { userId: 123 }})
-    }
+    },
+    formatDate(scheduleEnd) {
+      let { month, date } = parseDateTime(scheduleEnd);
+      return `${month}/${date}`;
+    },
+    formatYear(when) {
+      let {year, month, date} = parseYearTime(when);
+      return `${year}-${month}-${date}`;
+    },
+    goToTeamPage(teampageUuid) {
+      console.log(teampageUuid);
+      this.$router.push({ name: 'TeampageView', params: { teampageUuid: teampageUuid } });
+    },
+  
   },
   computed: {
     /* 프로젝트 3개씩 보여주게 */
     visibleCurrentProject(){
-      return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex);
+      console.log(this.currentStartIndex);
+      if(this.currentStartIndex === 0){
+        return this.currentProjectList.slice(this.currentStartIndex, this.currentEndIndex-1);
+      }
+      else{
+        return this.currentProjectList.slice(this.currentStartIndex-1, this.currentEndIndex-1);
+      }
     },
     visibleCompleteProject(){
       return this.completeProjectList.slice(this.completeStartIndex, this.completeEndIndex);
