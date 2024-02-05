@@ -48,8 +48,7 @@
                         :period-changed-callback="periodChanged"
                         :current-period-label="state.useTodayIcons ? 'icons' : ''"
                         :displayWeekNumbers="state.displayWeekNumbers"
-                        @click-date="onClickDay"
-                        @click-item="onClickItem"
+                        
                     >
                         <template #header="{ headerProps }">
                             <CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
@@ -203,49 +202,20 @@
     <div class="modal-wrap2" v-show="modalCheck2">
         <div class="modal-container">
             <div class="flex-box">
-                <div class="modal-info">
+                <div class="modal-info-add">
                     <h2>팀원 추가하기</h2>
-                    <div class="container-modal-window">
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀장</h4>
-                            </div>
-                            <input type="text" id="leader" class="input-short"/>
+                    <div class="container-modal-window-add" id="input-contain" v-for="(item, index) in teammates" :key="index">
+                        <div class="input-container-add" >
+                            <!-- <div class="label-text"><h4>팀원</h4></div> -->
+                            <input type="text" class="input-short" v-model="item.nickname"/>
+                            <input type="text" class="input-short" v-model="item.part"/>
+                            <input type="text" class="input-short" v-model="item.position"/>
                         </div>
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원1</h4>
-                            </div>
-                            <input type="text" id="member1" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원2</h4>
-                            </div>
-                            <input type="text" id="member2" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원3</h4>
-                            </div>
-                            <input type="text" id="member3" class="input-short"/>
-                        </div>
-
-                        <div class="input-container">
-                            <div class="label-text">
-                            <h4>팀원4</h4>
-                            </div>
-                            <input type="text" id="member4" class="input-short"/>
-                        </div>
-
                     </div>
-                    <div class="btn-container-right">
-                        <ButtonComponent msg="저장하기" @click="saveBtn"/>
-                    </div>
+                    <button class="addmemberBtn-add" type="button" @click="addMembers(index)">+</button>
                 </div>
             
+                
                 <div class="modal-btn">
                     <div class="close-btn" @click="modalOpen2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
@@ -253,6 +223,11 @@
                         </svg>
                     </div>
                 </div>
+                
+            </div>
+            
+            <div class="btn-container-right-add">
+                <ButtonComponent msg="저장하기" @click="saveBtn_addMem"/>
             </div>
         </div>
     </div>
@@ -264,6 +239,7 @@
 https://madewithvuejs.com/vue-simple-calendar
 https://github.com/richardtallent/vue-simple-calendar 
 */
+
   #container{
     padding: 2vh 0px 2vh 90px;
     height: 96vh;
@@ -322,6 +298,7 @@ https://github.com/richardtallent/vue-simple-calendar
     padding-top: 30px;
     padding-bottom: 30px;
   }
+
 
   #bar{
     height: 10px;
@@ -440,6 +417,7 @@ https://github.com/richardtallent/vue-simple-calendar
         width: 80vw;
         height: 70vh;
     }
+    
 
     h2, h4{
     margin: 0;
@@ -462,7 +440,15 @@ input{
   }
 
   .container-modal-window{
-    padding-top: 30px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+.container-modal-window-add{
+    padding-top: 5px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -477,14 +463,45 @@ input{
     margin: 10px;
     padding: 10px;
   }
-
+  /* 팀원추가수정사항 */
+   .input-container-add{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 72vw;
+    margin: 0px;
+    padding: 0px;
+  }
+  .addmemberBtn-add{
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    background-color: #D2DAFF;
+    margin-left: 35vw;
+    margin-top: 5px;
+    border:0;
+}
+.btn-container-right-add{
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 30px;
+  }
   .input-long{
     width: 60vw;
   }
 
   .input-short{
-    width: 30vw;
+    width: 20vw;
+    margin: 10px;
   }
+
+  .modal-info-add{
+    width: 80vw;
+    height: 70vh;
+    overflow-y: auto;
+}
 
   .btn-container{
     display: flex;
@@ -521,6 +538,7 @@ input{
         height: 130px;
         justify-content: space-evenly;
         align-items: center;
+        overflow-y: auto;
     }
 
     ul li{
@@ -554,6 +572,9 @@ export default {
   props: ['teampageUuid'],
   data() {
     return {
+        // inputMember_name:[],
+        // inputMember_part:[],
+        // inputMember_position:[],
         modalCheck: false,
         modalCheck2: false,
         // project: {
@@ -576,26 +597,39 @@ export default {
                 {
                     id: 1,
                     nickname: "팀원1",
+                    part:'',
+                    position:'',
+
                 },
                 {
                     id: 2,
                     nickname: "팀원2",
+                    part:'',
+                    position:'',
                 },
                 {
                     id: 3,
                     nickname: "팀원3",
+                    part:'',
+                    position:'',
                 },
                 {
                     id: 4,
                     nickname: "팀원4",
+                    part:'',
+                    position:'',
                 },
                 {
                     id: 5,
                     nickname: "팀원5",
+                    part:'',
+                    position:'',
                 },
                 {
                     id: 6,
                     nickname: "팀원6",
+                    part:'',
+                    position:'',
                 },
         ],
         state: {
@@ -649,6 +683,11 @@ export default {
         },
     },
     methods: {
+        addMembers(index){
+            var parentNode = document.getElementById("input-contain");
+            console.log(parentNode);
+            this.teammates.push({id: index, nickname:'', part:'', position:''});
+       },
         modalOpen() {
             this.modalCheck = !this.modalCheck
             const projectNameInput = document.getElementById('projectname');
@@ -660,6 +699,7 @@ export default {
 
         modalOpen2() {
             this.modalCheck2 = !this.modalCheck2
+            console.log("Modal open")
         },
 
         thisMonth(d, h = 0, m = 0) {
@@ -742,7 +782,15 @@ export default {
             console.log(projectName); //변경하는 이름
             console.log(teamName); //이것도
         },
-
+        saveBtn_addMem(){
+            // var i = 0;
+            // for(i=0;i<this.teammates.length;i++){
+            //     this.teammates.name=;
+            //     this.teammates.part=;
+            //     this.teammates.position=;
+            // }
+            console.log(this.teammates);
+        },
         onclickgithub() {
             window.open('https://github.com/springvuet-front/')
         },

@@ -7,9 +7,13 @@
 
 <style>
 body{
-  font-family: 'IBM Plex Sans KR', sans-serif;
   margin: 0;
 }
+
+body * {
+  font-family: 'IBM Plex Sans KR', sans-serif;
+}
+
 #app {
   /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -40,6 +44,7 @@ top: 0;
 width: 100%;
 height: 100%;
 background: rgba(0, 0, 0, 0.4);
+z-index: 150;
 }
 
 .modal-wrap2 {
@@ -48,6 +53,7 @@ left: 0;
 top: 0;
 width: 100%;
 height: 100%;
+z-index: 200;
 }
 /* modal or popup */
 .modal-container {
@@ -79,15 +85,15 @@ flex-direction: column;
     }
   
 ::-webkit-scrollbar-thumb {
-background-color: #e6e6e6;
+background-color:rgb(199, 199, 199) ;
 border-radius: 10px;
 background-clip: padding-box;
 border: 2px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(199, 199, 199);
-    border-radius: 10px;
+  background-color: #e6e6e6;
+  border-radius: 10px;
 }
 
 </style>

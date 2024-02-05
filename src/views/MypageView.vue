@@ -41,15 +41,17 @@
   <div class="b_right">
     <div class="bproject current">
       <div class="title">현재 진행중인 프로젝트</div> 
-      <ButtonComponent msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
+      <!-- <ButtonComponent class="addNewBtnStyle" msg="새 프로젝트 만들기" @click="$router.push('/createnew')" /> -->
       <!-- currentProject -->
       <div class="projectlist" v-if="data && data.myTeamResponseDto && data.myTeamResponseDto.currentTeams">
         <button type="button" class="showPastbtn" @click="showCurrentPast" :disabled="isDisabledCurrentPast">
           <img class="showbtnimg" v-if="isDisabledCurrentPast" alt="◀" src="../assets/showpastbtn.png"/>
           <img class="showbtnimg" v-if="isDisabledCurrentPast===false" alt="◀" src="../assets/showpastbtn_active.png" />
         </button>
+        <ButtonComponent class="addNewBtnStyle" msg="새 프로젝트 만들기" @click="$router.push('/createnew')" />
         <!-- <div v-for="(item, index) in visibleCurrentProject" :key="index" @click="pageLink"> -->
         <div v-for="teampage in data.myTeamResponseDto.currentTeams" :key="teampage.teampageUuid" @click="goToTeamPage(teampage.teampageUuid)">
+          
           <div class="projectBox">
             <div class="project category">
               <div class="project field">{{teampage.teamPosition}}</div>
@@ -116,7 +118,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
   margin-left: 100px;
   width: 400px;
   height: 570px;
@@ -126,12 +128,15 @@
   .b_left{
     display:none;
   }
+  .b_right{
+    margin-left: 100px;
+  }
 }
 .b_right {
   /* background-color: lightgray; */
   flex-direction: column;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 20px;
   width: 1200px;
   height: 570px;
 }
@@ -341,6 +346,7 @@
   justify-content: center;
   background-color: rgb(0,0,0,0);
   border: solid;
+  border-left: 0;
   border-bottom-right-radius: 7px;
   border-top-right-radius: 7px;
   /* float: right; */
@@ -384,6 +390,18 @@
   visibility:hidden;
 }
 /* addProjectBtn */
+.addNewBtnStyle{
+  width: 200px;
+  height: 200px;
+  background-color: #D2DAFF;
+  border-radius: 15px;
+  display: block;
+  font-size: 12pt;
+  border: 0;
+}
+.addNewBtnStyle:hover{
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
 .addProjectBtn {
   width: 200px;
   height: 200px;
