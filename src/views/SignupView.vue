@@ -52,9 +52,7 @@
 
                     <div class="input-text">닉네임</div>
                     <input type="text"
-                        v-model="nickname"
-                        @keyup.enter="signup"
-                        >
+                            v-model="nickname">
                 </div>
             </div>
 

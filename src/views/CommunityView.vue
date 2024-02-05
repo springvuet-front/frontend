@@ -6,195 +6,233 @@
         <div id="back">
           <div class="top">
             <div class="bTitle">모집 커뮤니티
-            <select
-              v-model="partModel"
-              class="part-select"
-              v-bind:id="input_id"
-              v-on:input="updateValue($event.target.value)"
-            > 
-              <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
-            </select>
-            <select
-              v-model="stateModel"
-              class="state-select"
-            > 
-              <option v-for="(item, index) in states" :key="index">{{ item }}</option>
-            </select>
-            <SelectBox
-              v-model="preselect_value"
-              :items="somethings"
-              :input_id="'my_selectbox'"
-              @input="value => { preselect_value = value }"
-          ></SelectBox>
-          </div>
-          </div>
-        
-        <div class="new-post">
-          <div class="bSelect">
-            <select
-              v-model="partModel2"
-              class="part-select2"
-              v-bind:id="input_id"
-              v-on:input="updateValue($event.target.value)"
-            > 
-              <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
-            </select>
-            <select
-              v-model="stateModel2"
-              class="state-select2"
-            > 
-              <option v-for="(item, index) in states" :key="index">{{ item }}</option>
-            </select>
-            <SelectBox
-              v-model="preselect_value"
-              :items="somethings"
-              :input_id="'my_selectbox'"
-              @input="value => { preselect_value = value }"
-            ></SelectBox>
-          </div>
-          <div class="bInput">
-            <input type="text" id="title1" class="write-title" v-model="inputTitle_community">
-            <textarea type="text" id="body1" class="write-body" v-model="inputBody_community" placeholder="여기에 글을 작성하세요"></textarea>
-          </div>
-          <div class="bBtn">
-            <ButtonComponent id="btn1" parameter="community" @click="addNewPost" msg="등록하기"/>
-          </div>
-        </div>
-
-        <!--기존 게시글 보이는 부분-->
-        <div v-for="(item, index) in currentPosts" :key="index">
-          <div v-if="(partModel === '전체' || partModel === item.data.post_part) && (stateModel === '전체' || stateModel === item.data.post_state)">
-          <!-- <div v-if="partModel===item.data.post_part && stateModel===item.data.post_state"> -->
-            <div class="posts">
-              <div class="posts-part-state">
-                <div class="post-part">{{ item.data.post_part }}</div>
-                <div class="post-state">{{ item.data.post_state }}</div>
+                <select
+                  v-model="partModel"
+                  class="part-select"
+                  v-bind:id="input_id"
+                  v-on:input="updateValue($event.target.value)"
+                > 
+                  <option v-for="(item, index) in parts" :key="index">{{ item }}</option>
+                </select>
+                <select
+                  v-model="stateModel"
+                  class="state-select"
+                > 
+                  <option v-for="(item, index) in states" :key="index">{{ item }}</option>
+                </select>
+                <SelectBox
+                  v-model="preselect_value"
+                  :items="somethings"
+                  :input_id="'my_selectbox'"
+                  @input="value => { preselect_value = value }"
+              ></SelectBox>
+            </div>
+            <div class="new-post">
+              <div class="bSelect">
+                <select
+                  v-model="partModel2"
+                  class="part-select2"
+                  v-bind:id="input_id"
+                  v-on:input="updateValue($event.target.value)"
+                > 
+                  <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
+                </select>
+                <select
+                  v-model="stateModel2"
+                  class="state-select2"
+                > 
+                  <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
+                </select>
+                <SelectBox
+                  v-model="preselect_value"
+                  :items="somethings"
+                  :input_id="'my_selectbox'"
+                  @input="value => { preselect_value = value }"
+                ></SelectBox>
               </div>
-              <div class="posts-contents">
-                <div class="post-title">{{ item.data.post_title }}</div>
-                <div class="post-body">{{ item.data.post_body }}</div>
+              <div class="bInput">
+                <input type="text" id="title1" class="write-title" v-model="inputTitle_community" placeholder="제목을 작성하세요">
+                <textarea type="text" id="body1" class="write-body" v-model="inputBody_community" placeholder="본문을 작성하세요"></textarea>
               </div>
-              <div class="posts-right">
+              <div class="bBtn">
+                <ButtonComponent id="btn1" parameter="community" @click="addNewPost" msg="등록하기"/>
+              </div>
+            </div>
+          </div>
+          <div class="bottom">
+                <!--기존 게시글 보이는 부분-->
+              <div v-for="(item, index) in currentPosts" :key="index">
+                <div v-if="(partModel === '전체' || partModel === item.data.post_part) && (stateModel === '전체' || stateModel === item.data.post_state)">
+                <!-- <div v-if="partModel===item.data.post_part && stateModel===item.data.post_state"> -->
+                  <div class="posts">
+                    <div class="posts-part-state">
+                      <div class="post-part">{{ item.data.post_part }}</div>
+                      <div class="post-state">{{ item.data.post_state }}</div>
+                    </div>
+                    <div class="posts-contents">
+                      <div class="post-title">{{ item.data.post_title }}</div>
+                      <div class="post-body">{{ item.data.post_body }}</div>
+                    </div>
+                    <div class="posts-right">
 
-                <!-- 수정하기 모달창-->
-                <div class="modifying">
-                  <div class="modifying-icon">
-                    
-                  </div>
-                  <Button class="modifying-button" @click="modalOpen_modify(index)">수정하기</Button>
-
-                  <div class="modal-wrap" v-show="modalCheck_modify">
-                    <div class="modal-container">
-                      <div class="flex-box">
-                        <div class="modal-info">
+                      <!-- 수정하기 모달창-->
+                      <div class="modifying">
+                        <div class="modifying-icon">
                           
-                          <div class="container-modal-window">
-                          <div class="currentComments" v-for="(item, index) in written_comments" :key="index">
-                            <!-- 본문 있던 곳 -->
-                          </div>
+                        </div>
+                        <Button class="modifying-button" @click="modalOpen_modify(index)">수정하기</Button>
 
-                          <div class="input-container">
-                            <div class="label-text">
+                        <div class="modal-wrap" v-show="modalCheck_modify">
+                          <div class="modal-container">
+                            <div class="flex-box">
+                              <div class="modal-info-modify">
+                                <div class="post-title">수정하기</div>
+                                <div class="select-container-modify">
+                                    <select
+                                      v-model="partModel2"
+                                      class="part-select2"
+                                      v-bind:id="input_id"
+                                      v-on:input="updateValue($event.target.value)"
+                                    > 
+                                      <option v-for="(item, index) in parts_input" :key="index">{{ item }}</option>
+                                    </select>
+                                    <select
+                                      v-model="stateModel2"
+                                      class="state-select2"
+                                    > 
+                                      <option v-for="(item, index) in states_input" :key="index">{{ item }}</option>
+                                    </select>
+                                    <SelectBox
+                                      v-model="preselect_value"
+                                      :items="somethings"
+                                      :input_id="'my_selectbox'"
+                                      @input="value => { preselect_value = value }"
+                                    ></SelectBox>
+                                </div>
+                                <br/>
+                                <div class="input-container-modify">
+                                  <input type="text" class="write-title"/>
+                                  <textarea type="text" class="write-body"/>
+                                </div>
+                                <div class="botton-container-modify">
+                                    <div class="btn-container-right">
+                                      <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
+                                    </div>
+                                    <div class="modal-btn">
+                                      <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
+                                      <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+
+                                <!-- <>수정하기</h5>
+                                  <div class="project-date">
+                                        <div class="edit-title">
+                                            <input msg="{{ item.data.post_title }}"  >
+                                        </div>
+                                        <div class="edit-body">
+                                            
+                                        </div>
+                                    </div> -->
+                                    
+                              
                             </div>
-                            <!-- 댓글 작성하던 곳 -->
+                            
                           </div>
+                        </div>
+                      </div>        
+                    </div>
+                    
+                    <!-- 수정하기 모달창 끝 -->
+                    <!-- 삭제하기 -->
+                    <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
 
-                        </div>
-                        <div class="btn-container-right">
-                          <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
-                        </div>
-                      </div>
-                      <div class="modal-btn">
-                        <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
-                        <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
+                      <div class="post-info">
+                        <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
+                        <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
                       </div>
                     </div>
-                  </div>
-                </div>        
-              </div>
-              <!-- 수정하기 모달창 끝 -->
-              <!-- 삭제하기 -->
-              <Button class="delete-button" @click="deletePost(index)">삭제하기</Button>
+                  
+                    <!-- 댓글달기 모달창-->
+                    <div class="comments">
+                      <div class="comment-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                        </svg>
+                      </div>
+                      <!-- <div class="comment-number">{{ currentComments[index].length }} </div> -->
+                      <div class="comment-number">0 </div>
+                      <Button class="comment-button" @click="modalOpen(index)">댓글 달기</Button>
 
-                <div class="post-info">
-                  <div class="post-writer"> 작성자 : {{ item.data.post_writer }}</div>
-                  <div class="post-date"> 등록일 : {{ item.data.post_date }}</div>
-                </div>
-              </div>
-            
-              <!-- 댓글달기 모달창-->
-              <div class="comments">
-                <div class="comment-icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-                  </svg>
-                </div>
-                <div class="comment-number">{{ item.data.comments_num }} </div>
-                <Button class="comment-button" @click="modalOpen(index)">댓글 달기</Button>
+                      <div class="modal-wrap" v-show="modalCheck">
+                        <div class="modal-container">
+                          <div class="flex-box">
+                            <div class="modal-info">
+                              <div class="post-title"> {{ currentPosts[modalIndex].data.post_title }} </div>
+                              <div class="post-body">{{ currentPosts[modalIndex].data.post_body }}</div>
+                              <div class="post-info">
+                                <div class="post-writer"> 작성자 : {{ currentPosts[modalIndex].data.post_writer }}</div>
+                                <div class="post-date"> 등록일 : {{ currentPosts[modalIndex].data.post_date }}</div>
+                              </div>
+                              <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
+                              <div class="container-modal-window">
+                                
+                              <!-- <div class="written-comments" v-for="(item, index) in currentPosts[modalIndex].post_Comment" :key="index">
+                                <div class="writer-id"> {{ item.writer_id }}</div>
+                                <div class="written-text"> {{ item.written_text }}</div>
+                                <div class="post-date"> 등록일 : {{ item.written_date }}</div>
+                              </div> -->
+                              <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
+                                <div class="writer-id"> {{ item.writer_id }}</div>
+                                <div class="written-text"> {{ item.written_text }}</div>
+                                <div class="post-date"> 등록일 : {{ item.written_date }}</div>
 
-                <div class="modal-wrap" v-show="modalCheck">
-                  <div class="modal-container">
-                    <div class="flex-box">
-                      <div class="modal-info">
-                        <div class="post-title"> {{ currentPosts[modalIndex].data.post_title }} </div>
-                        <div class="post-body">{{ currentPosts[modalIndex].data.post_body }}</div>
-                        <div class="post-info">
-                          <div class="post-writer"> 작성자 : {{ currentPosts[modalIndex].data.post_writer }}</div>
-                          <div class="post-date"> 등록일 : {{ currentPosts[modalIndex].data.post_date }}</div>
-                        </div>
-                        <hr class="horizontal-divider" style="border-top: 3px solid #a10ffc;">
-                        <div class="container-modal-window">
-                          
-                        <!-- <div class="written-comments" v-for="(item, index) in currentPosts[modalIndex].post_Comment" :key="index">
-                          <div class="writer-id"> {{ item.writer_id }}</div>
-                          <div class="written-text"> {{ item.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
-                        </div> -->
-                        <div class="written-comments" v-for="(item, index) in currentComments[modalIndex]" :key="index">
-                          <div class="writer-id"> {{ item.writer_id }}</div>
-                          <div class="written-text"> {{ item.written_text }}</div>
-                          <div class="post-date"> 등록일 : {{ item.written_date }}</div>
+                                <div class="delete-comment">
+                                  <div class="close-btn" @click="deleteComment(index)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                  </div>
+                                </div>
+                              </div>
 
-                          <div class="delete-comment">
-                            <div class="close-btn" @click="deleteComment(commentindex)">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-1 h-1">
+                              
+
+                              
+
+                            </div>
+                            <div class="input-container">
+                                <div class="label-text">
+                                </div>
+                                <div> 
+                                  <input type="text" id="write-comment" v-model="inputComment" placeholder="댓글 작성하기" class="input-long"/>
+                                  <button @click="addNewComment" class="send-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="modal-btn">
+                            <div class="close-btn" @click="modalOpen(index)">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                               </svg>
                             </div>
                           </div>
                         </div>
-
-                        <div class="input-container">
-                          <div class="label-text">
-                          </div>
-                          <div> 
-                            <input type="text" id="write-comment" v-model="inputComment" placeholder="댓글 작성하기" class="input-long"/>
-                            <button @click="addNewComment" class="send-icon">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-
-                        
-
                       </div>
-                    </div>
-                    <div class="modal-btn">
-                      <div class="close-btn" @click="modalOpen(index)">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-1 h-1">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                      </div>
-                    </div>
+                    </div>    
                   </div>
-                </div>
-              </div>    
-            </div>
-          </div>   
-        </div> <!-- 게시물 보이는 부분 끝-->
-        <!-- 댓글달기 모달창 끝 -->
+                </div>   
+              </div> <!-- 게시물 보이는 부분 끝-->
+              <!-- 댓글달기 모달창 끝 -->
+          </div>
+        
+        
+
+        
 
         </div>   
       </div>
@@ -203,7 +241,18 @@
 </template>
 
 <style scoped>
-
+.modal-info-modify{
+  display:flex;
+  flex-direction: column;
+}
+.select-container-modify{
+  display:flex;
+  flex-direction: row;
+}
+.botton-container-modify{
+  display:flex;
+  flex-direction: 
+}
 .container{padding: 20px 90px}
 #back{
   /* margin-left: 10px; */
@@ -211,10 +260,19 @@
   justify-content: center;
   flex-direction: column;
   line-height:2.0;
+  /* display:grid;
+  grid-template-rows: 400px 600px; */
 }
 .top{
   position: inherit;
+  top: 10px;
 }
+/* .bottom{
+  position: fixed;
+  top: 400px;
+  height: auto;
+  overflow-y: scroll;
+} */
 .bTitle{
   font-size: 40px;
   padding-left: 10px;
@@ -312,6 +370,10 @@
   height: 135px;
   border-width: 0px;
   font-size: 15pt;
+  resize:none;
+}
+.write-body:focus{
+  outline: 0;
 }
 .write-label {
   font-size: 15pt;
@@ -443,7 +505,8 @@
 }
 .container-modal-window{
   height: 400px;
-  overflow: scroll;
+  
+  overflow-y: scroll;
 }
 .writer-id{
   font-weight: bold;
@@ -506,6 +569,8 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         stateModel2: '모집중',
         parts: ['전체','웹', '앱', '데분'],
         states:['전체','모집중', '모집 완료'],
+        parts_input: ['웹', '앱', '데분'],
+        states_input: ['모집중', '모집 완료'],
         message: "글을 입력하세요",
         currentPosts: [
           {
@@ -516,7 +581,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
               post_body: "개발자 전용 커뮤니티 앱입니다.관심있으면 댓글 남겨주세요~",
               post_writer: "우주최강개발자",
               post_date: "2024-01-31",
-              comments_num: "3",
+              comments_num: 0,
             },
           },
           {
@@ -527,7 +592,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
               post_body: "Vue.js 능숙하신 분 환영합니다",
               post_writer: "나송집가고싶송",
               post_date: "2024-02-01",
-              comments_num: "2",
+              comments_num: 0,
             },
             // post_Comment:[
             //   {
@@ -597,8 +662,8 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
         this.currentPosts.splice(index, 1);
         this.currentComments.splice(index, 1);
       },
-      deleteComment(commentindex){
-        this.currentComments.splice(commentindex, 1);
+      deleteComment(index){
+        this.currentComments[this.modalIndex].splice(index, 1);
       },
       addNewPost() {
         const newPost = {
@@ -609,7 +674,7 @@ import ButtonComponent from '@/components/ButtonComponent.vue';
             post_body: this.inputBody_community,  // write-body input의 값을 가져옴
             post_writer: "새로운 작성자",  // 원하는 작성자 이름으로 변경
             post_date: new Date().toISOString().slice(0, 10),  // 현재 날짜로 설정
-            comments_num: "0",  // 초기 댓글 개수를 0으로 설정
+            comments_num: 0,  // 초기 댓글 개수를 0으로 설정
           }
         };
         // currentPosts 배열에 새로운 데이터 추가

@@ -13,11 +13,11 @@
                 <div class="project-date">
                     <div class="project-start">
                         <h5>프로젝트 시작일</h5>
-                        <div id="startdate">{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.start) }}</div>
                     </div>
                     <div class="project-end">
                         <h5>프로젝트 마감일</h5>
-                        <div id="enddate">{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
+                        <div>{{ formatYear(project.teampageDetailResponseDto.end) }}</div>
                     </div>
                 </div>
 
@@ -325,8 +325,7 @@ https://github.com/richardtallent/vue-simple-calendar
 
   #bar{
     height: 10px;
-    background-color: #B1B2FF;
-    border-radius: 10px;
+    background-color: aqua;
   }
 
   .right-menu-addschedule{
@@ -759,15 +758,11 @@ export default {
         this.state.newItemEndDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectStartDate = this.isoYearMonthDay(new Date())
         this.state.newItemProjectEndDate = this.isoYearMonthDay(new Date())
-    },
 
-    watch: {
-        'project.teampageDetailResponseDto.remainingDays': function(newVal) {
-            if (this.$refs.bar && !isNaN(newVal)) {
-                const dDaywidth = this.$refs.bar;
-                dDaywidth.style.width = newVal * 10 + 'px';
-            }
-        },
+        if (this.$refs.bar) {
+            const dDaywidth = this.$refs.bar
+            dDaywidth.style.width = this.dDay * 5 + 'px'
+        }
     },
 
     components: {
