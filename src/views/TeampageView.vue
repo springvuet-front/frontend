@@ -38,7 +38,6 @@
                     <CalendarView
                         :items="state.items"
                         :show-date="state.showDate"
-                        :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
                         :disable-past="state.disablePast"
                         :disable-future="state.disableFuture"
                         :date-classes="myDateClasses()"
@@ -61,20 +60,24 @@
         </div>
 
         <div class="flex-right">
-            <div class="right-menu-members">
-                <h3>팀명</h3>
+            <div class="right-menu-members" v-if="project">
+                <h3>{{ project.teampageDetailResponseDto.teamName }}</h3>
                 <hr>
-                <div class="members">
-                    <div class="members-left">
-                        <div class="member1">팀원1</div>
-                        <div class="member2">팀원2</div>
-                        <div class="member3">팀원3</div>
+                <div class="teammates-list">
+                    <div class="members-right">
+                        <ul>
+                            <li v-for="item in teammates.slice(0,3)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="members-right">
-                        <div class="member4">팀원4</div>
-                        <div class="member5">팀원5</div>
-                        <div class="member6">팀원6</div>
+                    <div class="members-left">
+                        <ul>
+                            <li v-for="item in teammates.slice(3,6)" :key="item.id">
+                                {{ item.nickname }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -140,7 +143,7 @@
                         <h4>프로젝트명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exProjectName" id="projectname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.projectName" id="projectname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -149,7 +152,7 @@
                         <h4>팀명</h4>
                         </div>
                         <div>
-                        <input type="text" v-model="exTeamName" id="teamname" class="input-long" autocomplete='off'/>
+                        <input type="text" :value="project.teampageDetailResponseDto.teamName" id="teamname" class="input-long" autocomplete='off'/>
                         </div>
                     </div>
 
@@ -176,7 +179,7 @@
                         <h4>깃허브 링크</h4>
                         </div>
                         <div>
-                        <input type="text" id="githublink" value="https://github.com/springvuet-front/" class="input-long"/>
+                        <input type="text" id="githublink" :value="project.teampageDetailResponseDto.github" class="input-long"/>
                         </div>
                     </div>
 
@@ -316,6 +319,7 @@ https://github.com/richardtallent/vue-simple-calendar
   .btn-container-right{
     display: flex;
     justify-content: flex-end;
+    padding-top: 30px;
     padding-bottom: 30px;
   }
 
@@ -325,7 +329,7 @@ https://github.com/richardtallent/vue-simple-calendar
   }
 
   .right-menu-addschedule{
-    height: 220px;
+    height: 240px;
     padding: 20px;
     margin: 5px;
     border-radius: 5px;
@@ -343,6 +347,8 @@ https://github.com/richardtallent/vue-simple-calendar
   .members{
     display: flex;
     padding: 20px;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .calendar-container{
@@ -510,8 +516,24 @@ input{
         margin-left: 25px;
     }
 
-    .members-right{
+    .teammates-list{
+        display: flex;
+        height: 130px;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    ul li{
+        padding: 5px;
+    }
+
+    ul{
+        list-style: none;
+    }
+
+    .modal-info h2{
         margin-left: 30px;
+        margin-top: 30px;
     }
 
 </style>
@@ -544,12 +566,38 @@ export default {
         // },
         project:{
             teampageDetailResponseDto: {
-          projectName: '...',
-          start: '...',
-          end: '...',
-          remainingDays: '...'
-        }
+                projectName: '...',
+                start: '...',
+                end: '...',
+                remainingDays: '...',
+            },
         },
+        teammates:[
+                {
+                    id: 1,
+                    nickname: "팀원1",
+                },
+                {
+                    id: 2,
+                    nickname: "팀원2",
+                },
+                {
+                    id: 3,
+                    nickname: "팀원3",
+                },
+                {
+                    id: 4,
+                    nickname: "팀원4",
+                },
+                {
+                    id: 5,
+                    nickname: "팀원5",
+                },
+                {
+                    id: 6,
+                    nickname: "팀원6",
+                },
+        ],
         state: {
             showDate: this.thisMonth(1),
             message: "",
@@ -565,25 +613,7 @@ export default {
             useDefaultTheme: true,
             useHolidayTheme: true,
             useTodayIcons: "-",
-            items: [
-                {
-                    id: "e1",
-                    startDate: this.thisMonth(15, 18, 30),
-                    title: "그냥"
-                },
-                // {
-                //     id: "e2",
-                //     startDate: this.thisMonth(15),
-                //     title: "Single-day item with a long title",
-                // },
-                // {
-                //     id: "e3",
-                //     startDate: this.thisMonth(7, 9, 25),
-                //     endDate: this.thisMonth(10, 16, 30),
-                //     title: "Multi-day item with a long title and times",
-                // },
-                //... the rest of your items
-            ],
+            items: [],
         }
     }
     },
@@ -592,6 +622,16 @@ export default {
     api.get(`/teampage/${teampageUuid}`)
     .then(response => {
       this.project = response.data || {} ;  // 응답 데이터를 project에 저장
+      this.teamScheduleDto = response.data.teamScheduleDto.monthSchedules || {};
+      for (let schedule of this.teamScheduleDto) {
+            this.state.items.push({
+                id: schedule.scheduleUuid,  // scheduleUuid를 id로 사용
+                startDate: this.formatYear(schedule.scheduleStart),
+                endDate: this.formatYear(schedule.scheduleEnd),
+                title: schedule.scheduleContent
+            });
+        }
+        console.log(this.state.items)
         })
     .catch(error => {
       console.error(error);
@@ -601,12 +641,6 @@ export default {
     computed:{
         todayDate(){
             return dayjs();
-        },
-        dueDate(){
-            return dayjs('2024-02-07');
-        },
-        dDay(){
-            return this.dueDate.diff(this.todayDate, 'day');
         },
         themeClasses(){
             return{
@@ -715,6 +749,7 @@ export default {
         formatYear(when) {
             let {year, month, date} = parseYearTime(when);
             return `${year}-${month}-${date}`;
+            
     },
 
     },
