@@ -85,15 +85,15 @@ flex-direction: column;
     }
   
 ::-webkit-scrollbar-thumb {
-background-color: #e6e6e6;
+background-color:rgb(199, 199, 199) ;
 border-radius: 10px;
 background-clip: padding-box;
 border: 2px solid transparent;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: rgb(199, 199, 199);
-    border-radius: 10px;
+  background-color: #e6e6e6;
+  border-radius: 10px;
 }
 
 </style>
