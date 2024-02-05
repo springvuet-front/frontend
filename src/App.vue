@@ -92,8 +92,7 @@ border: 2px solid transparent;
 
 </style>
 
-<!-- <script>
-import axios from 'axios';
+<script>
 
   export default {
   name: 'App',
@@ -103,9 +102,4 @@ import axios from 'axios';
 };
 
 
-</script> -->
-<script>
-
-export default {
-};
 </script>
