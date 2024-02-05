@@ -66,11 +66,7 @@
 
                   <div class="modal-wrap" v-show="modalCheck_modify">
                     <div class="modal-container">
-                      <div class="flex-box">
-                        <div class="modal-info-modify">
-                          <div class="post-title-modify">
-                            <label class="post-title-label">수정하기</label>
-                          </div>
+                          <h2>수정하기</h2>
                           <div class="select-container-modify">
                               <select
                                 v-model="currentPosts[modalIndex_modify].postCategory"
@@ -93,33 +89,21 @@
                                 @input="value => { preselect_value = value }"
                               ></SelectBox>
                           </div>
-                          <div class="input-container-modify">
-                            <input type="text" class="write-title-modify" v-model="currentPosts[modalIndex_modify].postTitle"/>
-                            <textarea type="text" class="write-body-modify" v-model="currentPosts[modalIndex_modify].postContent"/>
+                          <div class="center">
+                            <div class="input-container-modify">
+                              <input type="text" class="write-title-modify" v-model="currentPosts[modalIndex_modify].postTitle"/>
+                              <textarea type="text" class="write-body-modify" v-model="currentPosts[modalIndex_modify].postContent"/>
+                            </div>
+                            <div class="botton-container-modify">
+                                <div class="btn-container-right">
+                                  <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
+                                </div>
+                                <div class="modal-btn">
+                                  <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
+                                  <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
+                                </div>
+                            </div>
                           </div>
-                          <div class="botton-container-modify">
-                              <div class="btn-container-right">
-                                <ButtonComponent parameter="community" msg="저장하기" @click="saveBtn"/>
-                              </div>
-                              <div class="modal-btn">
-                                <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen_modify(index)"/>
-                                <!-- <ButtonComponent parameter="community" msg="취소하기" class="close-btn" @click="modalOpen(index)"/> -->
-                              </div>
-                          </div>
-                          
-                          <!-- </div> -->
-
-                          <!-- <>수정하기</h5>
-                            <div class="project-date">
-                                  <div class="edit-title">
-                                      <input msg="{{ item.data.post_title }}"  >
-                                  </div>
-                                  <div class="edit-body">
-                                      
-                                  </div>
-                              </div> -->   
-                      </div>
-                    </div>
                   </div>
                 </div>        
               </div>
@@ -213,6 +197,7 @@
 .botton-container-modify{
   display:flex;
   flex-direction: center;
+  margin-top: 10px;
 }
 .container{padding: 20px 90px}
 #back{
@@ -246,6 +231,12 @@
 
 .bottom{
   overflow-y: scroll;
+}
+
+.center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .part-select{
@@ -452,7 +443,8 @@
   padding-left: 20px;
   overflow: hidden; /*추가*/
   display: flex; /*추가*/
-  align-items: center;
+  align-items: flex-start;
+  width: 85vw;
 }
 .input-container{
   display: flex;
@@ -572,15 +564,10 @@ input:focus{
   font-size: 30pt;
   margin-left: 15px;
 }
-.modal-info-modify{
-  /* display:flex;
-  flex-direction: column; */
-  display: grid;
-  grid-template-rows: 10vh 20vh 30vh 20vh;
-}
 .select-container-modify{
   display:flex;
   flex-direction: column;
+  width: 70vw;
   /* background-color:black; */
 }
 .input-container-modify{
@@ -589,6 +576,8 @@ input:focus{
   align-items: center;
   /* background-color:pink; */
   margin-left: 10px;
+  margin-top: 180px;
+  width: 80vw;
 }
 .write-title-modify{
   background-color: #B1B2FF;
@@ -613,6 +602,7 @@ input:focus{
 .botton-container-modify{
   display:flex;
   justify-content: center;
+  margin-top: 30px;
 }
 .textCount{
   margin-left: 10px;
